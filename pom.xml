@@ -375,6 +375,11 @@
                     </statelessTestsetInfoReporter>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.hello2morrow</groupId>
+                <artifactId>sonargraph-maven-plugin</artifactId>
+                <version>14.0.1</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -541,6 +546,10 @@
             <url>
                 https://maven.vaadin.com/vaadin-prereleases/
             </url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Sonargraph</id>
+            <url>https://maven.hello2morrow.com/repository</url>
         </pluginRepository>
     </pluginRepositories>
 </project>
