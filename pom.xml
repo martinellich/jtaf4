@@ -99,6 +99,10 @@
             <artifactId>vaadin-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.vaadin.addons</groupId>
             <artifactId>googleanalyticstracker</artifactId>
             <version>${googleanalyticstracker.version}</version>
