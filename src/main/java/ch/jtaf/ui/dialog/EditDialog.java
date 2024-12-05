@@ -21,7 +21,6 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     public static final String FULLSCREEN = "fullscreen";
 
     private final String initialWidth;
-    protected final transient JooqDAO<?, R, ?> JooqDAO;
 
     private boolean isFullScreen = false;
     private final Div content;
@@ -33,9 +32,8 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     private transient Consumer<R> afterSave;
     private boolean initialized;
 
-    protected EditDialog(String title, String initialWidth, JooqDAO<?, R, ?> JooqDAO) {
+    protected EditDialog(String title, String initialWidth, JooqDAO<?, R, ?> jooqDAO) {
         this.initialWidth = initialWidth;
-        this.JooqDAO = JooqDAO;
 
         setWidth(initialWidth);
 
@@ -66,7 +64,7 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
             R recordToSave = binder.getBean();
-            JooqDAO.save(recordToSave);
+            jooqDAO.save(recordToSave);
 
             if (afterSave != null) {
                 afterSave.accept(recordToSave);
