@@ -51,7 +51,7 @@
     <properties>
         <java.version>21</java.version>
 
-        <vaadin.version>24.5.8</vaadin.version>
+        <vaadin.version>24.6.0</vaadin.version>
         <jooq-version>3.19.14</jooq-version>
         <openpdf.version>2.0.3</openpdf.version>
         <googleanalyticstracker.version>5.0.0</googleanalyticstracker.version>
