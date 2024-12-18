@@ -3,8 +3,8 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.domain.AthleteRepository;
-import ch.jtaf.domain.ClubRepository;
+import ch.jtaf.domain.AthleteDAO;
+import ch.jtaf.domain.ClubDAO;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -44,7 +44,7 @@ public class SearchAthleteDialog extends Dialog {
     private final Map<Long, ClubRecord> clubRecordMap;
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
-    public SearchAthleteDialog(AthleteRepository athleteRepository, ClubRepository clubRepository, OrganizationProvider organizationProvider,
+    public SearchAthleteDialog(AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider,
                                Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
         setDraggable(true);
         setResizable(true);
@@ -62,19 +62,19 @@ public class SearchAthleteDialog extends Dialog {
 
         getHeader().add(toggle, close);
 
-        var dialog = new AthleteDialog(getTranslation("Athlete"), athleteRepository, clubRepository, organizationProvider);
+        var dialog = new AthleteDialog(getTranslation("Athlete"), athleteDAO, clubDAO, organizationProvider);
 
         var filter = new TextField(getTranslation("Filter"));
         filter.setAutoselect(true);
         filter.setAutofocus(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
 
-        var clubs = clubRepository.findByOrganizationId(organizationId);
+        var clubs = clubDAO.findByOrganizationId(organizationId);
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
         CallbackDataProvider<AthleteRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
-            query -> athleteRepository.findByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query), query.getOffset(), query.getLimit()).stream(),
-            query -> athleteRepository.countByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query))
+            query -> athleteDAO.findByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query), query.getOffset(), query.getLimit()).stream(),
+            query -> athleteDAO.countByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query))
         );
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
@@ -91,7 +91,7 @@ public class SearchAthleteDialog extends Dialog {
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
             : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club")).setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(athleteRepository, grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
             var newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationId);
             return newRecord;
@@ -130,7 +130,6 @@ public class SearchAthleteDialog extends Dialog {
         isFullScreen = !isFullScreen;
     }
 
-    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {

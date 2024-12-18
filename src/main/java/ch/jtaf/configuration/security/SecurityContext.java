@@ -27,7 +27,7 @@ public final class SecurityContext {
     }
 
     /**
-     * Gets the username of the currently signed in user.
+     * Gets the username of the currently signed-in user.
      *
      * @return the username of the current user or <code>null</code> if the user
      * has not signed in

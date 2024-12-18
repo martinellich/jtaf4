@@ -1,6 +1,6 @@
 package ch.jtaf.ui.dialog;
 
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -21,7 +21,6 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     public static final String FULLSCREEN = "fullscreen";
 
     private final String initialWidth;
-    protected final JooqRepository<?, R, ?> jooqRepository;
 
     private boolean isFullScreen = false;
     private final Div content;
@@ -33,9 +32,8 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     private transient Consumer<R> afterSave;
     private boolean initialized;
 
-    protected EditDialog(String title, String initialWidth, JooqRepository<?, R, ?> jooqRepository) {
+    protected EditDialog(String title, String initialWidth, JooqDAO<?, R, ?> jooqDAO) {
         this.initialWidth = initialWidth;
-        this.jooqRepository = jooqRepository;
 
         setWidth(initialWidth);
 
@@ -65,11 +63,11 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
         save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            R record = binder.getBean();
-            jooqRepository.save(record);
+            R recordToSave = binder.getBean();
+            jooqDAO.save(recordToSave);
 
             if (afterSave != null) {
-                afterSave.accept(record);
+                afterSave.accept(recordToSave);
             }
             close();
         });

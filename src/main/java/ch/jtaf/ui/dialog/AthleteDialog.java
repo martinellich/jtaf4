@@ -3,8 +3,8 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
-import ch.jtaf.domain.AthleteRepository;
-import ch.jtaf.domain.ClubRepository;
+import ch.jtaf.domain.AthleteDAO;
+import ch.jtaf.domain.ClubDAO;
 import ch.jtaf.domain.Gender;
 import ch.jtaf.ui.converter.JtafStringToIntegerConverter;
 import ch.jtaf.ui.validator.NotEmptyValidator;
@@ -27,13 +27,13 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     private static final long serialVersionUID = 1L;
 
     private final transient OrganizationProvider organizationProvider;
-    private final ClubRepository clubRepository;
+    private final transient ClubDAO clubDAO;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
-    public AthleteDialog(String title, AthleteRepository athleteRepository, ClubRepository clubRepository, OrganizationProvider organizationProvider) {
-        super(title, "600px", athleteRepository);
-        this.clubRepository = clubRepository;
+    public AthleteDialog(String title, AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider) {
+        super(title, "600px", athleteDAO);
+        this.clubDAO = clubDAO;
         this.organizationProvider = organizationProvider;
     }
 
@@ -112,7 +112,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         if (organizationRecord == null) {
             return Collections.emptyList();
         } else {
-            var clubs = clubRepository.findByOrganizationId(organizationRecord.getId());
+            var clubs = clubDAO.findByOrganizationId(organizationRecord.getId());
             clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
             return clubs;
         }

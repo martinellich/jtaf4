@@ -44,10 +44,10 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
     private static final String REMOVE_RESULTS = "Remove.results";
 
     private final transient ResultCalculator resultCalculator;
-    private final ResultRepository resultRepository;
-    private final CategoryAthleteRepository categoryAthleteRepository;
-    private final CompetitionRepository competitionRepository;
-    private final EventRepository eventRepository;
+    private final transient ResultDAO resultDAO;
+    private final transient CategoryAthleteDAO categoryAthleteDAO;
+    private final transient CompetitionDAO competitionDAO;
+    private final transient EventDAO eventDAO;
 
     private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
     private final Div form = new Div();
@@ -55,16 +55,16 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
     private TextField resultTextField;
     private long competitionId;
 
-    public ResultCapturingView(ResultCalculator resultCalculator, ResultRepository resultRepository,
-                               CategoryAthleteRepository categoryAthleteRepository, AthleteRepository athleteRepository,
-                               CompetitionRepository competitionRepository, EventRepository eventRepository) {
+    public ResultCapturingView(ResultCalculator resultCalculator, ResultDAO resultDAO,
+                               CategoryAthleteDAO categoryAthleteDAO, AthleteDAO athleteDAO,
+                               CompetitionDAO competitionDAO, EventDAO eventDAO) {
         this.resultCalculator = resultCalculator;
-        this.resultRepository = resultRepository;
-        this.categoryAthleteRepository = categoryAthleteRepository;
-        this.competitionRepository = competitionRepository;
-        this.eventRepository = eventRepository;
+        this.resultDAO = resultDAO;
+        this.categoryAthleteDAO = categoryAthleteDAO;
+        this.competitionDAO = competitionDAO;
+        this.eventDAO = eventDAO;
 
-        createDataProvider(athleteRepository);
+        createDataProvider(athleteDAO);
 
         var filter = createFilter();
         add(filter);
@@ -94,11 +94,10 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         return filter;
     }
 
-    private void createDataProvider(AthleteRepository athleteRepository) {
-        final ConfigurableFilterDataProvider<Record4<Long, String, String, Long>, Void, String> dataProvider;
+    private void createDataProvider(AthleteDAO athleteDAO) {
         this.dataProvider = new CallbackDataProvider<>(
             query -> {
-                var athletes = athleteRepository.getAthletes(competitionId, createCondition(query), query.getOffset(), query.getLimit());
+                var athletes = athleteDAO.getAthletes(competitionId, createCondition(query), query.getOffset(), query.getLimit());
                 if (athletes.size() == 1) {
                     grid.select(athletes.getFirst());
                     if (resultTextField != null) {
@@ -108,7 +107,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 return athletes.stream();
             },
             (Query<Record4<Long, String, String, Long>, String> query) -> {
-                int count = athleteRepository.countAthletes(competitionId, createCondition(query));
+                int count = athleteDAO.countAthletes(competitionId, createCondition(query));
                 if (count == 0) {
                     form.removeAll();
                 }
@@ -125,7 +124,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
             var formLayout = new FormLayout();
             form.add(formLayout);
 
-            var events = eventRepository.findByCategoryIdOrderByPosition(event.getValue().get(CATEGORY.ID));
+            var events = eventDAO.findByCategoryIdOrderByPosition(event.getValue().get(CATEGORY.ID));
 
             boolean first = true;
             int position = 0;
@@ -145,7 +144,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                 points.setEnabled(false);
                 formLayout.add(points);
 
-                var optionalResultRecord = resultRepository.getResults(competitionId,
+                var optionalResultRecord = resultDAO.getResults(competitionId,
                     event.getValue().get(ATHLETE.ID), event.getValue().get(CATEGORY.ID),
                     eventRecord.getId());
 
@@ -170,7 +169,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     finalResultRecord.setPoints(resultCalculator.calculatePoints(eventRecord, resultValue));
                     points.setValue(finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
 
-                    resultRepository.save(finalResultRecord);
+                    resultDAO.save(finalResultRecord);
                 });
                 position++;
             }
@@ -178,13 +177,13 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
             var dnf = new Checkbox(getTranslation("Dnf"));
             dnf.addValueChangeListener(e -> {
                 try {
-                    categoryAthleteRepository.setDnf(event.getValue().get(ATHLETE.ID), event.getValue().get(CATEGORY.ID), e.getValue());
+                    categoryAthleteDAO.setDnf(event.getValue().get(ATHLETE.ID), event.getValue().get(CATEGORY.ID), e.getValue());
                 } catch (IllegalStateException ex) {
                     Notification.show(getTranslation("Set.dnf.unsuccessful"), 6000, Notification.Position.TOP_END);
                 }
             });
 
-            categoryAthleteRepository.findById(
+            categoryAthleteDAO.findById(
                     new CategoryAthleteId(event.getValue().get(CATEGORY.ID), event.getValue().get(ATHLETE.ID)))
                 .ifPresent(categoryAthleteRecord -> dnf.setValue(categoryAthleteRecord.getDnf()));
 
@@ -200,7 +199,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
                     ev -> {
                         dnf.setValue(false);
 
-                        resultRepository.delete(
+                        resultDAO.delete(
                             RESULT.ATHLETE_ID.eq(event.getValue().get(ATHLETE.ID))
                                 .and(RESULT.COMPETITION_ID.eq(competitionId)));
 
@@ -213,7 +212,6 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         }
     }
 
-    @SuppressWarnings("DuplicatedCode")
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
@@ -231,7 +229,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
     @Override
     public String getPageTitle() {
-        return competitionRepository.findProjectionById(competitionId)
+        return competitionDAO.findProjectionById(competitionId)
             .map(stringStringRecord2 -> "%s | %s - %s".formatted(
                 getTranslation("Enter.Results"),
                 stringStringRecord2.get(COMPETITION.series().NAME),

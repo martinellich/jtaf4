@@ -4,7 +4,7 @@ import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.configuration.security.SecurityContext;
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.domain.OrganizationRepository;
+import ch.jtaf.domain.OrganizationDAO;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.OrganizationDialog;
 import com.vaadin.flow.component.UI;
@@ -31,29 +31,29 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final OrganizationRepository organizationRepository;
+    private final transient OrganizationDAO organizationDAO;
     private final transient SecurityContext securityContext;
 
     private Grid<OrganizationRecord> grid;
     private final OrganizationDialog dialog;
 
-    public OrganizationsView(OrganizationRepository organizationRepository, OrganizationProvider organizationProvider,
+    public OrganizationsView(OrganizationDAO organizationDAO, OrganizationProvider organizationProvider,
                              SecurityContext securityContext) {
-        this.organizationRepository = organizationRepository;
+        this.organizationDAO = organizationDAO;
         this.securityContext = securityContext;
 
         setHeightFull();
 
-        dialog = new OrganizationDialog(getTranslation("Organization"), organizationRepository);
+        dialog = new OrganizationDialog(getTranslation("Organization"), organizationDAO);
 
-        createGrid(organizationRepository, organizationProvider, securityContext);
+        createGrid(organizationDAO, organizationProvider, securityContext);
 
         loadData(null);
 
         add(grid);
     }
 
-    private Grid<OrganizationRecord> createGrid(OrganizationRepository organizationRepository, OrganizationProvider organizationProvider, SecurityContext securityContext) {
+    private void createGrid(OrganizationDAO organizationDAO, OrganizationProvider organizationProvider, SecurityContext securityContext) {
         var add = new Button(getTranslation("Add"));
         add.setId("add-button");
         add.addClickListener(event -> {
@@ -89,7 +89,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
                     getTranslation("Are.you.sure"),
                     getTranslation("Delete"), e -> {
                     try {
-                        organizationRepository.deleteWithUsers(organizationRecord);
+                        organizationDAO.deleteWithUsers(organizationRecord);
 
                         loadData(null);
                     } catch (DataAccessException ex) {
@@ -105,15 +105,14 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         }).setTextAlign(ColumnTextAlign.END).setHeader(add).setAutoWidth(true).setKey("edit-column");
 
         grid.addItemClickListener(event -> dialog.open(event.getItem(), this::loadData));
-        return grid;
     }
 
     private void loadData(OrganizationRecord organizationRecord) {
         if (organizationRecord != null) {
-            organizationRepository.createOrganizationUser(securityContext.getUsername(), organizationRecord);
+            organizationDAO.createOrganizationUser(securityContext.getUsername(), organizationRecord);
         }
 
-        var organizations = organizationRepository.findByUsername(securityContext.getUsername());
+        var organizations = organizationDAO.findByUsername(securityContext.getUsername());
         grid.setItems(organizations);
     }
 

@@ -2,7 +2,7 @@ package ch.jtaf.domain;
 
 import ch.jtaf.db.tables.CategoryEvent;
 import ch.jtaf.db.tables.records.CategoryEventRecord;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
@@ -12,9 +12,9 @@ import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
 
 @Repository
-public class CategoryEventRepository extends JooqRepository<CategoryEvent, CategoryEventRecord, CategoryEventId> {
+public class CategoryEventDAO extends JooqDAO<CategoryEvent, CategoryEventRecord, CategoryEventId> {
 
-    public CategoryEventRepository(DSLContext dslContext) {
+    public CategoryEventDAO(DSLContext dslContext) {
         super(dslContext,
             CategoryEvent.CATEGORY_EVENT);
     }

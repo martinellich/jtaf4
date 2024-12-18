@@ -2,7 +2,7 @@ package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.ui.component.JooqDataProviderProducer;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import org.jooq.Condition;
@@ -20,16 +20,16 @@ public abstract class ProtectedGridView<R extends UpdatableRecord<R>> extends Pr
 
     final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
     final Grid<R> grid;
-    protected final JooqRepository<?, R, ?> jooqRepository;
+    protected final transient JooqDAO<?, R, ?> JooqDAO;
 
-    protected ProtectedGridView(JooqRepository<?, R, ?> jooqRepository, OrganizationProvider organizationProvider, Table<R> table) {
+    protected ProtectedGridView(JooqDAO<?, R, ?> JooqDAO, OrganizationProvider organizationProvider, Table<R> table) {
         super(organizationProvider);
-        this.jooqRepository = jooqRepository;
+        this.JooqDAO = JooqDAO;
 
         grid = new Grid<>();
         grid.setHeightFull();
 
-        dataProvider = new JooqDataProviderProducer<>(jooqRepository, table, this::initialCondition, this::initialSort).getDataProvider();
+        dataProvider = new JooqDataProviderProducer<>(JooqDAO, table, this::initialCondition, this::initialSort).getDataProvider();
 
         grid.setItems(dataProvider);
 

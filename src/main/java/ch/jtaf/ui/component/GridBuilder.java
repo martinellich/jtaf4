@@ -2,7 +2,7 @@ package ch.jtaf.ui.component;
 
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.EditDialog;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -21,16 +21,16 @@ public class GridBuilder {
     private GridBuilder() {
     }
 
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqRepository<?, R, ?> jooqRepository,
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> JooqDAO,
                                                                                              Grid<R> grid,
                                                                                              EditDialog<R> dialog,
                                                                                              Consumer<R> afterSave,
                                                                                              Supplier<R> onNewRecord,
                                                                                              Runnable afterDelete) {
-        addActionColumnAndSetSelectionListener(jooqRepository, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
+        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
     }
 
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqRepository<?, R, ?> jooqRepository,
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> JooqDAO,
                                                                                              Grid<R> grid,
                                                                                              EditDialog<R> dialog,
                                                                                              Consumer<R> afterSave,
@@ -55,7 +55,7 @@ public class GridBuilder {
                         grid.getTranslation("Are.you.sure"),
                         grid.getTranslation("Delete"), e -> {
                         try {
-                            jooqRepository.delete(updatableRecord);
+                            JooqDAO.delete(updatableRecord);
                             afterDelete.run();
                         } catch (DataAccessException ex) {
                             Notification.show(ex.getMessage());

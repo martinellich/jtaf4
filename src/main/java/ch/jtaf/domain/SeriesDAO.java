@@ -2,7 +2,7 @@ package ch.jtaf.domain;
 
 import ch.jtaf.db.tables.Series;
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
@@ -18,9 +18,9 @@ import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.select;
 
 @Repository
-public class SeriesRepository extends JooqRepository<Series, SeriesRecord, Long> {
+public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
 
-    public SeriesRepository(DSLContext dslContext) {
+    public SeriesDAO(DSLContext dslContext) {
         super(dslContext, SERIES);
     }
 

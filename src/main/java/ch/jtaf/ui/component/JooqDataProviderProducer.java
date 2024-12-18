@@ -1,6 +1,6 @@
 package ch.jtaf.ui.component;
 
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.*;
 import org.jooq.*;
@@ -15,14 +15,14 @@ import static org.jooq.impl.DSL.upper;
 
 public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
 
-    private final JooqRepository<?, R, ?> jooqRepository;
+    private final JooqDAO<?, R, ?> JooqDAO;
     private final Table<R> table;
     private final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
     private final Supplier<Condition> initialCondition;
     private final Supplier<List<OrderField<?>>> initialSort;
 
-    public JooqDataProviderProducer(JooqRepository<?, R, ?> jooqRepository, Table<R> table, Supplier<Condition> initialCondition, Supplier<List<OrderField<?>>> initialSort) {
-        this.jooqRepository = jooqRepository;
+    public JooqDataProviderProducer(JooqDAO<?, R, ?> JooqDAO, Table<R> table, Supplier<Condition> initialCondition, Supplier<List<OrderField<?>>> initialSort) {
+        this.JooqDAO = JooqDAO;
         this.table = table;
         this.initialCondition = initialCondition;
         this.initialSort = initialSort;
@@ -35,13 +35,13 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
     }
 
     private Stream<R> fetch(Query<R, String> query) {
-        List<R> all = jooqRepository.findAll(createCondition(query), query.getOffset(), query.getLimit(),
+        List<R> all = JooqDAO.findAll(createCondition(query), query.getOffset(), query.getLimit(),
             createOrderBy(query));
         return all.stream();
     }
 
     private int count(Query<R, String> query) {
-        return jooqRepository.count(createCondition(query));
+        return JooqDAO.count(createCondition(query));
     }
 
     private Condition createCondition(Query<R, String> query) {

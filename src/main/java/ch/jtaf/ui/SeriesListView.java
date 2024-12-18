@@ -2,8 +2,8 @@ package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.SeriesRecord;
-import ch.jtaf.domain.CategoryAthleteRepository;
-import ch.jtaf.domain.SeriesRepository;
+import ch.jtaf.domain.CategoryAthleteDAO;
+import ch.jtaf.domain.SeriesDAO;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.util.LogoUtil;
 import com.vaadin.flow.component.UI;
@@ -29,18 +29,18 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public SeriesListView(SeriesRepository seriesRepository, OrganizationProvider organizationProvider,
-                          CategoryAthleteRepository categoryAthleteRepository) {
-        super(seriesRepository, organizationProvider, SERIES);
+    public SeriesListView(SeriesDAO seriesDAO, OrganizationProvider organizationProvider,
+                          CategoryAthleteDAO categoryAthleteDAO) {
+        super(seriesDAO, organizationProvider, SERIES);
 
         setHeightFull();
 
-        createGrid(seriesRepository, categoryAthleteRepository);
+        createGrid(seriesDAO, categoryAthleteDAO);
 
         add(grid);
     }
 
-    private void createGrid(SeriesRepository seriesRepository, CategoryAthleteRepository categoryAthleteRepository) {
+    private void createGrid(SeriesDAO seriesDAO, CategoryAthleteDAO categoryAthleteDAO) {
         var add = new Button(getTranslation("Add"));
         add.setId("add-series");
         add.addClickListener(event -> UI.getCurrent().navigate(SeriesView.class));
@@ -50,7 +50,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo")).setAutoWidth(true);
         grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(SERIES.NAME.getName());
 
-        grid.addColumn(seriesRecord -> categoryAthleteRepository.countAthletesBySeriesId(seriesRecord.getId()))
+        grid.addColumn(seriesRecord -> categoryAthleteDAO.countAthletesBySeriesId(seriesRecord.getId()))
             .setHeader(getTranslation("Number.of.Athletes")).setAutoWidth(true);
 
         grid.addComponentColumn(seriesRecord -> {
@@ -76,7 +76,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
                     getTranslation("Are.you.sure"),
                     getTranslation("Delete"), e -> {
                     try {
-                        seriesRepository.deleteSeries(seriesRecord.getId());
+                        seriesDAO.deleteSeries(seriesRecord.getId());
                         refreshAll();
                     } catch (DataAccessException ex) {
                         Notification.show(ex.getMessage());

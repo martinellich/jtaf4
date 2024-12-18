@@ -1,7 +1,7 @@
 package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.domain.OrganizationRepository;
+import ch.jtaf.domain.OrganizationDAO;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -12,8 +12,8 @@ public class OrganizationDialog extends EditDialog<OrganizationRecord> {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public OrganizationDialog(String title, OrganizationRepository organizationRepository) {
-        super(title, "600px", organizationRepository);
+    public OrganizationDialog(String title, OrganizationDAO organizationDAO) {
+        super(title, "600px", organizationDAO);
     }
 
     @Override

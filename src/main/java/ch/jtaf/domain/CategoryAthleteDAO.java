@@ -3,7 +3,7 @@ package ch.jtaf.domain;
 import ch.jtaf.db.tables.CategoryAthlete;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.CategoryAthleteRecord;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
@@ -14,9 +14,9 @@ import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static org.jooq.impl.DSL.select;
 
 @Repository
-public class CategoryAthleteRepository extends JooqRepository<CategoryAthlete, CategoryAthleteRecord, CategoryAthleteId> {
+public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthleteRecord, CategoryAthleteId> {
 
-    public CategoryAthleteRepository(DSLContext dslContext) {
+    public CategoryAthleteDAO(DSLContext dslContext) {
         super(dslContext, CATEGORY_ATHLETE);
     }
 
@@ -56,11 +56,11 @@ public class CategoryAthleteRepository extends JooqRepository<CategoryAthlete, C
     }
 
     @Transactional
-    public void setDnf(Long athleteId, Long categoreyId, boolean dnf) {
+    public void setDnf(Long athleteId, Long categoryId, boolean dnf) {
         int updatedRows = dslContext.update(CATEGORY_ATHLETE)
             .set(CATEGORY_ATHLETE.DNF, dnf)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteId))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(categoreyId))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.eq(categoryId))
             .execute();
         if (updatedRows != 1) {
             throw new IllegalStateException("Dnf update failed");

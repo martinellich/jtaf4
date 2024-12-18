@@ -2,7 +2,7 @@ package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.domain.EventRepository;
+import ch.jtaf.domain.EventDAO;
 import ch.jtaf.ui.dialog.EventDialog;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
@@ -21,12 +21,12 @@ public class EventsView extends ProtectedGridView<EventRecord> {
     private static final long serialVersionUID = 1L;
     private final EventDialog dialog;
 
-    public EventsView(EventRepository eventRepository, OrganizationProvider organizationProvider) {
-        super(eventRepository, organizationProvider, EVENT);
+    public EventsView(EventDAO eventDAO, OrganizationProvider organizationProvider) {
+        super(eventDAO, organizationProvider, EVENT);
 
         setHeightFull();
 
-        dialog = new EventDialog(getTranslation("Event"), eventRepository);
+        dialog = new EventDialog(getTranslation("Event"), eventDAO);
 
         createGrid();
         add(grid);
@@ -43,7 +43,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
         grid.addColumn(EventRecord::getB).setHeader("B").setAutoWidth(true);
         grid.addColumn(EventRecord::getC).setHeader("C").setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(jooqRepository
+        addActionColumnAndSetSelectionListener(JooqDAO
             , grid, dialog, eventRecord -> refreshAll(), () -> {
             var newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());

@@ -2,7 +2,7 @@ package ch.jtaf.domain;
 
 import ch.jtaf.db.tables.Event;
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -14,9 +14,9 @@ import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
 
 @Repository
-public class EventRepository extends JooqRepository<Event, EventRecord, Long> {
+public class EventDAO extends JooqDAO<Event, EventRecord, Long> {
 
-    public EventRepository(DSLContext dslContext) {
+    public EventDAO(DSLContext dslContext) {
         super(dslContext, EVENT);
     }
 

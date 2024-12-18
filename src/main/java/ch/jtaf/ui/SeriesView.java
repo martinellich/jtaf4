@@ -54,14 +54,14 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     private static final String BLANK = "_blank";
 
-    private final CompetitionRepository competitionRepository;
-    private final CategoryRepository categoryRepository;
-    private final AthleteRepository athleteRepository;
-    private final CategoryEventRepository categoryEventRepository;
-    private final ClubRepository clubRepository;
-    private final EventRepository eventRepository;
-    private final SeriesRepository seriesRepository;
-    private final CategoryAthleteRepository categoryAthleteRepository;
+    private final transient CompetitionDAO competitionDAO;
+    private final transient CategoryDAO categoryDAO;
+    private final transient AthleteDAO athleteDAO;
+    private final transient CategoryEventDAO categoryEventDAO;
+    private final transient ClubDAO clubDAO;
+    private final transient EventDAO eventDAO;
+    private final transient SeriesDAO seriesDAO;
+    private final transient CategoryAthleteDAO categoryAthleteDAO;
     private final transient NumberAndSheetsService numberAndSheetsService;
 
     private Button copyCategories;
@@ -78,22 +78,22 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     private Map<Long, ClubRecord> clubRecordMap;
 
-    public SeriesView(CompetitionRepository competitionRepository, NumberAndSheetsService numberAndSheetsService,
-                      OrganizationProvider organizationProvider, CategoryRepository categoryRepository,
-                      CategoryEventRepository categoryEventRepository, AthleteRepository athleteRepository, ClubRepository clubRepository,
-                      EventRepository eventRepository, SeriesRepository seriesRepository, CategoryAthleteRepository categoryAthleteRepository) {
+    public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
+                      OrganizationProvider organizationProvider, CategoryDAO categoryDAO,
+                      CategoryEventDAO categoryEventDAO, AthleteDAO athleteDAO, ClubDAO clubDAO,
+                      EventDAO eventDAO, SeriesDAO seriesDAO, CategoryAthleteDAO categoryAthleteDAO) {
         super(organizationProvider);
-        this.competitionRepository = competitionRepository;
+        this.competitionDAO = competitionDAO;
         this.numberAndSheetsService = numberAndSheetsService;
-        this.categoryRepository = categoryRepository;
-        this.categoryEventRepository = categoryEventRepository;
-        this.athleteRepository = athleteRepository;
-        this.clubRepository = clubRepository;
-        this.eventRepository = eventRepository;
-        this.seriesRepository = seriesRepository;
-        this.categoryAthleteRepository = categoryAthleteRepository;
+        this.categoryDAO = categoryDAO;
+        this.categoryEventDAO = categoryEventDAO;
+        this.athleteDAO = athleteDAO;
+        this.clubDAO = clubDAO;
+        this.eventDAO = eventDAO;
+        this.seriesDAO = seriesDAO;
+        this.categoryAthleteDAO = categoryAthleteDAO;
 
-        createSeriesForm(organizationProvider, seriesRepository);
+        createSeriesForm(organizationProvider, seriesDAO);
 
         sectionTabs.setWidthFull();
         add(sectionTabs);
@@ -130,7 +130,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         });
     }
 
-    private void createSeriesForm(OrganizationProvider organizationProvider, SeriesRepository seriesRepository) {
+    private void createSeriesForm(OrganizationProvider organizationProvider, SeriesDAO seriesDAO) {
         var formLayout = new FormLayout();
         add(formLayout);
 
@@ -153,9 +153,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
             try {
                 var fileName = event.getFileName();
                 var inputStream = buffer.getInputStream(fileName);
-                SeriesRecord seriesRecord = binder.getBean();
-                seriesRecord.setLogo(inputStream.readAllBytes());
-                seriesRepository.save(seriesRecord);
+                SeriesRecord recordToSave = binder.getBean();
+                recordToSave.setLogo(inputStream.readAllBytes());
+                seriesDAO.save(recordToSave);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -190,8 +190,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         save.setId("save-series");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            SeriesRecord seriesRecord = binder.getBean();
-            seriesRepository.save(seriesRecord);
+            seriesDAO.save(binder.getBean());
 
             Notification.show(getTranslation("Series.saved"), 6000, Notification.Position.TOP_END);
         });
@@ -202,7 +201,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         copyCategories.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         copyCategories.addClickListener(event -> {
             if (seriesRecord != null) {
-                var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(), seriesRecord.getId(), seriesRepository);
+                var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(), seriesRecord.getId(), seriesDAO);
                 dialog.addAfterCopyListener(e -> refreshAll());
                 dialog.open();
             }
@@ -212,16 +211,16 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     @Override
     protected void refreshAll() {
-        var competitionRecords = competitionRepository.findBySeriesId(seriesRecord.getId());
+        var competitionRecords = competitionDAO.findBySeriesId(seriesRecord.getId());
         competitionsGrid.setItems(competitionRecords);
 
-        var categoryRecords = categoryRepository.findBySeriesId(seriesRecord.getId());
+        var categoryRecords = categoryDAO.findBySeriesId(seriesRecord.getId());
         categoriesGrid.setItems(categoryRecords);
 
-        var clubs = clubRepository.findByOrganizationId(organizationProvider.getOrganization().getId());
+        var clubs = clubDAO.findByOrganizationId(organizationProvider.getOrganization().getId());
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
-        var athleteRecords = athleteRepository.findBySeriesId(seriesRecord.getId());
+        var athleteRecords = athleteDAO.findBySeriesId(seriesRecord.getId());
         athletesGrid.setItems(athleteRecords);
     }
 
@@ -233,7 +232,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
             seriesRecord = SERIES.newRecord();
             seriesRecord.setOrganizationId(organizationRecord.getId());
         } else {
-            seriesRecord = seriesRepository.findById(seriesId).orElse(null);
+            seriesRecord = seriesDAO.findById(seriesId).orElse(null);
         }
         binder.setBean(seriesRecord);
 
@@ -241,7 +240,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
             // Series must be saved first
             copyCategories.setVisible(false);
         } else {
-            if (categoryRepository.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
+            if (categoryDAO.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
                 // Copy is only possible if no categories are added
                 copyCategories.setVisible(false);
             }
@@ -254,7 +253,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
     }
 
     private void createCompetitionsSection() {
-        var dialog = new CompetitionDialog(getTranslation("Category"), competitionRepository);
+        var dialog = new CompetitionDialog(getTranslation("Category"), competitionDAO);
 
         competitionsGrid = new Grid<>();
         competitionsGrid.setId("competitions-grid");
@@ -298,7 +297,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
             return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
         })).setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(competitionRepository, competitionsGrid, dialog, competitionRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(competitionDAO, competitionsGrid, dialog, competitionRecord -> refreshAll(), () -> {
             var newRecord = COMPETITION.newRecord();
             newRecord.setMedalPercentage(0);
             newRecord.setSeriesId(seriesRecord.getId());
@@ -307,7 +306,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
     }
 
     private void createCategoriesSection() {
-        var dialog = new CategoryDialog(getTranslation("Category"), categoryRepository, categoryEventRepository, eventRepository,
+        var dialog = new CategoryDialog(getTranslation("Category"), categoryDAO, categoryEventDAO, eventDAO,
             organizationProvider.getOrganization().getId());
 
         categoriesGrid = new Grid<>();
@@ -329,7 +328,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
             return new HorizontalLayout(sheet);
         })).setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(categoryRepository, categoriesGrid, dialog, categoryRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(), () -> {
             var newRecord = CATEGORY.newRecord();
             newRecord.setSeriesId(seriesRecord.getId());
             return newRecord;
@@ -351,7 +350,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         var assign = new Button(getTranslation("Assign.Athlete"));
         assign.setId("assign-athlete");
         assign.addClickListener(event -> {
-            SearchAthleteDialog dialog = new SearchAthleteDialog(athleteRepository, clubRepository, organizationProvider,
+            SearchAthleteDialog dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider,
                 organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
             dialog.open();
         });
@@ -376,14 +375,14 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
         var athleteRecord = athleteSelectedEvent.getAthleteRecord();
-        categoryAthleteRepository.createCategoryAthlete(athleteRecord, seriesRecord.getId());
+        categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId());
 
         refreshAll();
     }
 
     private void removeAthleteFromSeries(UpdatableRecord<?> updatableRecord) {
         var athleteRecord = (AthleteRecord) updatableRecord;
-        categoryAthleteRepository.deleteCategoryAthlete(athleteRecord, seriesRecord.getId());
+        categoryAthleteDAO.deleteCategoryAthlete(athleteRecord, seriesRecord.getId());
         refreshAll();
     }
 

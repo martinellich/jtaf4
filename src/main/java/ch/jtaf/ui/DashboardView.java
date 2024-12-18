@@ -1,10 +1,10 @@
 package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.SecurityContext;
+import ch.jtaf.domain.CompetitionDAO;
 import ch.jtaf.domain.CompetitionRankingService;
-import ch.jtaf.domain.CompetitionRepository;
+import ch.jtaf.domain.SeriesDAO;
 import ch.jtaf.domain.SeriesRankingService;
-import ch.jtaf.domain.SeriesRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -39,7 +39,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     private static final String BUTTON_WIDTH = "220px";
 
     public DashboardView(SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService,
-                         SeriesRepository seriesRepository, CompetitionRepository competitionRepository,
+                         SeriesDAO seriesDAO, CompetitionDAO competitionDAO,
                          SecurityContext securityContext) {
         getClassNames().add("dashboard");
 
@@ -47,7 +47,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         add(verticalLayout);
 
         int seriesIndex = 1;
-        var seriesRecords = seriesRepository.findAllOrderByCompetitionDate();
+        var seriesRecords = seriesDAO.findAllOrderByCompetitionDate();
         for (var series : seriesRecords) {
             HorizontalLayout seriesLayout = new HorizontalLayout();
             seriesLayout.getClassNames().add("series-layout");
@@ -101,7 +101,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             buttonLayout.add(clubRankingDiv);
 
             int competitionIndex = 1;
-            var competitionRecords = competitionRepository.findBySeriesId(series.getId());
+            var competitionRecords = competitionDAO.findBySeriesId(series.getId());
             for (var competition : competitionRecords) {
                 var competitionLayout = new HorizontalLayout();
                 competitionLayout.getClassNames().add("competition-layout");

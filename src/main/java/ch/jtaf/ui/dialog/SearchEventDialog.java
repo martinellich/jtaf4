@@ -2,7 +2,7 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.domain.EventRepository;
+import ch.jtaf.domain.EventDAO;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -39,7 +39,7 @@ public class SearchEventDialog extends Dialog {
 
     private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
-    public SearchEventDialog(EventRepository eventRepository, long organizationId, CategoryRecord categoryRecord,
+    public SearchEventDialog(EventDAO eventDAO, long organizationId, CategoryRecord categoryRecord,
                              ComponentEventListener<AssignEvent> assignEventListener) {
         setId("search-event-dialog");
 
@@ -66,10 +66,10 @@ public class SearchEventDialog extends Dialog {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
 
         CallbackDataProvider<EventRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
-            query -> eventRepository.findAllByOrganizationGenderCategory(
+            query -> eventDAO.findAllByOrganizationGenderCategory(
                 organizationId, categoryRecord.getGender(), categoryRecord.getId(), createCondition(query),
                 query.getOffset(), query.getLimit()).stream(),
-            query -> eventRepository.countByOrganizationGenderCategory(
+            query -> eventDAO.countByOrganizationGenderCategory(
                 organizationId, categoryRecord.getGender(), categoryRecord.getId(), createCondition(query)));
 
         dataProvider = callbackDataProvider.withConfigurableFilter();

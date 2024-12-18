@@ -2,7 +2,7 @@ package ch.jtaf.domain;
 
 import ch.jtaf.db.tables.Athlete;
 import ch.jtaf.db.tables.records.AthleteRecord;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record4;
@@ -18,9 +18,9 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static org.jooq.impl.DSL.select;
 
 @Repository
-public class AthleteRepository extends JooqRepository<Athlete, AthleteRecord, Long> {
+public class AthleteDAO extends JooqDAO<Athlete, AthleteRecord, Long> {
 
-    public AthleteRepository(DSLContext dslContext) {
+    public AthleteDAO(DSLContext dslContext) {
         super(dslContext, ATHLETE);
     }
 

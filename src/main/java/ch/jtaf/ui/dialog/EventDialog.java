@@ -1,7 +1,7 @@
 package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.EventRecord;
-import ch.jtaf.domain.EventRepository;
+import ch.jtaf.domain.EventDAO;
 import ch.jtaf.domain.EventType;
 import ch.jtaf.domain.Gender;
 import ch.jtaf.ui.validator.NotEmptyValidator;
@@ -18,8 +18,8 @@ public class EventDialog extends EditDialog<EventRecord> {
 
     private static final String MUST_BE_A_NUMBER = "Must.be.a.number";
 
-    public EventDialog(String title, EventRepository eventRepository) {
-        super(title, "600px", eventRepository);
+    public EventDialog(String title, EventDAO eventDAO) {
+        super(title, "600px", eventDAO);
     }
 
     @SuppressWarnings("DuplicatedCode")

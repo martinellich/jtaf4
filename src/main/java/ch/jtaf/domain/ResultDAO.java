@@ -2,7 +2,7 @@ package ch.jtaf.domain;
 
 import ch.jtaf.db.tables.Result;
 import ch.jtaf.db.tables.records.ResultRecord;
-import ch.martinelli.oss.jooqspring.JooqRepository;
+import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +11,9 @@ import java.util.Optional;
 import static ch.jtaf.db.tables.Result.RESULT;
 
 @Repository
-public class ResultRepository extends JooqRepository<Result, ResultRecord, Long> {
+public class ResultDAO extends JooqDAO<Result, ResultRecord, Long> {
 
-    public ResultRepository(DSLContext dslContext) {
+    public ResultDAO(DSLContext dslContext) {
         super(dslContext, RESULT);
     }
 

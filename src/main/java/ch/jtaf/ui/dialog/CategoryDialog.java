@@ -27,17 +27,19 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
     private final long organizationId;
-    private final CategoryEventRepository categoryEventRepository;
-    private final EventRepository eventRepository;
+
+    private final transient CategoryEventDAO categoryEventDAO;
+    private final transient EventDAO eventDAO;
 
     private Grid<CategoryEventVO> categoryEventsGrid;
 
-    public CategoryDialog(String title, CategoryRepository categoryRepository, CategoryEventRepository categoryEventRepository,
-                          EventRepository eventRepository, long organizationId) {
-        super(title, "1600px", categoryRepository);
-        this.categoryEventRepository = categoryEventRepository;
-        this.eventRepository = eventRepository;
+    public CategoryDialog(String title, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO,
+                          EventDAO eventDAO, long organizationId) {
+        super(title, "1600px", categoryDAO);
+        this.categoryEventDAO = categoryEventDAO;
+        this.eventDAO = eventDAO;
         this.organizationId = organizationId;
     }
 
@@ -104,7 +106,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
         addEvent.addClickListener(event -> {
-            SearchEventDialog dialog = new SearchEventDialog(eventRepository, organizationId, binder.getBean(), this::onAssignEvent);
+            SearchEventDialog dialog = new SearchEventDialog(eventDAO, organizationId, binder.getBean(), this::onAssignEvent);
             dialog.open();
         });
 
@@ -136,7 +138,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             .orElse(0);
         categoryEvent.setPosition(newPosition);
 
-        categoryEventRepository.save(categoryEvent);
+        categoryEventDAO.save(categoryEvent);
 
         categoryEventsGrid.setItems(getCategoryEvents());
         categoryEventsGrid.getDataProvider().refreshAll();
@@ -152,7 +154,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     private List<CategoryEventVO> getCategoryEvents() {
         CategoryRecord categoryRecord = binder.getBean();
         if (categoryRecord != null && categoryRecord.getId() != null) {
-            return categoryEventRepository.findAllByCategoryId(categoryRecord.getId());
+            return categoryEventDAO.findAllByCategoryId(categoryRecord.getId());
         } else {
             return Collections.emptyList();
         }
@@ -164,7 +166,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
             getTranslation("Confirm"),
             getTranslation("Are.you.sure"),
             getTranslation("Remove"), e -> {
-            categoryEventRepository.delete(
+            categoryEventDAO.delete(
                 CATEGORY_EVENT.CATEGORY_ID.eq(categoryEventVO.categoryId())
                     .and(CATEGORY_EVENT.EVENT_ID.eq(categoryEventVO.eventId())));
             categoryEventsGrid.setItems(getCategoryEvents());
