@@ -2,6 +2,7 @@ package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.configuration.security.SecurityContext;
+import ch.jtaf.ui.component.GoogleAnalytics;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
@@ -20,11 +21,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
 
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
+@EnableGoogleAnalytics("G-PH4RL4J6YT")
 public class MainLayout extends AppLayout implements BeforeEnterObserver{
 
     @Serial
@@ -56,6 +59,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         setPrimarySection(Section.DRAWER);
         addToNavbar(false, createHeaderContent());
         addToDrawer(createDrawerContent());
+
+        GoogleAnalytics analytics = new GoogleAnalytics("G-PH4RL4J6YT");
+        addToDrawer(analytics);
+
+        UI.getCurrent().addBeforeEnterListener(event -> {
+            analytics.sendPageView(event.getLocation().getPath());
+        });
     }
 
     private Component createHeaderContent() {
