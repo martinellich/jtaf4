@@ -2,6 +2,7 @@ package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.configuration.security.SecurityContext;
+import ch.jtaf.ui.component.GoogleAnalytics;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
@@ -58,6 +59,13 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         setPrimarySection(Section.DRAWER);
         addToNavbar(false, createHeaderContent());
         addToDrawer(createDrawerContent());
+
+        GoogleAnalytics analytics = new GoogleAnalytics("G-PH4RL4J6YT");
+        addToDrawer(analytics);
+
+        UI.getCurrent().addBeforeEnterListener(event -> {
+            analytics.sendPageView(event.getLocation().getPath());
+        });
     }
 
     private Component createHeaderContent() {
