@@ -9,43 +9,68 @@ import elemental.json.JsonObject;
 public class GoogleAnalytics extends Component implements HasSize {
 
     public GoogleAnalytics(String measurementId) {
-        getElement().executeJs("""
-            (function (w, d, s, l, i) {
-                w[l] = w[l] || [];
-                w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js'});
-                var f = d.getElementsByTagName(s)[0];
-                var j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-                j.async = true;
-                j.src = 'https://www.googletagmanager.com/gtag/js?id=' + i + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', '$0');
-            window.dataLayer = window.dataLayer || [];
-            
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            
-            gtag('js', new Date());
-            gtag('config', '$0');
-            """, measurementId
+        getElement().executeJs(
+            """
+                (function(browserWindow, htmlDocument, scriptTagName, analyticsLayerName, analyticsId) {
+                    // Initialize analytics data layer array if it doesn't exist
+                    browserWindow[analyticsLayerName] = browserWindow[analyticsLayerName] || [];
+                
+                    // Add initial GTM event with timestamp
+                    browserWindow[analyticsLayerName].push({
+                        'gtm.start': new Date().getTime(),
+                        event: 'gtm.js'
+                    });
+                
+                    // Get reference to first script tag in document
+                    var firstScriptTag = htmlDocument.getElementsByTagName(scriptTagName)[0];
+                
+                    // Create new script element for Analytics
+                    var analyticsScript = htmlDocument.createElement(scriptTagName);
+                
+                    // Set custom layer name if not using default 'dataLayer'
+                    var customLayerParam = analyticsLayerName != 'dataLayer' ? '&l=' + analyticsLayerName : '';
+                
+                    // Configure script loading
+                    analyticsScript.async = true;
+                    analyticsScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId + customLayerParam;
+                
+                    // Insert Analytics script into document
+                    firstScriptTag.parentNode.insertBefore(analyticsScript, firstScriptTag);
+                
+                })(window, document, 'script', 'dataLayer', '$0');
+                
+                // Ensure dataLayer exists
+                window.dataLayer = window.dataLayer || [];
+                
+                // Function to send data to Analytics
+                function sendToAnalytics() {
+                    window.dataLayer.push(arguments);
+                }
+                
+                // Initialize Analytics with timestamp
+                sendToAnalytics('js', new Date());
+                
+                // Configure Analytics with measurement ID
+                sendToAnalytics('config', '$0');
+                """, measurementId
         );
     }
 
     public void sendPageView(String pageName) {
         getElement().executeJs("""
             gtag('event', 'page_view', {
-                'page_title': $0,
-                'page_location': window.location.href,
-                'page_path': window.location.pathname
+             'page_title': $0,                      // The page name you pass
+             'page_location': window.location.href, // Full URL
+             'page_path': window.location.pathname  // URL path only
             });
             """, pageName
         );
     }
 
     public void sendEvent(String eventName, JsonObject eventParams) {
-        getElement().executeJs(
-            "gtag('event', $0, $1);",
-            eventName, eventParams
+        getElement().executeJs("""
+            gtag('event', $0, $1); // $0 is event name, $1 is parameters object
+            """, eventName, eventParams
         );
     }
 }
