@@ -228,6 +228,13 @@
             <version>${archunit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.mfvanek</groupId>
+            <artifactId>pg-index-health-test-starter</artifactId>
+            <version>0.14.4</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
