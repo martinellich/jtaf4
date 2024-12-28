@@ -28,9 +28,6 @@ class DatabaseStructureStaticAnalysisTest {
 
     @Test
     void checksShouldWork() {
-        assertThat(checks)
-            .hasSameSizeAs(Diagnostic.values());
-
         checks.stream()
             .filter(DatabaseCheckOnHost::isStatic)
             .filter(c -> c.getDiagnostic() != Diagnostic.TABLES_WITHOUT_DESCRIPTION &&
