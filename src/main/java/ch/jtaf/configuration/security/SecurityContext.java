@@ -50,10 +50,26 @@ public final class SecurityContext {
         return isUserLoggedIn(SecurityContextHolder.getContext().getAuthentication());
     }
 
+    /**
+     * Determines if a user is currently logged in based on the provided authentication object.
+     *
+     * @param authentication the {@link Authentication} object representing the current security context
+     * @return true if the user is authenticated and not anonymous, false otherwise
+     */
     private boolean isUserLoggedIn(Authentication authentication) {
         return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
+    /**
+     * Logs out the currently authenticated user.
+     * <p>
+     * This method performs the following tasks:
+     * - Invalidates the current authentication context, effectively logging out the user.
+     * - Removes the "remember-me" cookie by creating a new cookie with the same name and setting its value to null
+     * and its max age to zero. This ensures the cookie is deleted from the client.
+     * - Sets the path for the cookie based on the application's context path to ensure proper deletion.
+     * - Adds the updated cookie to the HTTP response to propagate the change to the client.
+     */
     public void logout() {
         var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
