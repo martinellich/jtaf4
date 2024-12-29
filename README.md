@@ -36,5 +36,5 @@ JTAF is available as Software-as-a-Service (SaaS) in the cloud! https://www.jtaf
 
 ## License
 
-JTAF is developed by Simon Martinelli from [Martinelli LLC](https://martinelli.ch) and is open and free software under Apache
-License, Version 2: http://www.apache.org/licenses/LICENSE-2.0.html
+JTAF is developed by Simon Martinelli from [Martinelli LLC](https://martinelli.ch) and is open and free software under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+
