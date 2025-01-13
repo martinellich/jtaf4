@@ -59,8 +59,11 @@ class AthletesViewTest extends KaribuTest {
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Test");
 
         // Remove athlete
-        GridKt._getCellComponent(athletesGrid, 0, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(athletesGrid, 0, "edit-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -92,4 +95,5 @@ class AthletesViewTest extends KaribuTest {
         _sort(athletesGrid, new QuerySortOrder(ATHLETE.LAST_NAME.getName(), SortDirection.DESCENDING));
         assertThat(GridKt._get(athletesGrid, 0).getLastName()).isEqualTo("Zumstein");
     }
+
 }

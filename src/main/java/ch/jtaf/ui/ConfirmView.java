@@ -12,7 +12,9 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 public class ConfirmView extends VerticalLayout implements HasDynamicTitle, BeforeEnterObserver {
 
     private final transient UserService userService;
+
     private final VerticalLayout okDiv;
+
     private final H1 failure;
 
     public ConfirmView(UserService userService) {
@@ -37,7 +39,8 @@ public class ConfirmView extends VerticalLayout implements HasDynamicTitle, Befo
             if (confirmed) {
                 okDiv.setVisible(true);
                 failure.setVisible(false);
-            } else {
+            }
+            else {
                 okDiv.setVisible(false);
                 failure.setVisible(true);
             }
@@ -48,4 +51,5 @@ public class ConfirmView extends VerticalLayout implements HasDynamicTitle, Befo
     public String getPageTitle() {
         return getTranslation("Confirm");
     }
+
 }

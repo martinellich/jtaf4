@@ -26,6 +26,7 @@ public class NumbersReport extends AbstractReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(NumbersReport.class);
 
     private static final float FONT_SIZE_INFO = 12f;
+
     private static final float FONT_SIZE_TEXT = 90f;
 
     private final List<NumbersAndSheetsAthlete> athletes;
@@ -62,7 +63,8 @@ public class NumbersReport extends AbstractReport {
                 number++;
             }
             if (number % 2 == 0) {
-                // An even number indicates an odd number of athletes so we need to add an empty cell to complete the row
+                // An even number indicates an odd number of athletes so we need to add an
+                // empty cell to complete the row
                 addEmptyCell(table);
             }
 
@@ -71,14 +73,15 @@ public class NumbersReport extends AbstractReport {
             document.close();
             pdfWriter.flush();
             return byteArrayOutputStream.toByteArray();
-        } catch (DocumentException | IOException e) {
+        }
+        catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
     }
 
     private PdfPTable createMainTable() {
-        var table = new PdfPTable(new float[]{10f, 1.8f, 10f});
+        var table = new PdfPTable(new float[] { 10f, 1.8f, 10f });
         table.setWidthPercentage(100);
         return table;
     }
@@ -93,9 +96,7 @@ public class NumbersReport extends AbstractReport {
         var pdfPTable = new PdfPTable(1);
         pdfPTable.setWidthPercentage(100);
 
-        var cellId = new PdfPCell(
-            new Phrase(String.valueOf(number),
-                FontFactory.getFont(HELVETICA, FONT_SIZE_TEXT)));
+        var cellId = new PdfPCell(new Phrase(String.valueOf(number), FontFactory.getFont(HELVETICA, FONT_SIZE_TEXT)));
         cellId.setBorder(0);
         cellId.setMinimumHeight(cmToPixel(2.5f));
         cellId.setHorizontalAlignment(ALIGN_CENTER);

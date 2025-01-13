@@ -19,6 +19,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
     private final EventDialog dialog;
 
     public EventsView(EventDAO eventDAO, OrganizationProvider organizationProvider) {
@@ -35,16 +36,31 @@ public class EventsView extends ProtectedGridView<EventRecord> {
     private void createGrid() {
         grid.setId("events-grid");
 
-        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setAutoWidth(true).setKey(EVENT.ABBREVIATION.getName());
-        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(EVENT.NAME.getName());
-        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(EVENT.GENDER.getName());
-        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setAutoWidth(true).setKey(EVENT.EVENT_TYPE.getName());
+        grid.addColumn(EventRecord::getAbbreviation)
+            .setHeader(getTranslation("Abbreviation"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.ABBREVIATION.getName());
+        grid.addColumn(EventRecord::getName)
+            .setHeader(getTranslation("Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.NAME.getName());
+        grid.addColumn(EventRecord::getGender)
+            .setHeader(getTranslation("Gender"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.GENDER.getName());
+        grid.addColumn(EventRecord::getEventType)
+            .setHeader(getTranslation("Event.Type"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.EVENT_TYPE.getName());
         grid.addColumn(EventRecord::getA).setHeader("A").setAutoWidth(true);
         grid.addColumn(EventRecord::getB).setHeader("B").setAutoWidth(true);
         grid.addColumn(EventRecord::getC).setHeader("C").setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(JooqDAO
-            , grid, dialog, eventRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, eventRecord -> refreshAll(), () -> {
             var newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
@@ -65,4 +81,5 @@ public class EventsView extends ProtectedGridView<EventRecord> {
     protected List<OrderField<?>> initialSort() {
         return List.of(EVENT.GENDER.asc(), EVENT.ABBREVIATION.asc());
     }
+
 }

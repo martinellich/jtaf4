@@ -27,4 +27,5 @@ public class RouteNotFoundError extends Component implements HasErrorParameter<N
 
         return HttpServletResponse.SC_TEMPORARY_REDIRECT;
     }
+
 }

@@ -24,7 +24,8 @@ class UserServiceTest {
     @Test
     void create_user_and_confirm() {
         assertThatNoException().isThrownBy(() -> {
-            SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass", Locale.of("de", "CH"));
+            SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass",
+                    Locale.of("de", "CH"));
 
             boolean confirmed = userService.confirm(user.getConfirmationId());
 
@@ -42,7 +43,7 @@ class UserServiceTest {
     @Test
     void user_exist() {
         assertThatExceptionOfType(UserAlreadyExistException.class)
-            .isThrownBy(() ->
-                userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null));
+            .isThrownBy(() -> userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null));
     }
+
 }

@@ -30,7 +30,7 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
     private static final long serialVersionUID = 1L;
 
     public SeriesListView(SeriesDAO seriesDAO, OrganizationProvider organizationProvider,
-                          CategoryAthleteDAO categoryAthleteDAO) {
+            CategoryAthleteDAO categoryAthleteDAO) {
         super(seriesDAO, organizationProvider, SERIES);
 
         setHeightFull();
@@ -48,10 +48,15 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         grid.setId("series-grid");
 
         grid.addComponentColumn(LogoUtil::resizeLogo).setHeader(getTranslation("Logo")).setAutoWidth(true);
-        grid.addColumn(SeriesRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(SERIES.NAME.getName());
+        grid.addColumn(SeriesRecord::getName)
+            .setHeader(getTranslation("Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(SERIES.NAME.getName());
 
         grid.addColumn(seriesRecord -> categoryAthleteDAO.countAthletesBySeriesId(seriesRecord.getId()))
-            .setHeader(getTranslation("Number.of.Athletes")).setAutoWidth(true);
+            .setHeader(getTranslation("Number.of.Athletes"))
+            .setAutoWidth(true);
 
         grid.addComponentColumn(seriesRecord -> {
             var hidden = new Checkbox();
@@ -69,21 +74,18 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
         grid.addComponentColumn(seriesRecord -> {
             var delete = new Button(getTranslation("Delete"));
             delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event ->
-                new ConfirmDialog(
-                    "delete-series-confirm-dialog",
-                    getTranslation("Confirm"),
-                    getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), e -> {
-                    try {
-                        seriesDAO.deleteSeries(seriesRecord.getId());
-                        refreshAll();
-                    } catch (DataAccessException ex) {
-                        Notification.show(ex.getMessage());
-                    }
-                },
-                    getTranslation("Cancel"), e -> {
-                }).open());
+            delete.addClickListener(event -> new ConfirmDialog("delete-series-confirm-dialog",
+                    getTranslation("Confirm"), getTranslation("Are.you.sure"), getTranslation("Delete"), e -> {
+                        try {
+                            seriesDAO.deleteSeries(seriesRecord.getId());
+                            refreshAll();
+                        }
+                        catch (DataAccessException ex) {
+                            Notification.show(ex.getMessage());
+                        }
+                    }, getTranslation("Cancel"), e -> {
+                    })
+                .open());
 
             var horizontalLayout = new HorizontalLayout(delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
@@ -107,4 +109,5 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
     protected List<OrderField<?>> initialSort() {
         return List.of(SERIES.NAME.desc());
     }
+
 }

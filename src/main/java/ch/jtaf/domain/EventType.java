@@ -14,4 +14,5 @@ public enum EventType {
         }
         return valuesAsStrings;
     }
+
 }

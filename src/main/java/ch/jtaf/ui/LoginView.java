@@ -49,7 +49,8 @@ public class LoginView extends LoginOverlay implements AfterNavigationObserver, 
     public void beforeEnter(BeforeEnterEvent event) {
         if (securityContext.isUserLoggedIn()) {
             event.forwardTo(DashboardView.class);
-        } else {
+        }
+        else {
             setOpened(true);
         }
     }

@@ -25,24 +25,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var securityUserRecord = dslContext
-            .selectFrom(SECURITY_USER)
+        var securityUserRecord = dslContext.selectFrom(SECURITY_USER)
             .where(SECURITY_USER.EMAIL.eq(username))
             .fetchOne();
 
         if (securityUserRecord != null) {
-            var groups = dslContext
-                .select(USER_GROUP.securityGroup().NAME)
+            var groups = dslContext.select(USER_GROUP.securityGroup().NAME)
                 .from(USER_GROUP)
                 .where(USER_GROUP.USER_ID.eq(securityUserRecord.getId()))
                 .fetch();
 
             return new User(securityUserRecord.getEmail(), securityUserRecord.getSecret(),
-                groups.stream()
-                    .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getValue(SECURITY_GROUP.NAME)))
-                    .toList());
-        } else {
+                    groups.stream()
+                        .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getValue(SECURITY_GROUP.NAME)))
+                        .toList());
+        }
+        else {
             throw new UsernameNotFoundException(username);
         }
     }
+
 }

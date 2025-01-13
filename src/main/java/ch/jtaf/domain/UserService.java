@@ -21,13 +21,17 @@ import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 public class UserService {
 
     private final DSLContext dslContext;
+
     private final PasswordEncoder passwordEncoder;
+
     private final JavaMailSender mailSender;
+
     private final I18NProvider i18n;
+
     private final String publicAddress;
 
-    public UserService(DSLContext dslContext, PasswordEncoder passwordEncoder, JavaMailSender mailSender, I18NProvider i18n,
-                       @Value("${jtaf.public.address}") String publicAddress) {
+    public UserService(DSLContext dslContext, PasswordEncoder passwordEncoder, JavaMailSender mailSender,
+            I18NProvider i18n, @Value("${jtaf.public.address}") String publicAddress) {
         this.dslContext = dslContext;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
@@ -36,9 +40,13 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = UserAlreadyExistException.class)
-    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password, Locale locale) throws UserAlreadyExistException {
+    public SecurityUserRecord createUser(String firstName, String lastName, String email, String password,
+            Locale locale) throws UserAlreadyExistException {
 
-        var count = dslContext.selectCount().from(SECURITY_USER).where(SECURITY_USER.EMAIL.eq(email)).fetchOneInto(Integer.class);
+        var count = dslContext.selectCount()
+            .from(SECURITY_USER)
+            .where(SECURITY_USER.EMAIL.eq(email))
+            .fetchOneInto(Integer.class);
         if (count != null && count > 0) {
             throw new UserAlreadyExistException();
         }
@@ -62,7 +70,8 @@ public class UserService {
             sendConfirmationEmail(user, locale);
 
             return user;
-        } else {
+        }
+        else {
             throw new IllegalStateException("USER role does not exist!");
         }
     }
@@ -78,8 +87,7 @@ public class UserService {
 
     @Transactional
     public boolean confirm(String confirmationId) {
-        var securityUser = dslContext
-            .selectFrom(SECURITY_USER)
+        var securityUser = dslContext.selectFrom(SECURITY_USER)
             .where(SECURITY_USER.CONFIRMATION_ID.eq(confirmationId))
             .fetchOne();
 
@@ -88,8 +96,10 @@ public class UserService {
             securityUser.store();
 
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
+
 }

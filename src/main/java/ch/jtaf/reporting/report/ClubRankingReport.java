@@ -19,6 +19,7 @@ public class ClubRankingReport extends RankingReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClubRankingReport.class);
 
     private final ClubRankingData ranking;
+
     private Document document;
 
     public ClubRankingReport(ClubRankingData ranking, Locale locale) {
@@ -33,8 +34,7 @@ public class ClubRankingReport extends RankingReport {
                 document = new Document(A4, border, border, border, border);
 
                 var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
-                pdfWriter.setPageEvent(
-                    new HeaderFooter(messages.getString("Club.Ranking"), ranking.seriesName(), ""));
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Club.Ranking"), ranking.seriesName(), ""));
 
                 document.open();
 
@@ -45,14 +45,15 @@ public class ClubRankingReport extends RankingReport {
                 pdfWriter.flush();
                 return byteArrayOutputStream.toByteArray();
             }
-        } catch (IOException | DocumentException e) {
+        }
+        catch (IOException | DocumentException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
     }
 
     private void createRanking() {
-        var table = new PdfPTable(new float[]{2f, 10f, 10f});
+        var table = new PdfPTable(new float[] { 2f, 10f, 10f });
         table.setWidthPercentage(100f);
         table.setSpacingBefore(1f);
 

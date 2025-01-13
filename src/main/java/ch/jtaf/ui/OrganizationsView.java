@@ -24,7 +24,7 @@ import java.io.Serial;
 
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 
-@RolesAllowed({Role.USER, Role.ADMIN})
+@RolesAllowed({ Role.USER, Role.ADMIN })
 @Route(layout = MainLayout.class)
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {
 
@@ -32,13 +32,15 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
     private static final long serialVersionUID = 1L;
 
     private final transient OrganizationDAO organizationDAO;
+
     private final transient SecurityContext securityContext;
 
     private Grid<OrganizationRecord> grid;
+
     private final OrganizationDialog dialog;
 
     public OrganizationsView(OrganizationDAO organizationDAO, OrganizationProvider organizationProvider,
-                             SecurityContext securityContext) {
+            SecurityContext securityContext) {
         this.organizationDAO = organizationDAO;
         this.securityContext = securityContext;
 
@@ -53,7 +55,8 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         add(grid);
     }
 
-    private void createGrid(OrganizationDAO organizationDAO, OrganizationProvider organizationProvider, SecurityContext securityContext) {
+    private void createGrid(OrganizationDAO organizationDAO, OrganizationProvider organizationProvider,
+            SecurityContext securityContext) {
         var add = new Button(getTranslation("Add"));
         add.setId("add-button");
         add.addClickListener(event -> {
@@ -67,8 +70,16 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
         grid.getClassNames().add("rounded-corners");
         grid.setHeightFull();
 
-        grid.addColumn(OrganizationRecord::getOrganizationKey).setHeader(getTranslation("Key")).setSortable(true).setAutoWidth(true).setKey(ORGANIZATION.ORGANIZATION_KEY.getName());
-        grid.addColumn(OrganizationRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(ORGANIZATION.NAME.getName());
+        grid.addColumn(OrganizationRecord::getOrganizationKey)
+            .setHeader(getTranslation("Key"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ORGANIZATION.ORGANIZATION_KEY.getName());
+        grid.addColumn(OrganizationRecord::getName)
+            .setHeader(getTranslation("Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ORGANIZATION.NAME.getName());
 
         grid.addComponentColumn(organizationRecord -> {
             var select = new Button(getTranslation("Select"));
@@ -82,22 +93,19 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
             var delete = new Button(getTranslation("Delete"));
             delete.setId("delete-organization-" + organizationRecord.getOrganizationKey());
             delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event ->
-                new ConfirmDialog(
-                    "delete-organization-confirm-dialog",
-                    getTranslation("Confirm"),
-                    getTranslation("Are.you.sure"),
-                    getTranslation("Delete"), e -> {
-                    try {
-                        organizationDAO.deleteWithUsers(organizationRecord);
+            delete.addClickListener(event -> new ConfirmDialog("delete-organization-confirm-dialog",
+                    getTranslation("Confirm"), getTranslation("Are.you.sure"), getTranslation("Delete"), e -> {
+                        try {
+                            organizationDAO.deleteWithUsers(organizationRecord);
 
-                        loadData(null);
-                    } catch (DataAccessException ex) {
-                        Notification.show(ex.getMessage());
-                    }
-                },
-                    getTranslation("Cancel"), e -> {
-                }).open());
+                            loadData(null);
+                        }
+                        catch (DataAccessException ex) {
+                            Notification.show(ex.getMessage());
+                        }
+                    }, getTranslation("Cancel"), e -> {
+                    })
+                .open());
 
             var horizontalLayout = new HorizontalLayout(select, delete);
             horizontalLayout.setJustifyContentMode(JustifyContentMode.END);
@@ -120,4 +128,5 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
     public String getPageTitle() {
         return getTranslation("Organizations");
     }
+
 }

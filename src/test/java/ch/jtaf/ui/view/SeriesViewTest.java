@@ -66,8 +66,11 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._get(competitionsGrid, 2).getName()).isEqualTo("Test");
 
         // Remove competition
-        GridKt._getCellComponent(competitionsGrid, 2, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(competitionsGrid, 2, "edit-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -137,11 +140,15 @@ class SeriesViewTest extends KaribuTest {
         Grid<EventRecord> categoryEventsGrid = _get(Grid.class, spec -> spec.withId("category-events-grid"));
         assertThat(GridKt._size(categoryEventsGrid)).isEqualTo(1);
 
-        GridKt._getCellComponent(categoryEventsGrid, 0, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(categoryEventsGrid, 0, "edit-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
-        ConfirmDialog confirmDialog = _get(ConfirmDialog.class, spec -> spec.withId("remove-event-from-category-confirm-dialog"));
+        ConfirmDialog confirmDialog = _get(ConfirmDialog.class,
+                spec -> spec.withId("remove-event-from-category-confirm-dialog"));
         assertThat(confirmDialog.isOpened()).isTrue();
         _get(Button.class, spec -> spec.withId("remove-event-from-category-confirm-dialog-confirm")).click();
 
@@ -149,8 +156,11 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._size(categoryEventsGrid)).isZero();
 
         // Remove category
-        GridKt._getCellComponent(categoriesGrid, 0, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(categoriesGrid, 0, "edit-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         confirmDialog = _get(ConfirmDialog.class, spec -> spec.withId("delete-confirm-dialog"));
@@ -190,8 +200,11 @@ class SeriesViewTest extends KaribuTest {
 
         assertThat(GridKt._get(searchAthletesGrid, 0).getLastName()).isEqualTo("Zimmermann");
 
-        GridKt._getCellComponent(searchAthletesGrid, 0, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(searchAthletesGrid, 0, "edit-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         // Check if athlete was assigned
@@ -199,8 +212,11 @@ class SeriesViewTest extends KaribuTest {
         assertThat(GridKt._get(athletesGrid, 40).getLastName()).isEqualTo("Hermoso");
 
         // Remove athlete from category
-        GridKt._getCellComponent(athletesGrid, 40, "remove-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(athletesGrid, 40, "remove-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -217,15 +233,18 @@ class SeriesViewTest extends KaribuTest {
             URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
             if (imageUrl == null) {
                 fail("Image not found");
-            } else {
+            }
+            else {
                 Path path = Paths.get(imageUrl.toURI());
                 byte[] logoData = Files.readAllBytes(path);
 
                 Upload upload = _get(Upload.class, spec -> spec.withId("logo-upload"));
                 UploadKt._upload(upload, "logo.png", logoData);
             }
-        } catch (URISyntaxException | IOException e) {
+        }
+        catch (URISyntaxException | IOException e) {
             fail(e.getMessage(), e);
         }
     }
+
 }

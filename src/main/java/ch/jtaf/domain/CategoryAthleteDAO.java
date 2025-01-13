@@ -22,8 +22,7 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
 
     @Transactional
     public void createCategoryAthlete(AthleteRecord athleteRecord, long seriesId) {
-        var categoryId = dslContext
-            .select(CATEGORY.ID)
+        var categoryId = dslContext.select(CATEGORY.ID)
             .from(CATEGORY)
             .where(CATEGORY.SERIES_ID.eq(seriesId))
             .and(CATEGORY.GENDER.eq(athleteRecord.getGender()))
@@ -40,19 +39,19 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
 
     @Transactional
     public void deleteCategoryAthlete(AthleteRecord athleteRecord, long seriesId) {
-        dslContext
-            .deleteFrom(CATEGORY_ATHLETE)
+        dslContext.deleteFrom(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID.in(
-                select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesId))))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID
+                .in(select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesId))))
             .execute();
     }
 
     public int countAthletesBySeriesId(Long seriesId) {
-        return dslContext
-            .select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID)).from(CATEGORY_ATHLETE)
+        return dslContext.select(DSL.count(CATEGORY_ATHLETE.ATHLETE_ID))
+            .from(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.category().SERIES_ID.eq(seriesId))
-            .fetchOptionalInto(Integer.class).orElse(0);
+            .fetchOptionalInto(Integer.class)
+            .orElse(0);
     }
 
     @Transactional
@@ -66,4 +65,5 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
             throw new IllegalStateException("Dnf update failed");
         }
     }
+
 }

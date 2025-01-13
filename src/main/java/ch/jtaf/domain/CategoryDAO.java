@@ -18,10 +18,10 @@ public class CategoryDAO extends JooqDAO<Category, CategoryRecord, Long> {
     }
 
     public List<CategoryRecord> findBySeriesId(Long seriesId) {
-        return dslContext
-            .selectFrom(CATEGORY)
+        return dslContext.selectFrom(CATEGORY)
             .where(CATEGORY.SERIES_ID.eq(seriesId))
             .orderBy(CATEGORY.ABBREVIATION)
             .fetch();
     }
+
 }

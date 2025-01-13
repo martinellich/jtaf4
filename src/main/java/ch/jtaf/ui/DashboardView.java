@@ -36,11 +36,11 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     private static final long serialVersionUID = 1L;
 
     private static final String NAME_MIN_WIDTH = "350px";
+
     private static final String BUTTON_WIDTH = "220px";
 
     public DashboardView(SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService,
-                         SeriesDAO seriesDAO, CompetitionDAO competitionDAO,
-                         SecurityContext securityContext) {
+            SeriesDAO seriesDAO, CompetitionDAO competitionDAO, SecurityContext securityContext) {
         getClassNames().add("dashboard");
 
         var verticalLayout = new VerticalLayout();
@@ -66,11 +66,10 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             buttonLayout.getClassNames().add("button-layout");
             seriesLayout.add(buttonLayout);
 
-            var seriesRankingAnchor = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf",
-                () -> {
-                    var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId(), getLocale());
-                    return new ByteArrayInputStream(pdf);
-                }), "");
+            var seriesRankingAnchor = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf", () -> {
+                var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId(), getLocale());
+                return new ByteArrayInputStream(pdf);
+            }), "");
             seriesRankingAnchor.setId("series-ranking-" + seriesIndex);
             seriesRankingAnchor.setTarget("_blank");
 
@@ -83,11 +82,10 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             var seriesRankingDiv = new Div(seriesRankingAnchor);
             buttonLayout.add(seriesRankingDiv);
 
-            var clubRankingAnchor = new Anchor(new StreamResource("club_ranking" + series.getId() + ".pdf",
-                () -> {
-                    byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId(), getLocale());
-                    return new ByteArrayInputStream(pdf);
-                }), "");
+            var clubRankingAnchor = new Anchor(new StreamResource("club_ranking" + series.getId() + ".pdf", () -> {
+                byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId(), getLocale());
+                return new ByteArrayInputStream(pdf);
+            }), "");
             clubRankingAnchor.setId("club-ranking-" + seriesIndex);
             clubRankingAnchor.setTarget("_blank");
 
@@ -113,7 +111,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 competitionLayout.add(fakeLogo);
 
                 var dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                var pCompetition = new Paragraph("%s %s".formatted(competition.getName(), dateTimeFormatter.format(competition.getCompetitionDate())));
+                var pCompetition = new Paragraph("%s %s".formatted(competition.getName(),
+                        dateTimeFormatter.format(competition.getCompetitionDate())));
                 pCompetition.setMinWidth(NAME_MIN_WIDTH);
                 competitionLayout.add(pCompetition);
 
@@ -121,15 +120,17 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 links.getClassNames().add("links-layout");
                 competitionLayout.add(links);
 
-                var competitionRankingAnchor = new Anchor(new StreamResource("competition_ranking" + competition.getId() + ".pdf",
-                    () -> {
-                        byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId(), getLocale());
-                        return new ByteArrayInputStream(pdf);
-                    }), "");
+                var competitionRankingAnchor = new Anchor(
+                        new StreamResource("competition_ranking" + competition.getId() + ".pdf", () -> {
+                            byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId(),
+                                    getLocale());
+                            return new ByteArrayInputStream(pdf);
+                        }), "");
                 competitionRankingAnchor.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
                 competitionRankingAnchor.setTarget("_blank");
 
-                var competitionRankingButton = new Button(getTranslation("Competition.Ranking"), new Icon(VaadinIcon.FILE));
+                var competitionRankingButton = new Button(getTranslation("Competition.Ranking"),
+                        new Icon(VaadinIcon.FILE));
                 competitionRankingButton.setWidth(BUTTON_WIDTH);
                 competitionRankingButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                 competitionRankingButton.addClassName(LumoUtility.FontWeight.MEDIUM);
@@ -139,11 +140,10 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                 links.add(competitionRankingDiv);
 
                 if (securityContext.isUserLoggedIn()) {
-                    var diplomaAnchor = new Anchor(new StreamResource("diploma" + competition.getId() + ".pdf",
-                        () -> {
-                            var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId(), getLocale());
-                            return new ByteArrayInputStream(pdf);
-                        }), "");
+                    var diplomaAnchor = new Anchor(new StreamResource("diploma" + competition.getId() + ".pdf", () -> {
+                        var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId(), getLocale());
+                        return new ByteArrayInputStream(pdf);
+                    }), "");
                     diplomaAnchor.setId("diploma-" + seriesIndex + "-" + competitionIndex);
                     diplomaAnchor.setTarget("_blank");
 
@@ -156,11 +156,12 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     var diplomaDiv = new Div(diplomaAnchor);
                     links.add(diplomaDiv);
 
-                    var eventRankingAnchor = new Anchor(new StreamResource("event_ranking" + competition.getId() + ".pdf",
-                        () -> {
-                            var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId(), getLocale());
-                            return new ByteArrayInputStream(pdf);
-                        }), "");
+                    var eventRankingAnchor = new Anchor(
+                            new StreamResource("event_ranking" + competition.getId() + ".pdf", () -> {
+                                var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId(),
+                                        getLocale());
+                                return new ByteArrayInputStream(pdf);
+                            }), "");
                     eventRankingAnchor.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);
                     eventRankingAnchor.setTarget("_blank");
 
@@ -177,7 +178,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     enterResults.setId("enter-results-" + seriesIndex + "-" + competitionIndex);
                     enterResults.addThemeVariants(ButtonVariant.LUMO_ERROR);
                     enterResults.setWidth(BUTTON_WIDTH);
-                    enterResults.addClickListener(event -> UI.getCurrent().navigate(ResultCapturingView.class, competition.getId().toString()));
+                    enterResults.addClickListener(event -> UI.getCurrent()
+                        .navigate(ResultCapturingView.class, competition.getId().toString()));
                     var enterResultsDiv = new Div(enterResults);
                     links.add(enterResultsDiv);
 
@@ -196,4 +198,5 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
     public String getPageTitle() {
         return getTranslation("Dashboard");
     }
+
 }

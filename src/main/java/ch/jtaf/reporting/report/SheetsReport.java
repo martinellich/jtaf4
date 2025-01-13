@@ -24,13 +24,19 @@ public class SheetsReport extends AbstractReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(SheetsReport.class);
 
     private static final float INFO_LINE_HEIGHT = 40f;
+
     private static final float FONT_SIZE_INFO = 8f;
+
     private static final float FONT_SIZE_TEXT = 16f;
 
     private Document document;
+
     private PdfWriter pdfWriter;
+
     private final NumbersAndSheetsCompetition competition;
+
     private final List<NumbersAndSheetsAthlete> athletes;
+
     private final byte[] logo;
 
     public SheetsReport(NumbersAndSheetsAthlete athlete, byte[] logo, Locale locale) {
@@ -41,7 +47,8 @@ public class SheetsReport extends AbstractReport {
         this.logo = logo;
     }
 
-    public SheetsReport(NumbersAndSheetsCompetition competition, NumbersAndSheetsAthlete athlete, byte[] logo, Locale locale) {
+    public SheetsReport(NumbersAndSheetsCompetition competition, NumbersAndSheetsAthlete athlete, byte[] logo,
+            Locale locale) {
         super(locale);
         this.competition = competition;
         this.athletes = new ArrayList<>();
@@ -49,7 +56,8 @@ public class SheetsReport extends AbstractReport {
         this.logo = logo;
     }
 
-    public SheetsReport(NumbersAndSheetsCompetition competition, List<NumbersAndSheetsAthlete> athletes, byte[] logo, Locale locale) {
+    public SheetsReport(NumbersAndSheetsCompetition competition, List<NumbersAndSheetsAthlete> athletes, byte[] logo,
+            Locale locale) {
         super(locale);
         this.competition = competition;
         this.athletes = athletes;
@@ -79,7 +87,8 @@ public class SheetsReport extends AbstractReport {
             document.close();
             pdfWriter.flush();
             return byteArrayOutputStream.toByteArray();
-        } catch (DocumentException | IOException e) {
+        }
+        catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
@@ -92,7 +101,8 @@ public class SheetsReport extends AbstractReport {
                 image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));
                 image.scaleToFit(120, 60);
                 document.add(image);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 LOGGER.error(e.getMessage(), e);
             }
         }
@@ -117,32 +127,38 @@ public class SheetsReport extends AbstractReport {
         if (athlete.id() != null) {
             addInfoCell(table, String.valueOf(number));
             addCell(table, athlete.id().toString());
-        } else {
+        }
+        else {
             addCell(table, " ");
             addCell(table, " ");
         }
         if (athlete.lastName() == null) {
             addInfoCellWithBorder(table, messages.getString("Last.Name"));
-        } else {
+        }
+        else {
             addInfoCell(table, athlete.lastName());
         }
         if (athlete.firstName() == null) {
             addInfoCellWithBorder(table, messages.getString("First.Name"));
-        } else {
+        }
+        else {
             addInfoCell(table, athlete.firstName());
         }
         if (athlete.yearOfBirth() == null) {
             addInfoCellWithBorder(table, messages.getString("Year"));
-        } else {
+        }
+        else {
             addInfoCell(table, String.valueOf(athlete.yearOfBirth()));
         }
         if (athlete.club() == null) {
             if (athlete.id() == null) {
                 addInfoCellWithBorder(table, messages.getString("Club"));
-            } else {
+            }
+            else {
                 addInfoCell(table, "");
             }
-        } else {
+        }
+        else {
             addInfoCell(table, athlete.club());
         }
 
@@ -155,9 +171,8 @@ public class SheetsReport extends AbstractReport {
         table.setSpacingBefore(cmToPixel(0.5f));
         table.setSpacingAfter(cmToPixel(0.5f));
 
-        addCompetitionCell(table, competition == null
-            ? ""
-            : "%s %s".formatted(competition.name(), DATE_TIME_FORMATTER.format(competition.competitionDate())));
+        addCompetitionCell(table, competition == null ? ""
+                : "%s %s".formatted(competition.name(), DATE_TIME_FORMATTER.format(competition.competitionDate())));
 
         document.add(table);
     }
@@ -173,7 +188,8 @@ public class SheetsReport extends AbstractReport {
                 addInfoCellWithBorder(table, "");
                 addInfoCellWithBorder(table, "");
                 addInfoCellWithBorder(table, "");
-            } else {
+            }
+            else {
                 addInfoCellWithColspan(table, event.name(), 3);
                 addInfoCellWithBorder(table, "");
             }
@@ -197,7 +213,6 @@ public class SheetsReport extends AbstractReport {
         table.addCell(cell);
     }
 
-
     private void addCompetitionCell(PdfPTable table, String text) {
         var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, FONT_SIZE_TEXT)));
         cell.setBorder(0);
@@ -211,7 +226,8 @@ public class SheetsReport extends AbstractReport {
         table.addCell(cell);
     }
 
-    private void addInfoCellWithColspan(PdfPTable table, String text, @SuppressWarnings("SameParameterValue") int colspan) {
+    private void addInfoCellWithColspan(PdfPTable table, String text,
+            @SuppressWarnings("SameParameterValue") int colspan) {
         var cell = new PdfPCell(new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA, FONT_SIZE_TEXT)));
         cell.setBorder(0);
         cell.setColspan(colspan);
@@ -225,4 +241,5 @@ public class SheetsReport extends AbstractReport {
         cell.setBorderWidth(1);
         table.addCell(cell);
     }
+
 }

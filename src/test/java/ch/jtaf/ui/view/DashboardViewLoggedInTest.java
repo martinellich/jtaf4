@@ -28,7 +28,8 @@ class DashboardViewLoggedInTest extends KaribuTest {
 
         try {
             _get(Button.class, spec -> spec.withId("logout")).click();
-        } catch (Exception __) {
+        }
+        catch (Exception __) {
             // https://github.com/mvysny/karibu-testing/issues/148
         }
     }
@@ -43,4 +44,5 @@ class DashboardViewLoggedInTest extends KaribuTest {
 
         Locale.setDefault(Locale.ENGLISH);
     }
+
 }

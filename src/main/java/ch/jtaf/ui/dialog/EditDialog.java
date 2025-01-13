@@ -23,13 +23,17 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     private final String initialWidth;
 
     private boolean isFullScreen = false;
+
     private final Div content;
+
     private final Button toggle;
 
     final Binder<R> binder;
+
     final FormLayout formLayout;
 
     private transient Consumer<R> afterSave;
+
     private boolean initialized;
 
     protected EditDialog(String title, String initialWidth, JooqDAO<?, R, ?> jooqDAO) {
@@ -103,7 +107,8 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     private void toggleFullscreen() {
         if (isFullScreen) {
             initialSize();
-        } else {
+        }
+        else {
             toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();

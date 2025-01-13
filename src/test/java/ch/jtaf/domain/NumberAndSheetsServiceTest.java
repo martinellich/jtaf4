@@ -31,7 +31,8 @@ class NumberAndSheetsServiceTest {
 
     @Test
     void create_numbers_ordered_by_club() {
-        byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+        byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"), CLUB.ABBREVIATION,
+                CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
 
         assertThat(pdf).isNotEmpty();
     }
@@ -52,7 +53,8 @@ class NumberAndSheetsServiceTest {
 
     @Test
     void create_sheets_ordered_by_club() {
-        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"), CLUB.ABBREVIATION,
+                CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
 
         assertThat(pdf).isNotEmpty();
     }

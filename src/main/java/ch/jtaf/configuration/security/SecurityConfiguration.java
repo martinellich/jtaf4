@@ -36,17 +36,17 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(c -> c.requestMatchers(
-            new AntPathRequestMatcher("/icons/*.png"),
-            new AntPathRequestMatcher("/line-awesome/**"),
-            EndpointRequest.to(HealthEndpoint.class)
-        ).permitAll());
+        http.authorizeHttpRequests(c -> c
+            .requestMatchers(new AntPathRequestMatcher("/icons/*.png"), new AntPathRequestMatcher("/line-awesome/**"),
+                    EndpointRequest.to(HealthEndpoint.class))
+            .permitAll());
 
         super.configure(http);
 
         setLoginView(http, LoginView.class, LOGOUT_URL);
 
         setStatelessAuthentication(http, new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256),
-            "ch.jtaf", 3600);
+                "ch.jtaf", 3600);
     }
+
 }

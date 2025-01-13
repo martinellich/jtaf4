@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EnableGoogleAnalytics("G-PH4RL4J6YT")
-public class MainLayout extends AppLayout implements BeforeEnterObserver{
+public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -36,22 +36,31 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
     private static final String LA_LA_FILE = "la la-file";
 
     private final transient OrganizationProvider organizationProvider;
+
     private final String applicationVersion;
+
     private final transient SecurityContext securityContext;
 
     private final Div version = new Div();
+
     private Button login;
+
     private Button logout;
 
     private H1 viewTitle;
 
     private RouterLink seriesLink;
+
     private RouterLink eventsLink;
+
     private RouterLink clubsLink;
+
     private RouterLink athletesLink;
+
     private RouterLink register;
 
-    public MainLayout(OrganizationProvider organizationProvider, @Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
+    public MainLayout(OrganizationProvider organizationProvider,
+            @Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
         this.organizationProvider = organizationProvider;
         this.applicationVersion = applicationVersion;
         this.securityContext = securityContext;
@@ -99,8 +108,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         info.add(about, version, register, login, logout);
 
         var header = new Header(toggle, viewTitle, info);
-        header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER,
-            Display.FLEX, Height.XLARGE, AlignItems.CENTER, Width.FULL);
+        header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER, Display.FLEX,
+                Height.XLARGE, AlignItems.CENTER, Width.FULL);
         return header;
     }
 
@@ -118,8 +127,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         nav.getElement().setAttribute("aria-labelledby", "views");
 
         var views = new H3("Views");
-        views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM, Margin.Vertical.NONE,
-            FontSize.SMALL, TextColor.TERTIARY);
+        views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM,
+                Margin.Vertical.NONE, FontSize.SMALL, TextColor.TERTIARY);
         views.setId("views");
 
         for (var link : createLinks()) {
@@ -132,7 +141,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         var links = new ArrayList<RouterLink>();
 
         links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
-        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
+        links
+            .add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
         seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
         seriesLink.setId("series-list-link");
@@ -154,7 +164,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
 
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
         var link = new RouterLink();
-        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE, TextColor.SECONDARY);
+        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE,
+                TextColor.SECONDARY);
         link.setRoute(menuItemInfo.view());
 
         var icon = new Span();
@@ -174,7 +185,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         var layout = new Footer();
         layout.addClassNames(Display.FLEX, Margin.Vertical.SMALL, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
 
-        var htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
+        var htmlByLink = new Html(
+                "<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
 
         var byLink = new Anchor();
         byLink.setWidth("300px");
@@ -217,7 +229,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
                 seriesLink.setText(organization.getOrganizationKey());
                 setVisibilityOfLinks(true);
             }
-        } else {
+        }
+        else {
             register.setVisible(true);
             login.setVisible(true);
             logout.setVisible(false);
@@ -236,4 +249,5 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
 
     public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
     }
+
 }

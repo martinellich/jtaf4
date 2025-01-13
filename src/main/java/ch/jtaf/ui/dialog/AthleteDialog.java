@@ -27,11 +27,13 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
     private static final long serialVersionUID = 1L;
 
     private final transient OrganizationProvider organizationProvider;
+
     private final transient ClubDAO clubDAO;
 
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
-    public AthleteDialog(String title, AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider) {
+    public AthleteDialog(String title, AthleteDAO athleteDAO, ClubDAO clubDAO,
+            OrganizationProvider organizationProvider) {
         super(title, "600px", athleteDAO);
         this.clubDAO = clubDAO;
         this.organizationProvider = organizationProvider;
@@ -63,8 +65,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
 
-        binder.forField(gender)
-            .bind(AthleteRecord::getGender, AthleteRecord::setGender);
+        binder.forField(gender).bind(AthleteRecord::getGender, AthleteRecord::setGender);
 
         var yearOfBirth = new TextField(getTranslation("Year"));
         yearOfBirth.setAutoselect(true);
@@ -80,19 +81,17 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
         club.setItemLabelGenerator(item -> "%s %s".formatted(item.getAbbreviation(), item.getName()));
         club.setItems(getClubs());
 
-        binder.forField(club)
-            .withConverter(new Converter<ClubRecord, Long>() {
-                @Override
-                public Result<Long> convertToModel(ClubRecord value, ValueContext context) {
-                    return Result.ok(value == null ? null : value.getId());
-                }
+        binder.forField(club).withConverter(new Converter<ClubRecord, Long>() {
+            @Override
+            public Result<Long> convertToModel(ClubRecord value, ValueContext context) {
+                return Result.ok(value == null ? null : value.getId());
+            }
 
-                @Override
-                public ClubRecord convertToPresentation(Long value, ValueContext context) {
-                    return clubRecordMap.get(value);
-                }
-            })
-            .bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
+            @Override
+            public ClubRecord convertToPresentation(Long value, ValueContext context) {
+                return clubRecordMap.get(value);
+            }
+        }).bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
 
         var year = new TextField("Year");
         year.setAutoselect(true);
@@ -111,7 +110,8 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
         if (organizationRecord == null) {
             return Collections.emptyList();
-        } else {
+        }
+        else {
             var clubs = clubDAO.findByOrganizationId(organizationRecord.getId());
             clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
             return clubs;

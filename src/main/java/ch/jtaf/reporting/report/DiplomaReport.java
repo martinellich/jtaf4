@@ -22,7 +22,9 @@ public class DiplomaReport extends AbstractReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(DiplomaReport.class);
 
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d. MMMM yyyy");
+
     private final CompetitionRankingData ranking;
+
     private final byte[] logo;
 
     private Document document;
@@ -55,7 +57,8 @@ public class DiplomaReport extends AbstractReport {
             document.close();
             pdfWriter.flush();
             return byteArrayOutputStream.toByteArray();
-        } catch (IOException | DocumentException e) {
+        }
+        catch (IOException | DocumentException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
@@ -67,17 +70,18 @@ public class DiplomaReport extends AbstractReport {
                 var image = Image.getInstance(logo);
                 image.scaleToFit(cmToPixel(11f), cmToPixel(11f));
                 image.setAbsolutePosition((cmToPixel(14.85f) - image.getScaledWidth()) / 2,
-                    (cmToPixel(11f) - image.getScaledHeight()) / 2 + cmToPixel(5.5f));
+                        (cmToPixel(11f) - image.getScaledHeight()) / 2 + cmToPixel(5.5f));
                 document.add(image);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 LOGGER.error(e.getMessage(), e);
             }
         }
     }
 
     private void createAthleteInfo(CompetitionRankingData.Category.Athlete athlete,
-                                   CompetitionRankingData.Category category, int rank) throws DocumentException {
-        var table = new PdfPTable(new float[]{2f, 10f, 10f, 3f, 2f});
+            CompetitionRankingData.Category category, int rank) throws DocumentException {
+        var table = new PdfPTable(new float[] { 2f, 10f, 10f, 3f, 2f });
         table.setWidthPercentage(100f);
         table.setSpacingBefore(cmToPixel(1.5f));
 
@@ -113,11 +117,13 @@ public class DiplomaReport extends AbstractReport {
         cell.setHorizontalAlignment(ALIGN_CENTER);
         table.addCell(cell);
 
-        cell = new PdfPCell(new Phrase(DATE_FORMATTER.format(ranking.competitionDate()), FontFactory.getFont(HELVETICA, 25f)));
+        cell = new PdfPCell(
+                new Phrase(DATE_FORMATTER.format(ranking.competitionDate()), FontFactory.getFont(HELVETICA, 25f)));
         cell.setBorder(0);
         cell.setHorizontalAlignment(ALIGN_CENTER);
         table.addCell(cell);
 
         document.add(table);
     }
+
 }

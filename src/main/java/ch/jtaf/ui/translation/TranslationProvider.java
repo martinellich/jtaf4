@@ -38,9 +38,11 @@ public class TranslationProvider implements I18NProvider {
                 value = MessageFormat.format(value, params);
             }
             return value;
-        } catch (MissingResourceException e) {
+        }
+        catch (MissingResourceException e) {
             LOGGER.warn("Missing resource", e);
             return "!" + locale.getLanguage() + ": " + key;
         }
     }
+
 }

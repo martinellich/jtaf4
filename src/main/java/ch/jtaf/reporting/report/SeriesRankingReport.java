@@ -19,6 +19,7 @@ public class SeriesRankingReport extends RankingReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(SeriesRankingReport.class);
 
     private final SeriesRankingData ranking;
+
     private Document document;
 
     public SeriesRankingReport(SeriesRankingData ranking, Locale locale) {
@@ -32,8 +33,7 @@ public class SeriesRankingReport extends RankingReport {
             try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
                 document = new Document(A4);
                 var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
-                pdfWriter.setPageEvent(new HeaderFooter(
-                    messages.getString("Series.Ranking"), ranking.name(), ""));
+                pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Series.Ranking"), ranking.name(), ""));
                 document.open();
 
                 createRanking();
@@ -43,7 +43,8 @@ public class SeriesRankingReport extends RankingReport {
                 ba = byteArrayOutputStream.toByteArray();
             }
             return ba;
-        } catch (DocumentException | IOException e) {
+        }
+        catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
@@ -74,7 +75,7 @@ public class SeriesRankingReport extends RankingReport {
     }
 
     private PdfPTable createAthletesTable() {
-        var table = new PdfPTable(new float[]{3f, 10f, 10f, 2f, 5f, 5f});
+        var table = new PdfPTable(new float[] { 3f, 10f, 10f, 2f, 5f, 5f });
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(1f));
         return table;
@@ -82,8 +83,8 @@ public class SeriesRankingReport extends RankingReport {
 
     private void createCategoryTitle(PdfPTable table, SeriesRankingData.Category category) {
         addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
-        addCategoryTitleCellWithColspan(table, category.name() + " "
-            + category.yearFrom() + " - " + category.yearTo(), 5);
+        addCategoryTitleCellWithColspan(table, category.name() + " " + category.yearFrom() + " - " + category.yearTo(),
+                5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
@@ -106,4 +107,5 @@ public class SeriesRankingReport extends RankingReport {
         addCell(table, "");
         addResultsCell(table, sb.toString());
     }
+
 }

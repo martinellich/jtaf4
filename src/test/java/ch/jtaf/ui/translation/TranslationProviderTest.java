@@ -53,4 +53,5 @@ class TranslationProviderTest {
 
         assertThat(nothing).isEmpty();
     }
+
 }

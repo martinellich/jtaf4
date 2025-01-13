@@ -20,18 +20,17 @@ public class CompetitionDAO extends JooqDAO<Competition, CompetitionRecord, Long
     }
 
     public List<CompetitionRecord> findBySeriesId(Long seriesId) {
-        return dslContext
-            .selectFrom(COMPETITION)
+        return dslContext.selectFrom(COMPETITION)
             .where(COMPETITION.SERIES_ID.eq(seriesId))
             .orderBy(COMPETITION.COMPETITION_DATE)
             .fetch();
     }
 
     public Optional<Record2<String, String>> findProjectionById(long competitionId) {
-        return dslContext
-            .select(COMPETITION.series().NAME, COMPETITION.NAME)
+        return dslContext.select(COMPETITION.series().NAME, COMPETITION.NAME)
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOptional();
     }
+
 }

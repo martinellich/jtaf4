@@ -58,9 +58,11 @@ class OrganizationsViewTest extends KaribuTest {
         assertThat(GridKt._get(organizationGrid, 2).getOrganizationKey()).isEqualTo("AAA");
 
         // Remove organization
-        GridKt._getCellComponent(organizationGrid, 2, "edit-column").getChildren()
+        GridKt._getCellComponent(organizationGrid, 2, "edit-column")
+            .getChildren()
             .filter(component -> component instanceof Button && ((Button) component).getText().equals("Delete"))
-            .findFirst().map(component -> (Button) component)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -82,4 +84,5 @@ class OrganizationsViewTest extends KaribuTest {
         RouterLink routerLink = _get(RouterLink.class, spec -> spec.withId("series-list-link"));
         assertThat(routerLink.getText()).isEqualTo("CIS");
     }
+
 }

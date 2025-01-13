@@ -66,17 +66,21 @@ public abstract class KaribuTest {
     }
 
     protected void login(String user, String pass, final List<String> roles) {
-        // taken from https://www.baeldung.com/manually-set-user-authentication-spring-security
+        // taken from
+        // https://www.baeldung.com/manually-set-user-authentication-spring-security
         // also see https://github.com/mvysny/karibu-testing/issues/47 for more details.
-        final List<SimpleGrantedAuthority> authorities =
-            roles.stream().map(it -> new SimpleGrantedAuthority("ROLE_" + it)).toList();
+        final List<SimpleGrantedAuthority> authorities = roles.stream()
+            .map(it -> new SimpleGrantedAuthority("ROLE_" + it))
+            .toList();
 
         UserDetails userDetails = new User(user, pass, authorities);
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userDetails, pass, authorities);
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(userDetails, pass,
+                authorities);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(authReq);
 
-        // however, you also need to make sure that ViewAccessChecker works properly that requires
+        // however, you also need to make sure that ViewAccessChecker works properly that
+        // requires
         // a correct MockRequest.userPrincipal and MockRequest.isUserInRole()
         final FakeRequest request = (FakeRequest) VaadinServletRequest.getCurrent().getRequest();
         request.setUserPrincipalInt(authReq);
@@ -91,7 +95,8 @@ public abstract class KaribuTest {
                 request.setUserPrincipalInt(null);
                 request.setUserInRole((principal, role) -> false);
             }
-        } catch (IllegalStateException e) {
+        }
+        catch (IllegalStateException e) {
             // Ignored
         }
     }
@@ -105,8 +110,11 @@ public abstract class KaribuTest {
         Grid<OrganizationRecord> organizationsGrid = _get(Grid.class, spec -> spec.withId("organizations-grid"));
         assertThat(GridKt._size(organizationsGrid)).isEqualTo(2);
 
-        GridKt._getCellComponent(organizationsGrid, 0, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(organizationsGrid, 0, "edit-column")
+            .getChildren()
+            .filter(component -> component instanceof Button)
+            .findFirst()
+            .map(component -> (Button) component)
             .ifPresent(Button::click);
 
         h1 = _get(H1.class, spec -> spec.withId("view-title"));
@@ -120,4 +128,5 @@ public abstract class KaribuTest {
 
         return seriesGrid;
     }
+
 }

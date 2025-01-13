@@ -55,13 +55,21 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
     private static final String BLANK = "_blank";
 
     private final transient CompetitionDAO competitionDAO;
+
     private final transient CategoryDAO categoryDAO;
+
     private final transient AthleteDAO athleteDAO;
+
     private final transient CategoryEventDAO categoryEventDAO;
+
     private final transient ClubDAO clubDAO;
+
     private final transient EventDAO eventDAO;
+
     private final transient SeriesDAO seriesDAO;
+
     private final transient CategoryAthleteDAO categoryAthleteDAO;
+
     private final transient NumberAndSheetsService numberAndSheetsService;
 
     private Button copyCategories;
@@ -69,7 +77,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
     private SeriesRecord seriesRecord;
 
     private Grid<CompetitionRecord> competitionsGrid;
+
     private Grid<CategoryRecord> categoriesGrid;
+
     private Grid<AthleteRecord> athletesGrid;
 
     final Tabs sectionTabs = new Tabs();
@@ -79,9 +89,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
     private Map<Long, ClubRecord> clubRecordMap;
 
     public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
-                      OrganizationProvider organizationProvider, CategoryDAO categoryDAO,
-                      CategoryEventDAO categoryEventDAO, AthleteDAO athleteDAO, ClubDAO clubDAO,
-                      EventDAO eventDAO, SeriesDAO seriesDAO, CategoryAthleteDAO categoryAthleteDAO) {
+            OrganizationProvider organizationProvider, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO,
+            AthleteDAO athleteDAO, ClubDAO clubDAO, EventDAO eventDAO, SeriesDAO seriesDAO,
+            CategoryAthleteDAO categoryAthleteDAO) {
         super(organizationProvider);
         this.competitionDAO = competitionDAO;
         this.numberAndSheetsService = numberAndSheetsService;
@@ -156,7 +166,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
                 SeriesRecord recordToSave = binder.getBean();
                 recordToSave.setLogo(inputStream.readAllBytes());
                 seriesDAO.save(recordToSave);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -179,8 +190,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         var locked = new Checkbox(getTranslation("Locked"));
         checkboxes.add(locked);
 
-        binder.forField(locked)
-            .bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
+        binder.forField(locked).bind(SeriesRecord::getLocked, SeriesRecord::setLocked);
 
         var buttons = new HorizontalLayout();
         buttons.setPadding(false);
@@ -201,7 +211,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         copyCategories.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         copyCategories.addClickListener(event -> {
             if (seriesRecord != null) {
-                var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(), seriesRecord.getId(), seriesDAO);
+                var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
+                        seriesRecord.getId(), seriesDAO);
                 dialog.addAfterCopyListener(e -> refreshAll());
                 dialog.open();
             }
@@ -231,7 +242,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
             seriesRecord = SERIES.newRecord();
             seriesRecord.setOrganizationId(organizationRecord.getId());
-        } else {
+        }
+        else {
             seriesRecord = seriesDAO.findById(seriesId).orElse(null);
         }
         binder.setBean(seriesRecord);
@@ -239,7 +251,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         if (seriesId == null) {
             // Series must be saved first
             copyCategories.setVisible(false);
-        } else {
+        }
+        else {
             if (categoryDAO.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
                 // Copy is only possible if no categories are added
                 copyCategories.setVisible(false);
@@ -259,80 +272,108 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         competitionsGrid.setId("competitions-grid");
         competitionsGrid.setHeightFull();
 
-        competitionsGrid.addColumn(CompetitionRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(COMPETITION.NAME.getName());
-        competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate).setHeader(getTranslation("Date")).setSortable(true).setAutoWidth(true).setKey(COMPETITION.COMPETITION_DATE.getName());
+        competitionsGrid.addColumn(CompetitionRecord::getName)
+            .setHeader(getTranslation("Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(COMPETITION.NAME.getName());
+        competitionsGrid.addColumn(CompetitionRecord::getCompetitionDate)
+            .setHeader(getTranslation("Date"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(COMPETITION.COMPETITION_DATE.getName());
         competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
-            var sheetsOrderedByAthlete = new Anchor(new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf",
-                () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(), getLocale(),
-                        CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-                    return new ByteArrayInputStream(pdf);
-                }), getTranslation("Sheets"));
+            var sheetsOrderedByAthlete = new Anchor(
+                    new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf", () -> {
+                        byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+                                getLocale(), CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                        return new ByteArrayInputStream(pdf);
+                    }), getTranslation("Sheets"));
             sheetsOrderedByAthlete.setTarget(BLANK);
 
-            var sheetsOrderedByClub = new Anchor(new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf",
-                () -> {
-                    byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(), getLocale(),
-                        CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-                    return new ByteArrayInputStream(pdf);
-                }), getTranslation("Ordered.by.club"));
+            var sheetsOrderedByClub = new Anchor(
+                    new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf", () -> {
+                        byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+                                getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
+                                ATHLETE.FIRST_NAME);
+                        return new ByteArrayInputStream(pdf);
+                    }), getTranslation("Ordered.by.club"));
             sheetsOrderedByClub.setTarget(BLANK);
 
-            var numbersOrderedByAthlete = new Anchor(new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf",
-                () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
-                        CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-                    return new ByteArrayInputStream(pdf);
-                }), getTranslation("Numbers"));
+            var numbersOrderedByAthlete = new Anchor(
+                    new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf", () -> {
+                        byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
+                                CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                        return new ByteArrayInputStream(pdf);
+                    }), getTranslation("Numbers"));
             numbersOrderedByAthlete.setTarget(BLANK);
 
-            var numbersOrderedByClub = new Anchor(new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf",
-                () -> {
-                    byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
-                        CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-                    return new ByteArrayInputStream(pdf);
-                }), getTranslation("Ordered.by.club"));
+            var numbersOrderedByClub = new Anchor(
+                    new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf", () -> {
+                        byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
+                                CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+                        return new ByteArrayInputStream(pdf);
+                    }), getTranslation("Ordered.by.club"));
             numbersOrderedByClub.setTarget(BLANK);
 
-            return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete, numbersOrderedByClub);
+            return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete,
+                    numbersOrderedByClub);
         })).setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(competitionDAO, competitionsGrid, dialog, competitionRecord -> refreshAll(), () -> {
-            var newRecord = COMPETITION.newRecord();
-            newRecord.setMedalPercentage(0);
-            newRecord.setSeriesId(seriesRecord.getId());
-            return newRecord;
-        }, this::refreshAll);
+        addActionColumnAndSetSelectionListener(competitionDAO, competitionsGrid, dialog,
+                competitionRecord -> refreshAll(), () -> {
+                    var newRecord = COMPETITION.newRecord();
+                    newRecord.setMedalPercentage(0);
+                    newRecord.setSeriesId(seriesRecord.getId());
+                    return newRecord;
+                }, this::refreshAll);
     }
 
     private void createCategoriesSection() {
         var dialog = new CategoryDialog(getTranslation("Category"), categoryDAO, categoryEventDAO, eventDAO,
-            organizationProvider.getOrganization().getId());
+                organizationProvider.getOrganization().getId());
 
         categoriesGrid = new Grid<>();
         categoriesGrid.setId("categories-grid");
         categoriesGrid.setHeightFull();
 
-        categoriesGrid.addColumn(CategoryRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.ABBREVIATION.getName());
-        categoriesGrid.addColumn(CategoryRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.NAME.getName());
-        categoriesGrid.addColumn(CategoryRecord::getYearFrom).setHeader(getTranslation("Year.From")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.YEAR_FROM.getName());
-        categoriesGrid.addColumn(CategoryRecord::getYearTo).setHeader(getTranslation("Year.To")).setSortable(true).setAutoWidth(true).setKey(CATEGORY.YEAR_TO.getName());
+        categoriesGrid.addColumn(CategoryRecord::getAbbreviation)
+            .setHeader(getTranslation("Abbreviation"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(CATEGORY.ABBREVIATION.getName());
+        categoriesGrid.addColumn(CategoryRecord::getName)
+            .setHeader(getTranslation("Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(CATEGORY.NAME.getName());
+        categoriesGrid.addColumn(CategoryRecord::getYearFrom)
+            .setHeader(getTranslation("Year.From"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(CATEGORY.YEAR_FROM.getName());
+        categoriesGrid.addColumn(CategoryRecord::getYearTo)
+            .setHeader(getTranslation("Year.To"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(CATEGORY.YEAR_TO.getName());
         categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
-            var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf",
-                () -> {
-                    byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(), getLocale());
-                    return new ByteArrayInputStream(pdf);
-                }), getTranslation("Sheets"));
+            var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf", () -> {
+                byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
+                        getLocale());
+                return new ByteArrayInputStream(pdf);
+            }), getTranslation("Sheets"));
             sheet.setTarget(BLANK);
 
             return new HorizontalLayout(sheet);
         })).setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(), () -> {
-            var newRecord = CATEGORY.newRecord();
-            newRecord.setSeriesId(seriesRecord.getId());
-            return newRecord;
-        }, this::refreshAll);
+        addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(),
+                () -> {
+                    var newRecord = CATEGORY.newRecord();
+                    newRecord.setSeriesId(seriesRecord.getId());
+                    return newRecord;
+                }, this::refreshAll);
     }
 
     private void createAthletesSection() {
@@ -340,32 +381,48 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         athletesGrid.setId("athletes-grid");
         athletesGrid.setHeightFull();
 
-        athletesGrid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.LAST_NAME.getName());
-        athletesGrid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.FIRST_NAME.getName());
-        athletesGrid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.GENDER.getName());
-        athletesGrid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-        athletesGrid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-            : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club")).setAutoWidth(true);
+        athletesGrid.addColumn(AthleteRecord::getLastName)
+            .setHeader(getTranslation("Last.Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.LAST_NAME.getName());
+        athletesGrid.addColumn(AthleteRecord::getFirstName)
+            .setHeader(getTranslation("First.Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.FIRST_NAME.getName());
+        athletesGrid.addColumn(AthleteRecord::getGender)
+            .setHeader(getTranslation("Gender"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.GENDER.getName());
+        athletesGrid.addColumn(AthleteRecord::getYearOfBirth)
+            .setHeader(getTranslation("Year"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.YEAR_OF_BIRTH.getName());
+        athletesGrid
+            .addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
+                    : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
+            .setHeader(getTranslation("Club"))
+            .setAutoWidth(true);
 
         var assign = new Button(getTranslation("Assign.Athlete"));
         assign.setId("assign-athlete");
         assign.addClickListener(event -> {
             SearchAthleteDialog dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider,
-                organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
+                    organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
             dialog.open();
         });
 
         athletesGrid.addComponentColumn(athleteRecord -> {
             var remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            remove.addClickListener(event ->
-                new ConfirmDialog(
-                    "athlete-delete-confirm-dialog",
-                    getTranslation("Confirm"),
-                    getTranslation("Are.you.sure"),
-                    getTranslation("Remove"), e -> removeAthleteFromSeries(athleteRecord),
-                    getTranslation("Cancel"), e -> {
-                }).open());
+            remove.addClickListener(event -> new ConfirmDialog("athlete-delete-confirm-dialog",
+                    getTranslation("Confirm"), getTranslation("Are.you.sure"), getTranslation("Remove"),
+                    e -> removeAthleteFromSeries(athleteRecord), getTranslation("Cancel"), e -> {
+                    })
+                .open());
 
             var horizontalLayout = new HorizontalLayout(remove);
             horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);

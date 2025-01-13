@@ -19,7 +19,9 @@ public abstract class ProtectedGridView<R extends UpdatableRecord<R>> extends Pr
     private static final long serialVersionUID = 1L;
 
     final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
+
     final Grid<R> grid;
+
     protected final transient JooqDAO<?, R, ?> JooqDAO;
 
     protected ProtectedGridView(JooqDAO<?, R, ?> JooqDAO, OrganizationProvider organizationProvider, Table<R> table) {
@@ -29,7 +31,8 @@ public abstract class ProtectedGridView<R extends UpdatableRecord<R>> extends Pr
         grid = new Grid<>();
         grid.setHeightFull();
 
-        dataProvider = new JooqDataProviderProducer<>(JooqDAO, table, this::initialCondition, this::initialSort).getDataProvider();
+        dataProvider = new JooqDataProviderProducer<>(JooqDAO, table, this::initialCondition, this::initialSort)
+            .getDataProvider();
 
         grid.setItems(dataProvider);
 

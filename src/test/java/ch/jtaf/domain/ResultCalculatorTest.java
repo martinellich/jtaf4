@@ -21,19 +21,19 @@ class ResultCalculatorTest {
 
     @Autowired
     private ResultCalculator resultCalculator;
+
     @Autowired
     private DSLContext dsl;
 
     @ParameterizedTest
     @CsvSource(textBlock = """
-        60 m,    1, 12.10,  62
-        60 f,    2, 12.10,  74
-        ball m, 11, 21.33, 224
-        ball f, 12, 21.33, 304
-        weit m, 16,  3.11, 261
-        weit f, 17,  3.11, 340
-        """
-    )
+            60 m,    1, 12.10,  62
+            60 f,    2, 12.10,  74
+            ball m, 11, 21.33, 224
+            ball f, 12, 21.33, 304
+            weit m, 16,  3.11, 261
+            weit f, 17,  3.11, 340
+            """)
     void correct_result(String event, long eventId, String result, int expectedPoints) {
         var eventRecord = dsl.selectFrom(EVENT).where(EVENT.ID.eq(eventId)).fetchOne();
 
@@ -48,4 +48,5 @@ class ResultCalculatorTest {
 
         assertThrows(NumberFormatException.class, () -> resultCalculator.calculatePoints(eventRecord, "12.2.2"));
     }
+
 }

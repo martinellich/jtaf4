@@ -55,4 +55,5 @@ class CompetitionRankingServiceTest {
 
         assertThat(pdf).isNotEmpty();
     }
+
 }
