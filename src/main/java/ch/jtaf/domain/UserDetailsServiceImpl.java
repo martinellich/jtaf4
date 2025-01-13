@@ -13,6 +13,7 @@ import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 
+// @formatter:off
 @Service
 @Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,12 +26,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var securityUserRecord = dslContext.selectFrom(SECURITY_USER)
+        var securityUserRecord = dslContext
+            .selectFrom(SECURITY_USER)
             .where(SECURITY_USER.EMAIL.eq(username))
             .fetchOne();
 
         if (securityUserRecord != null) {
-            var groups = dslContext.select(USER_GROUP.securityGroup().NAME)
+            var groups = dslContext
+                .select(USER_GROUP.securityGroup().NAME)
                 .from(USER_GROUP)
                 .where(USER_GROUP.USER_ID.eq(securityUserRecord.getId()))
                 .fetch();

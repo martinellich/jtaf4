@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static ch.jtaf.db.tables.Result.RESULT;
 
+// @formatter:off
 @Repository
 public class ResultDAO extends JooqDAO<Result, ResultRecord, Long> {
 
@@ -18,7 +19,8 @@ public class ResultDAO extends JooqDAO<Result, ResultRecord, Long> {
     }
 
     public Optional<ResultRecord> getResults(long competitionId, long athleteId, long categoryId, long eventId) {
-        return dslContext.selectFrom(RESULT)
+        return dslContext
+            .selectFrom(RESULT)
             .where(RESULT.COMPETITION_ID.eq(competitionId))
             .and(RESULT.ATHLETE_ID.eq(athleteId))
             .and(RESULT.CATEGORY_ID.eq(categoryId))

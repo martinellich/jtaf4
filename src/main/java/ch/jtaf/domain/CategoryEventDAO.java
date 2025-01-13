@@ -11,6 +11,7 @@ import java.util.List;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
 
+// @formatter:off
 @Repository
 public class CategoryEventDAO extends JooqDAO<CategoryEvent, CategoryEventRecord, CategoryEventId> {
 
@@ -23,8 +24,7 @@ public class CategoryEventDAO extends JooqDAO<CategoryEvent, CategoryEventRecord
             .select(EVENT.ABBREVIATION, EVENT.NAME, EVENT.GENDER, EVENT.EVENT_TYPE, EVENT.A, EVENT.B, EVENT.C,
                     CATEGORY_EVENT.POSITION, CATEGORY_EVENT.CATEGORY_ID, CATEGORY_EVENT.EVENT_ID)
             .from(CATEGORY_EVENT)
-            .join(EVENT)
-            .on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
+            .join(EVENT).on(EVENT.ID.eq(CATEGORY_EVENT.EVENT_ID))
             .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryId))
             .orderBy(CATEGORY_EVENT.POSITION)
             .fetchInto(CategoryEventVO.class);

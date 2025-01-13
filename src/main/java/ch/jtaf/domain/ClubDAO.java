@@ -10,6 +10,7 @@ import java.util.List;
 
 import static ch.jtaf.db.tables.Club.CLUB;
 
+// @formatter:off
 @Repository
 public class ClubDAO extends JooqDAO<Club, ClubRecord, Long> {
 
@@ -18,7 +19,10 @@ public class ClubDAO extends JooqDAO<Club, ClubRecord, Long> {
     }
 
     public List<ClubRecord> findByOrganizationId(Long organizationId) {
-        return dslContext.selectFrom(CLUB).where(CLUB.ORGANIZATION_ID.eq(organizationId)).fetch();
+        return dslContext
+            .selectFrom(CLUB)
+            .where(CLUB.ORGANIZATION_ID.eq(organizationId))
+            .fetch();
     }
 
 }
