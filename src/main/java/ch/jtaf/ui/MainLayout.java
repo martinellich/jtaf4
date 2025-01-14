@@ -202,8 +202,12 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     }
 
     private String getCurrentPageTitle() {
-        var title = (HasDynamicTitle) getContent();
-        return title == null ? "" : title.getPageTitle();
+        if (getContent() instanceof HasDynamicTitle hasDynamicTitle) {
+            return hasDynamicTitle.getPageTitle();
+        }
+        else {
+            return "";
+        }
     }
 
     @PostConstruct
