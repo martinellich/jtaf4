@@ -30,7 +30,7 @@ class DashboardViewLoggedInTest extends KaribuTest {
         try {
             _get(Button.class, spec -> spec.withId("logout")).click();
         }
-        catch (Exception __) {
+        catch (Exception ignored) {
             // https://github.com/mvysny/karibu-testing/issues/148
         }
     }
