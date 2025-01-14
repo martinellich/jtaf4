@@ -127,10 +127,6 @@ public class CompetitionRankingService {
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOne();
-        if (logoRecord != null) {
-            return logoRecord.get(SERIES.LOGO);
-        } else {
-            return new byte[0];
-        }
+        return logoRecord != null ? logoRecord.get(SERIES.LOGO) : new byte[0];
     }
 }

@@ -39,11 +39,13 @@ public class UserService {
         this.publicAddress = publicAddress;
     }
 
+    // @formatter:off
     @Transactional(rollbackFor = UserAlreadyExistException.class)
     public SecurityUserRecord createUser(String firstName, String lastName, String email, String password,
             Locale locale) throws UserAlreadyExistException {
 
-        var count = dslContext.selectCount()
+        var count = dslContext
+            .selectCount()
             .from(SECURITY_USER)
             .where(SECURITY_USER.EMAIL.eq(email))
             .fetchOneInto(Integer.class);
@@ -75,6 +77,7 @@ public class UserService {
             throw new IllegalStateException("USER role does not exist!");
         }
     }
+    // @formatter:on
 
     public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
         var message = new SimpleMailMessage();
@@ -85,9 +88,11 @@ public class UserService {
         mailSender.send(message);
     }
 
+    // @formatter:off
     @Transactional
     public boolean confirm(String confirmationId) {
-        var securityUser = dslContext.selectFrom(SECURITY_USER)
+        var securityUser = dslContext
+            .selectFrom(SECURITY_USER)
             .where(SECURITY_USER.CONFIRMATION_ID.eq(confirmationId))
             .fetchOne();
 
@@ -101,5 +106,6 @@ public class UserService {
             return false;
         }
     }
+    // @formatter:on
 
 }

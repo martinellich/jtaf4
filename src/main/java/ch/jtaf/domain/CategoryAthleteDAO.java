@@ -44,8 +44,7 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
         dslContext
             .deleteFrom(CATEGORY_ATHLETE)
             .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteRecord.getId()))
-            .and(CATEGORY_ATHLETE.CATEGORY_ID.in(
-                select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesId))))
+            .and(CATEGORY_ATHLETE.CATEGORY_ID.in(select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesId))))
             .execute();
     }
 

@@ -25,6 +25,7 @@ import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.multiset;
 import static org.jooq.impl.DSL.select;
 
+// @formatter:off
 @Service
 public class NumberAndSheetsService {
 
@@ -39,8 +40,7 @@ public class NumberAndSheetsService {
     }
 
     public byte[] createSheets(Long seriesId, Long competitionId, Locale locale, Field<?>... orderBy) {
-        return new SheetsReport(getCompetition(competitionId).orElseThrow(), getAthletes(seriesId, orderBy),
-                getLogo(seriesId), locale)
+        return new SheetsReport(getCompetition(competitionId).orElseThrow(), getAthletes(seriesId, orderBy), getLogo(seriesId), locale)
             .create();
     }
 
@@ -53,9 +53,11 @@ public class NumberAndSheetsService {
             .select(DSL.inline(null, SQLDataType.BIGINT), DSL.inline(null, SQLDataType.VARCHAR),
                     DSL.inline(null, SQLDataType.VARCHAR), DSL.inline(null, SQLDataType.INTEGER), CATEGORY.ABBREVIATION,
                     CATEGORY.NAME, DSL.inline(null, SQLDataType.VARCHAR),
-                    multiset(select(CATEGORY_EVENT.event().NAME, CATEGORY_EVENT.event().EVENT_TYPE).from(CATEGORY_EVENT)
-                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
-                        .orderBy(CATEGORY_EVENT.POSITION))
+                    multiset(
+                        select(CATEGORY_EVENT.event().NAME, CATEGORY_EVENT.event().EVENT_TYPE)
+                            .from(CATEGORY_EVENT)
+                            .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
+                            .orderBy(CATEGORY_EVENT.POSITION))
                         .convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new))))
             .from(CATEGORY)
             .where(CATEGORY.ID.eq(categoryId))
@@ -63,37 +65,35 @@ public class NumberAndSheetsService {
     }
 
     private Optional<NumbersAndSheetsCompetition> getCompetition(Long competitionId) {
-        return dslContext.select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
+        return dslContext
+            .select(COMPETITION.NAME, COMPETITION.COMPETITION_DATE)
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOptionalInto(NumbersAndSheetsCompetition.class);
     }
 
     private byte[] getLogo(Long id) {
-        var logoRecord = dslContext.select(SERIES.LOGO).from(SERIES).where(SERIES.ID.eq(id)).fetchOne();
-        if (logoRecord != null) {
-            return logoRecord.get(SERIES.LOGO);
-        }
-        else {
-            return new byte[0];
-        }
+        var logoRecord = dslContext
+            .select(SERIES.LOGO)
+            .from(SERIES)
+            .where(SERIES.ID.eq(id)).fetchOne();
+        return logoRecord != null ? logoRecord.get(SERIES.LOGO) : new byte[0];
     }
 
     private List<NumbersAndSheetsAthlete> getAthletes(Long seriesId, Field<?>... orderBy) {
         return dslContext
             .select(ATHLETE.ID, ATHLETE.FIRST_NAME, ATHLETE.LAST_NAME, ATHLETE.YEAR_OF_BIRTH, CATEGORY.ABBREVIATION,
                     CATEGORY.NAME, CLUB.ABBREVIATION,
-                    multiset(select(CATEGORY_EVENT.event().NAME, CATEGORY_EVENT.event().EVENT_TYPE).from(CATEGORY_EVENT)
-                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-                        .orderBy(CATEGORY_EVENT.POSITION))
+                    multiset(
+                        select(CATEGORY_EVENT.event().NAME, CATEGORY_EVENT.event().EVENT_TYPE)
+                            .from(CATEGORY_EVENT)
+                            .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+                            .orderBy(CATEGORY_EVENT.POSITION))
                         .convertFrom(r -> r.map(mapping(NumbersAndSheetsAthlete.Event::new))))
             .from(CATEGORY_ATHLETE)
-            .join(ATHLETE)
-            .on(ATHLETE.ID.eq(CATEGORY_ATHLETE.ATHLETE_ID))
-            .join(CATEGORY)
-            .on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
-            .leftOuterJoin(CLUB)
-            .on(CLUB.ID.eq(ATHLETE.CLUB_ID))
+            .join(ATHLETE).on(ATHLETE.ID.eq(CATEGORY_ATHLETE.ATHLETE_ID))
+            .join(CATEGORY).on(CATEGORY.ID.eq(CATEGORY_ATHLETE.CATEGORY_ID))
+            .leftOuterJoin(CLUB).on(CLUB.ID.eq(ATHLETE.CLUB_ID))
             .where(CATEGORY.series().ID.eq(seriesId))
             .orderBy(orderBy)
             .fetch(mapping(NumbersAndSheetsAthlete::new));
