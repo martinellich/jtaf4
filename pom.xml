@@ -54,7 +54,6 @@
         <vaadin.version>24.6.1</vaadin.version>
         <jooq-version>3.19.14</jooq-version>
         <openpdf.version>2.0.3</openpdf.version>
-        <googleanalyticstracker.version>5.0.0</googleanalyticstracker.version>
         <jooq-spring.version>0.4.0</jooq-spring.version>
         <jooq-utilities.version>1.1.2</jooq-utilities.version>
 
@@ -102,11 +101,6 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.vaadin.addons</groupId>
-            <artifactId>googleanalyticstracker</artifactId>
-            <version>${googleanalyticstracker.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.martinelli.oss</groupId>

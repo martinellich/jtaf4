@@ -39,6 +39,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     private static final String BUTTON_WIDTH = "220px";
 
+    @SuppressWarnings("java:S1192")
     public DashboardView(SeriesRankingService seriesRankingService, CompetitionRankingService competitionRankingService,
             SeriesDAO seriesDAO, CompetitionDAO competitionDAO, SecurityContext securityContext) {
         getClassNames().add("dashboard");

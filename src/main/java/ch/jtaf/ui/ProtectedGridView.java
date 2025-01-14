@@ -13,6 +13,7 @@ import org.jooq.UpdatableRecord;
 import java.io.Serial;
 import java.util.List;
 
+@SuppressWarnings("java:S1452")
 public abstract class ProtectedGridView<R extends UpdatableRecord<R>> extends ProtectedView {
 
     @Serial

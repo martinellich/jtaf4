@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 
+@SuppressWarnings("java:S2699")
 class ConfirmationViewTest extends KaribuTest {
 
     @Autowired

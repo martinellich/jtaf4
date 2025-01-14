@@ -52,6 +52,7 @@ public class CompetitionRankingReport extends RankingReport {
         }
     }
 
+    @SuppressWarnings("java:S3776")
     private void createRanking() {
         for (var category : ranking.categories()) {
             if (!category.athletes().isEmpty()) {

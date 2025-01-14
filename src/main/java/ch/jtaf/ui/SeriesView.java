@@ -88,6 +88,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     private Map<Long, ClubRecord> clubRecordMap;
 
+    @SuppressWarnings("java:S107")
     public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
             OrganizationProvider organizationProvider, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO,
             AthleteDAO athleteDAO, ClubDAO clubDAO, EventDAO eventDAO, SeriesDAO seriesDAO,
@@ -140,6 +141,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         });
     }
 
+    @SuppressWarnings("java:S112")
     private void createSeriesForm(OrganizationProvider organizationProvider, SeriesDAO seriesDAO) {
         var formLayout = new FormLayout();
         add(formLayout);

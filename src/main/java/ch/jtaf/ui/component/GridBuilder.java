@@ -26,6 +26,7 @@ public class GridBuilder {
         addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
     }
 
+    @SuppressWarnings("java:S107")
     public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> JooqDAO,
             Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord,
             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete, Runnable afterDelete) {

@@ -21,13 +21,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
 
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnableGoogleAnalytics("G-PH4RL4J6YT")
+@SuppressWarnings("java:S7027")
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     @Serial
