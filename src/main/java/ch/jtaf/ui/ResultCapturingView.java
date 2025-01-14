@@ -36,7 +36,7 @@ import static ch.jtaf.db.tables.Result.RESULT;
 import static org.jooq.impl.DSL.upper;
 
 @RolesAllowed({ Role.USER, Role.ADMIN })
-@Route(layout = MainLayout.class)
+@Route
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
     @Serial

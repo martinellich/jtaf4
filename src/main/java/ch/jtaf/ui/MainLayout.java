@@ -13,10 +13,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
@@ -26,7 +24,8 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("java:S7027")
+@Layout
+@AnonymousAllowed
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     @Serial

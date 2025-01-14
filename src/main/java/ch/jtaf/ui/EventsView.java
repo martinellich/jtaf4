@@ -14,7 +14,7 @@ import java.util.List;
 import static ch.jtaf.db.tables.Event.EVENT;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@Route(layout = MainLayout.class)
+@Route
 public class EventsView extends ProtectedGridView<EventRecord> {
 
     @Serial

@@ -46,7 +46,7 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Series.SERIES;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@Route(layout = MainLayout.class)
+@Route
 public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
     @Serial

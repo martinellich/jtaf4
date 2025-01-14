@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @AnonymousAllowed
-@Route(value = "register", layout = MainLayout.class)
+@Route(value = "register")
 public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
     public RegisterView(UserService userService) {

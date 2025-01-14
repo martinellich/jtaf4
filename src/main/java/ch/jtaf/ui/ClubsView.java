@@ -14,7 +14,7 @@ import java.util.List;
 import static ch.jtaf.db.tables.Club.CLUB;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@Route(layout = MainLayout.class)
+@Route
 public class ClubsView extends ProtectedGridView<ClubRecord> {
 
     @Serial

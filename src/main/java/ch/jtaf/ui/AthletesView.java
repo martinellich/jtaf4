@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@Route(layout = MainLayout.class)
+@Route
 public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     @Serial

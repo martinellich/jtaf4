@@ -23,7 +23,7 @@ import java.util.List;
 
 import static ch.jtaf.db.tables.Series.SERIES;
 
-@Route(layout = MainLayout.class)
+@Route
 public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
     @Serial

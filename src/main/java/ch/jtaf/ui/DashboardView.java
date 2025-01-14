@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
 import static ch.jtaf.ui.util.LogoUtil.resizeLogo;
 
 @AnonymousAllowed
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "")
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
     @Serial
