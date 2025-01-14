@@ -112,9 +112,9 @@ public abstract class KaribuTest {
 
         GridKt._getCellComponent(organizationsGrid, 0, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button)
+            .filter(Button.class::isInstance)
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         h1 = _get(H1.class, spec -> spec.withId("view-title"));

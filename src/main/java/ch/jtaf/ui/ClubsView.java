@@ -48,7 +48,7 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
             .setAutoWidth(true)
             .setKey(CLUB.NAME.getName());
 
-        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, clubRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, clubRecord -> refreshAll(), () -> {
             ClubRecord newRecord = CLUB.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;

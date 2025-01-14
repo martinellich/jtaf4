@@ -68,9 +68,9 @@ class SeriesViewTest extends KaribuTest {
         // Remove competition
         GridKt._getCellComponent(competitionsGrid, 2, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button)
+            .filter(Button.class::isInstance)
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -142,9 +142,9 @@ class SeriesViewTest extends KaribuTest {
 
         GridKt._getCellComponent(categoryEventsGrid, 0, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button)
+            .filter(Button.class::isInstance)
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class,
@@ -158,9 +158,9 @@ class SeriesViewTest extends KaribuTest {
         // Remove category
         GridKt._getCellComponent(categoriesGrid, 0, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button)
+            .filter(Button.class::isInstance)
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         confirmDialog = _get(ConfirmDialog.class, spec -> spec.withId("delete-confirm-dialog"));
@@ -202,9 +202,9 @@ class SeriesViewTest extends KaribuTest {
 
         GridKt._getCellComponent(searchAthletesGrid, 0, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button)
+            .filter(Button.class::isInstance)
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         // Check if athlete was assigned

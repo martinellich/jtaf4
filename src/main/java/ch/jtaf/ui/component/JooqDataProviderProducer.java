@@ -15,7 +15,7 @@ import static org.jooq.impl.DSL.upper;
 
 public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
 
-    private final JooqDAO<?, R, ?> JooqDAO;
+    private final JooqDAO<?, R, ?> jooqDAO;
 
     private final Table<R> table;
 
@@ -25,9 +25,9 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
 
     private final Supplier<List<OrderField<?>>> initialSort;
 
-    public JooqDataProviderProducer(JooqDAO<?, R, ?> JooqDAO, Table<R> table, Supplier<Condition> initialCondition,
+    public JooqDataProviderProducer(JooqDAO<?, R, ?> jooqDAO, Table<R> table, Supplier<Condition> initialCondition,
             Supplier<List<OrderField<?>>> initialSort) {
-        this.JooqDAO = JooqDAO;
+        this.jooqDAO = jooqDAO;
         this.table = table;
         this.initialCondition = initialCondition;
         this.initialSort = initialSort;
@@ -40,13 +40,13 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
     }
 
     private Stream<R> fetch(Query<R, String> query) {
-        List<R> all = JooqDAO.findAll(createCondition(query), query.getOffset(), query.getLimit(),
+        List<R> all = jooqDAO.findAll(createCondition(query), query.getOffset(), query.getLimit(),
                 createOrderBy(query));
         return all.stream();
     }
 
     private int count(Query<R, String> query) {
-        return JooqDAO.count(createCondition(query));
+        return jooqDAO.count(createCondition(query));
     }
 
     private Condition createCondition(Query<R, String> query) {

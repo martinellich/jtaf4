@@ -23,16 +23,16 @@ public abstract class ProtectedGridView<R extends UpdatableRecord<R>> extends Pr
 
     final Grid<R> grid;
 
-    protected final transient JooqDAO<?, R, ?> JooqDAO;
+    protected final transient JooqDAO<?, R, ?> jooqDAO;
 
-    protected ProtectedGridView(JooqDAO<?, R, ?> JooqDAO, OrganizationProvider organizationProvider, Table<R> table) {
+    protected ProtectedGridView(JooqDAO<?, R, ?> jooqDAO, OrganizationProvider organizationProvider, Table<R> table) {
         super(organizationProvider);
-        this.JooqDAO = JooqDAO;
+        this.jooqDAO = jooqDAO;
 
         grid = new Grid<>();
         grid.setHeightFull();
 
-        dataProvider = new JooqDataProviderProducer<>(JooqDAO, table, this::initialCondition, this::initialSort)
+        dataProvider = new JooqDataProviderProducer<>(jooqDAO, table, this::initialCondition, this::initialSort)
             .getDataProvider();
 
         grid.setItems(dataProvider);

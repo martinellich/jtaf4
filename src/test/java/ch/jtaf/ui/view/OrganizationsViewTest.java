@@ -60,9 +60,9 @@ class OrganizationsViewTest extends KaribuTest {
         // Remove organization
         GridKt._getCellComponent(organizationGrid, 2, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button && ((Button) component).getText().equals("Delete"))
+            .filter(component -> component instanceof Button button && button.getText().equals("Delete"))
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);

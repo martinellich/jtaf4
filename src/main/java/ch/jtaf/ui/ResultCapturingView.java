@@ -135,6 +135,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
         }, athleteRecord -> athleteRecord.get(ATHLETE.ID)).withConfigurableFilter();
     }
 
+    @SuppressWarnings("java:3776")
     private void createForm(
             AbstractField.ComponentValueChangeEvent<Grid<Record4<Long, String, String, Long>>, Record4<Long, String, String, Long>> event) {
         form.removeAll();

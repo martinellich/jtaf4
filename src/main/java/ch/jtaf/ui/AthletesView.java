@@ -78,7 +78,7 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
             .setHeader(getTranslation("Club"))
             .setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, athleteRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, athleteRecord -> refreshAll(), () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;

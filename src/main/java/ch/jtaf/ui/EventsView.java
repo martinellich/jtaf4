@@ -60,7 +60,7 @@ public class EventsView extends ProtectedGridView<EventRecord> {
         grid.addColumn(EventRecord::getB).setHeader("B").setAutoWidth(true);
         grid.addColumn(EventRecord::getC).setHeader("C").setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, eventRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, eventRecord -> refreshAll(), () -> {
             var newRecord = EVENT.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;

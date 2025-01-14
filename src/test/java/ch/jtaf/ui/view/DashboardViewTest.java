@@ -17,6 +17,7 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
+@SuppressWarnings("java:S2699")
 class DashboardViewTest extends KaribuTest {
 
     @BeforeEach

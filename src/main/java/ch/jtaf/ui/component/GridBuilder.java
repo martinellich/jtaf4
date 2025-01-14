@@ -21,13 +21,13 @@ public class GridBuilder {
     private GridBuilder() {
     }
 
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> JooqDAO,
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
             Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord, Runnable afterDelete) {
-        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
+        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
     }
 
     @SuppressWarnings("java:S107")
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> JooqDAO,
+    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
             Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord,
             String insteadOfDeleteTitle, Consumer<R> insteadOfDelete, Runnable afterDelete) {
         var buttonAdd = new Button(grid.getTranslation("Add"));
@@ -46,7 +46,7 @@ public class GridBuilder {
                     new ConfirmDialog("delete-confirm-dialog", grid.getTranslation("Confirm"),
                             grid.getTranslation("Are.you.sure"), grid.getTranslation("Delete"), e -> {
                                 try {
-                                    JooqDAO.delete(updatableRecord);
+                                    jooqDAO.delete(updatableRecord);
                                     afterDelete.run();
                                 }
                                 catch (DataAccessException ex) {

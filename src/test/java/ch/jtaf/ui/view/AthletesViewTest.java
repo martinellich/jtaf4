@@ -61,9 +61,9 @@ class AthletesViewTest extends KaribuTest {
         // Remove athlete
         GridKt._getCellComponent(athletesGrid, 0, "edit-column")
             .getChildren()
-            .filter(component -> component instanceof Button)
+            .filter(Button.class::isInstance)
             .findFirst()
-            .map(component -> (Button) component)
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);

@@ -13,6 +13,7 @@ import java.util.Locale;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 
+@SuppressWarnings("java:S2699")
 class DashboardViewLoggedInTest extends KaribuTest {
 
     @BeforeEach
