@@ -112,8 +112,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
         addEvent.addClickListener(event -> {
-            SearchEventDialog dialog = new SearchEventDialog(eventDAO, organizationId, binder.getBean(),
-                    this::onAssignEvent);
+            var dialog = new SearchEventDialog(eventDAO, organizationId, binder.getBean(), this::onAssignEvent);
             dialog.open();
         });
 
