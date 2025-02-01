@@ -412,8 +412,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
         var assign = new Button(getTranslation("Assign.Athlete"));
         assign.setId("assign-athlete");
         assign.addClickListener(event -> {
-            SearchAthleteDialog dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider,
-                    organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
+            var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider, organizationRecord.getId(),
+                    seriesRecord.getId(), this::onAthleteSelect);
             dialog.open();
         });
 

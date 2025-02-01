@@ -1,8 +1,10 @@
 package ch.jtaf.ui.component;
 
 import ch.martinelli.oss.jooqspring.JooqDAO;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
-import com.vaadin.flow.data.provider.*;
+import com.vaadin.flow.data.provider.SortDirection;
 import org.jooq.*;
 
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
         var condition = noCondition();
         var filter = query.getFilter();
         if (filter.isPresent()) {
-            for (Field<?> field : table.fields()) {
+            for (var field : table.fields()) {
                 if (field.getType() == String.class) {
                     // noinspection unchecked
                     condition = condition.or(upper((Field<String>) field).like(upper("%" + filter.get() + "%")));
@@ -72,11 +74,11 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
             return initialSort.get();
         }
         else {
-            List<OrderField<?>> sortFields = new ArrayList<>();
-            for (QuerySortOrder sortOrder : query.getSortOrders()) {
-                String column = sortOrder.getSorted();
-                SortDirection sortDirection = sortOrder.getDirection();
-                Field<?> field = table.field(column);
+            var sortFields = new ArrayList<OrderField<?>>();
+            for (var sortOrder : query.getSortOrders()) {
+                var column = sortOrder.getSorted();
+                var sortDirection = sortOrder.getDirection();
+                var field = table.field(column);
                 if (field != null) {
                     if (sortDirection == SortDirection.DESCENDING) {
                         sortFields.add(field.desc());

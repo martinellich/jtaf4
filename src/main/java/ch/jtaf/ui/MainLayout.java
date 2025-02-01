@@ -67,7 +67,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         addToNavbar(false, createHeaderContent());
         addToDrawer(createDrawerContent());
 
-        GoogleAnalytics analytics = new GoogleAnalytics("G-PH4RL4J6YT");
+        var analytics = new GoogleAnalytics("G-PH4RL4J6YT");
         addToDrawer(analytics);
 
         UI.getCurrent().addBeforeEnterListener(event -> analytics.sendPageView(event.getLocation().getPath()));

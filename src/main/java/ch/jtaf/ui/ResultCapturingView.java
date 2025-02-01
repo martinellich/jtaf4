@@ -146,8 +146,8 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
             var events = eventDAO.findByCategoryIdOrderByPosition(event.getValue().get(CATEGORY.ID));
 
-            boolean first = true;
-            int position = 0;
+            var first = true;
+            var position = 0;
             for (var eventRecord : events) {
                 var result = new TextField(eventRecord.getName());
                 result.setId("result-" + position);
@@ -232,7 +232,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
-            String filterString = (String) optionalFilter.get();
+            var filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             }

@@ -147,7 +147,7 @@ public class SearchEventDialog extends Dialog {
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
-            String filterString = (String) optionalFilter.get();
+            var filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return EVENT.ID.eq(Long.valueOf(filterString));
             }

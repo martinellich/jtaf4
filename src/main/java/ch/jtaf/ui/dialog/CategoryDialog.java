@@ -118,7 +118,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         });
 
         categoryEventsGrid.addComponentColumn(categoryRecord -> {
-            Button remove = new Button(getTranslation("Remove"));
+            var remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
             remove.addClickListener(event -> {
                 removeEventFromCategory(categoryRecord);
@@ -159,7 +159,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     }
 
     private List<CategoryEventVO> getCategoryEvents() {
-        CategoryRecord categoryRecord = binder.getBean();
+        var categoryRecord = binder.getBean();
         if (categoryRecord != null && categoryRecord.getId() != null) {
             return categoryEventDAO.findAllByCategoryId(categoryRecord.getId());
         }

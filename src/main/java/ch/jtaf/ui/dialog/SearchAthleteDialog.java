@@ -158,7 +158,7 @@ public class SearchAthleteDialog extends Dialog {
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
-            String filterString = (String) optionalFilter.get();
+            var filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
             }

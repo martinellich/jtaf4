@@ -70,7 +70,7 @@ public class SheetsReport extends AbstractReport {
             document = new Document(A5, oneCm, oneCm, cmToPixel(4.5f), oneCm);
             pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
-            boolean first = true;
+            var first = true;
             var number = 1;
             for (var athlete : athletes) {
                 if (!first) {

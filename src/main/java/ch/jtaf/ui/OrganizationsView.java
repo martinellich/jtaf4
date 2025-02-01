@@ -24,6 +24,7 @@ import java.io.Serial;
 
 import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 
+@SuppressWarnings("javaarchitecture:S7027")
 @RolesAllowed({ Role.USER, Role.ADMIN })
 @Route
 public class OrganizationsView extends VerticalLayout implements HasDynamicTitle {

@@ -67,7 +67,7 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
         save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            R recordToSave = binder.getBean();
+            var recordToSave = binder.getBean();
             jooqDAO.save(recordToSave);
 
             if (afterSave != null) {

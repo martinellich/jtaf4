@@ -47,7 +47,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         var verticalLayout = new VerticalLayout();
         add(verticalLayout);
 
-        int seriesIndex = 1;
+        var seriesIndex = 1;
         var seriesRecords = seriesDAO.findAllOrderByCompetitionDate();
         for (var series : seriesRecords) {
             var seriesLayout = new HorizontalLayout();
