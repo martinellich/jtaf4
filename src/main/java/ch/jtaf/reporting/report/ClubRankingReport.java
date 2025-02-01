@@ -57,7 +57,7 @@ public class ClubRankingReport extends RankingReport {
         table.setWidthPercentage(100f);
         table.setSpacingBefore(1f);
 
-        int rank = 1;
+        var rank = 1;
         for (var result : ranking.sortedResults()) {
             createClubRow(table, result, rank);
             rank++;

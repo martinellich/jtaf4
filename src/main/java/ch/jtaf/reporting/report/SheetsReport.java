@@ -71,7 +71,7 @@ public class SheetsReport extends AbstractReport {
             pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
             boolean first = true;
-            int number = 1;
+            var number = 1;
             for (var athlete : athletes) {
                 if (!first) {
                     document.newPage();

@@ -42,8 +42,8 @@ public class NumbersReport extends AbstractReport {
             var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
             document.open();
 
-            int i = 0;
-            int number = 1;
+            var i = 0;
+            var number = 1;
             var table = createMainTable();
             for (var athlete : athletes) {
                 if (i > 9) {

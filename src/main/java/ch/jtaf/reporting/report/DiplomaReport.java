@@ -42,7 +42,7 @@ public class DiplomaReport extends AbstractReport {
             document.open();
 
             for (var category : ranking.categories()) {
-                int rank = 1;
+                var rank = 1;
                 for (var athlete : category.sortedAthletes()) {
                     createTitle();
                     createLogo();
@@ -85,7 +85,7 @@ public class DiplomaReport extends AbstractReport {
         table.setWidthPercentage(100f);
         table.setSpacingBefore(cmToPixel(1.5f));
 
-        float athleteFontSize = 12f;
+        var athleteFontSize = 12f;
         addCell(table, rank + ".", athleteFontSize);
         addCell(table, athlete.lastName(), athleteFontSize);
         addCell(table, athlete.firstName(), athleteFontSize);

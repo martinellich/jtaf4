@@ -60,7 +60,7 @@ public class EventsRankingReport extends RankingReport {
 
             createEventTitle(table, event);
 
-            int position = 1;
+            var position = 1;
             for (var result : event.sortedResults()) {
                 createAthleteRow(table, position, result);
                 position++;

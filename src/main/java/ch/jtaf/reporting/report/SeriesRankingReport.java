@@ -59,7 +59,7 @@ public class SeriesRankingReport extends RankingReport {
             createCategoryTitle(table, category);
             numberOfRows += 2;
 
-            int rank = 1;
+            var rank = 1;
             for (var athlete : category.getFilteredAndSortedAthletes(ranking.numberOfCompetitions())) {
                 if (numberOfRows > 23) {
                     document.add(table);

@@ -50,7 +50,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
         int seriesIndex = 1;
         var seriesRecords = seriesDAO.findAllOrderByCompetitionDate();
         for (var series : seriesRecords) {
-            HorizontalLayout seriesLayout = new HorizontalLayout();
+            var seriesLayout = new HorizontalLayout();
             seriesLayout.getClassNames().add("series-layout");
             verticalLayout.add(seriesLayout);
 
@@ -99,7 +99,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
             var clubRankingDiv = new Div(clubRankingAnchor);
             buttonLayout.add(clubRankingDiv);
 
-            int competitionIndex = 1;
+            var competitionIndex = 1;
             var competitionRecords = competitionDAO.findBySeriesId(series.getId());
             for (var competition : competitionRecords) {
                 var competitionLayout = new HorizontalLayout();
@@ -187,7 +187,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
                     competitionIndex++;
                 }
             }
-            Hr hr = new Hr();
+            var hr = new Hr();
             hr.setClassName("dashboard-separator");
             verticalLayout.add(hr);
 

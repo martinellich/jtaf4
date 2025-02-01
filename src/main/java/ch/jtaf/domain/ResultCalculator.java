@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class ResultCalculator {
 
     public int calculatePoints(EventRecord event, String result) {
-        double points = 0.0d;
+        var points = 0.0d;
         if (EventType.valueOf(event.getEventType()) == EventType.RUN) {
             points = event.getA() * Math.pow((event.getB() - Double.parseDouble(result) * 100) / 100, event.getC());
         }

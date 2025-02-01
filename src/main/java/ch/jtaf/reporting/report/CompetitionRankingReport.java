@@ -63,7 +63,7 @@ public class CompetitionRankingReport extends RankingReport {
                 createCategoryTitle(table, category);
                 numberOfRows += 2;
 
-                int rank = 1;
+                var rank = 1;
                 for (var athlete : category.sortedAthletes()) {
                     if (numberOfRows > 23) {
                         document.add(table);
