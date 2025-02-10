@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Layout
 @AnonymousAllowed
@@ -178,21 +179,30 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
     }
 
     private Footer createFooter() {
-        var layout = new Footer();
-        layout.addClassNames(Display.FLEX, Margin.Vertical.SMALL, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
+        var footer = new Footer();
+        footer.addClassName(Margin.Left.LARGE);
+
+        var locale = UI.getCurrent().getSession().getLocale();
+        var languageSwitch = new Button(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? "DE" : "EN");
+        languageSwitch.addClassName(Margin.Bottom.XLARGE);
+        languageSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        languageSwitch.addClickListener(e -> {
+            UI.getCurrent().getSession().setLocale(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? Locale.GERMAN : Locale.ENGLISH);
+            UI.getCurrent().getPage().reload();
+        });
+        footer.add(languageSwitch);
 
         var htmlByLink = new Html(
                 "<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
-
         var byLink = new Anchor();
         byLink.setWidth("300px");
         byLink.getElement().getStyle().set("font-size", "small");
-        byLink.setHref("https://72.services");
+        byLink.setHref("https://martinelli.ch");
         byLink.setTarget("_blank");
         byLink.add(htmlByLink);
-        layout.add(byLink);
+        footer.add(byLink);
 
-        return layout;
+        return footer;
     }
 
     @Override
