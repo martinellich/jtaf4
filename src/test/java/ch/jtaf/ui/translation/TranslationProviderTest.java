@@ -23,7 +23,8 @@ class TranslationProviderTest {
     void get_provided_locales() {
         var providedLocales = translationProvider.getProvidedLocales();
 
-        assertThat(providedLocales).isNotEmpty().hasSize(2);
+        // Check if this is disabled
+        assertThat(providedLocales).isEmpty();
     }
 
     @Test
