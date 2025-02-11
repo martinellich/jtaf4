@@ -22,7 +22,7 @@ public class TranslationProvider implements I18NProvider {
 
     @Override
     public List<Locale> getProvidedLocales() {
-        return List.of();
+        return List.of(Locale.ENGLISH, Locale.GERMAN);
     }
 
     @Override
