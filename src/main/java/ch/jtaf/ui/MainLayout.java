@@ -187,7 +187,9 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
         languageSwitch.addClassName(Margin.Bottom.XLARGE);
         languageSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
         languageSwitch.addClickListener(e -> {
-            UI.getCurrent().getSession().setLocale(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? Locale.GERMAN : Locale.ENGLISH);
+            UI.getCurrent()
+                .getSession()
+                .setLocale(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? Locale.GERMAN : Locale.ENGLISH);
             UI.getCurrent().getPage().reload();
         });
         footer.add(languageSwitch);
