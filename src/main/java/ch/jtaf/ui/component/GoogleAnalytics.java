@@ -37,7 +37,7 @@ public class GoogleAnalytics extends Component implements HasSize {
                             // Insert Analytics script into document
                             firstScriptTag.parentNode.insertBefore(analyticsScript, firstScriptTag);
 
-                        })(window, document, 'script', 'dataLayer', '$0');
+                        })(window, document, 'script', 'dataLayer', $0);
 
                         // Ensure dataLayer exists
                         window.dataLayer = window.dataLayer || [];
@@ -51,7 +51,7 @@ public class GoogleAnalytics extends Component implements HasSize {
                         sendToAnalytics('js', new Date());
 
                         // Configure Analytics with measurement ID
-                        sendToAnalytics('config', '$0');
+                        sendToAnalytics('config', $0);
                         """,
                 measurementId);
     }
@@ -68,7 +68,7 @@ public class GoogleAnalytics extends Component implements HasSize {
 
     public void sendEvent(String eventName, JsonObject eventParams) {
         getElement().executeJs("""
-                gtag('event', $0, $1); // $0 is event name, $1 is parameters object
+                gtag('event', $0, $1); // $0 is the event name, $1 is the parameters object
                 """, eventName, eventParams);
     }
 
