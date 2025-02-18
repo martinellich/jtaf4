@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 
+// @formatter:off
 @Repository
 public class CompetitionDAO extends JooqDAO<Competition, CompetitionRecord, Long> {
 
@@ -34,4 +35,5 @@ public class CompetitionDAO extends JooqDAO<Competition, CompetitionRecord, Long
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOptional();
     }
+
 }

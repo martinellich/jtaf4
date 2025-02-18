@@ -13,6 +13,7 @@ import java.util.Locale;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._assert;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 
+@SuppressWarnings("java:S2699")
 class DashboardViewLoggedInTest extends KaribuTest {
 
     @BeforeEach
@@ -28,7 +29,8 @@ class DashboardViewLoggedInTest extends KaribuTest {
 
         try {
             _get(Button.class, spec -> spec.withId("logout")).click();
-        } catch (Exception __) {
+        }
+        catch (Exception ignored) {
             // https://github.com/mvysny/karibu-testing/issues/148
         }
     }
@@ -43,4 +45,5 @@ class DashboardViewLoggedInTest extends KaribuTest {
 
         Locale.setDefault(Locale.ENGLISH);
     }
+
 }

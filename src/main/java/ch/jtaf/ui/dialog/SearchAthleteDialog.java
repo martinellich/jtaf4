@@ -5,13 +5,13 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.domain.AthleteDAO;
 import ch.jtaf.domain.ClubDAO;
+import ch.jtaf.ui.component.MaterialSymbol;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -38,14 +38,17 @@ public class SearchAthleteDialog extends Dialog {
     public static final String FULLSCREEN = "fullscreen";
 
     private boolean isFullScreen = false;
+
     private final Div content;
+
     private final Button toggle;
 
     private final Map<Long, ClubRecord> clubRecordMap;
+
     private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
     public SearchAthleteDialog(AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider,
-                               Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
+            Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
         setDraggable(true);
         setResizable(true);
 
@@ -53,11 +56,11 @@ public class SearchAthleteDialog extends Dialog {
 
         setHeaderTitle(getTranslation("Athletes"));
 
-        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
         toggle.setId("toggle");
         toggle.addClickListener(event -> toggle());
 
-        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(MaterialSymbol.CLOSE.create());
         close.addClickListener(event -> close());
 
         getHeader().add(toggle, close);
@@ -73,9 +76,11 @@ public class SearchAthleteDialog extends Dialog {
         clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
         CallbackDataProvider<AthleteRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
-            query -> athleteDAO.findByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query), query.getOffset(), query.getLimit()).stream(),
-            query -> athleteDAO.countByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query))
-        );
+                query -> athleteDAO
+                    .findByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query),
+                            query.getOffset(), query.getLimit())
+                    .stream(),
+                query -> athleteDAO.countByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query)));
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
@@ -84,21 +89,40 @@ public class SearchAthleteDialog extends Dialog {
         grid.setItems(dataProvider);
         grid.setHeight("calc(100% - 60px");
 
-        grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.LAST_NAME.getName());
-        grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.FIRST_NAME.getName());
-        grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.GENDER.getName());
-        grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
+        grid.addColumn(AthleteRecord::getLastName)
+            .setHeader(getTranslation("Last.Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.LAST_NAME.getName());
+        grid.addColumn(AthleteRecord::getFirstName)
+            .setHeader(getTranslation("First.Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.FIRST_NAME.getName());
+        grid.addColumn(AthleteRecord::getGender)
+            .setHeader(getTranslation("Gender"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.GENDER.getName());
+        grid.addColumn(AthleteRecord::getYearOfBirth)
+            .setHeader(getTranslation("Year"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.YEAR_OF_BIRTH.getName());
         grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-            : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club")).setAutoWidth(true);
+                : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
+            .setHeader(getTranslation("Club"))
+            .setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(), () -> {
-            var newRecord = ATHLETE.newRecord();
-            newRecord.setOrganizationId(organizationId);
-            return newRecord;
-        }, getTranslation("Assign.Athlete"), athleteRecord -> {
-            fireEvent(new AthleteSelectedEvent(this, athleteRecord));
-            close();
-        }, dataProvider::refreshAll);
+        addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(),
+                () -> {
+                    var newRecord = ATHLETE.newRecord();
+                    newRecord.setOrganizationId(organizationId);
+                    return newRecord;
+                }, getTranslation("Assign.Athlete"), athleteRecord -> {
+                    fireEvent(new AthleteSelectedEvent(this, athleteRecord));
+                    close();
+                }, dataProvider::refreshAll);
 
         filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
@@ -112,7 +136,7 @@ public class SearchAthleteDialog extends Dialog {
     }
 
     private void initialSize() {
-        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(MaterialSymbol.MAXIMIZE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
@@ -121,8 +145,9 @@ public class SearchAthleteDialog extends Dialog {
     private void toggle() {
         if (isFullScreen) {
             initialSize();
-        } else {
-            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+        }
+        else {
+            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);
@@ -133,14 +158,16 @@ public class SearchAthleteDialog extends Dialog {
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
-            String filterString = (String) optionalFilter.get();
+            var filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return ATHLETE.ID.eq(Long.valueOf(filterString));
-            } else {
+            }
+            else {
                 return lower(ATHLETE.LAST_NAME).like(filterString.toLowerCase() + "%")
                     .or(lower(ATHLETE.FIRST_NAME).like(filterString.toLowerCase() + "%"));
             }
-        } else {
+        }
+        else {
             return DSL.condition("1 = 2");
         }
     }
@@ -158,5 +185,7 @@ public class SearchAthleteDialog extends Dialog {
         public AthleteRecord getAthleteRecord() {
             return athleteRecord;
         }
+
     }
+
 }

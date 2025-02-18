@@ -58,8 +58,11 @@ class SeriesListViewTest extends KaribuTest {
         assertThat(GridKt._get(seriesGrid, 0).getName()).isEqualTo("Test");
 
         // Remove series
-        GridKt._getCellComponent(seriesGrid, 0, "delete-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(seriesGrid, 0, "delete-column")
+            .getChildren()
+            .filter(Button.class::isInstance)
+            .findFirst()
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -118,8 +121,11 @@ class SeriesListViewTest extends KaribuTest {
         // Remove series
         UI.getCurrent().navigate(SeriesListView.class);
 
-        GridKt._getCellComponent(seriesGrid, 0, "delete-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(seriesGrid, 0, "delete-column")
+            .getChildren()
+            .filter(Button.class::isInstance)
+            .findFirst()
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);
@@ -129,4 +135,5 @@ class SeriesListViewTest extends KaribuTest {
         // Check if series was removed
         assertThat(GridKt._size(seriesGrid)).isEqualTo(2);
     }
+
 }

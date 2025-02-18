@@ -8,8 +8,9 @@ import com.vaadin.flow.component.html.Paragraph;
 
 public class ConfirmDialog extends Dialog {
 
-    public ConfirmDialog(String id, String header, String text, String confirmText, ComponentEventListener<ConfirmEvent> confirmListener,
-                         String cancelText, ComponentEventListener<CancelEvent> cancelListener) {
+    public ConfirmDialog(String id, String header, String text, String confirmText,
+            ComponentEventListener<ConfirmEvent> confirmListener, String cancelText,
+            ComponentEventListener<CancelEvent> cancelListener) {
         setId(id);
 
         setHeaderTitle(header);
@@ -41,6 +42,7 @@ public class ConfirmDialog extends Dialog {
         public ConfirmEvent(ConfirmDialog source) {
             super(source, false);
         }
+
     }
 
     public static class CancelEvent extends ComponentEvent<ConfirmDialog> {
@@ -48,5 +50,7 @@ public class ConfirmDialog extends Dialog {
         public CancelEvent(ConfirmDialog source) {
             super(source, false);
         }
+
     }
+
 }

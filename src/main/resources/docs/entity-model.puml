@@ -1,0 +1,147 @@
+@startuml JTAF Entity Model
+
+' Entities
+entity Organization {
+  * id: bigint
+  * organization_key: varchar
+  * name: varchar
+  * owner: varchar
+}
+
+entity Series {
+  * id: bigint
+  * name: varchar
+  logo: bytea
+  hidden: boolean
+  locked: boolean
+  --
+  * organization_id: bigint
+}
+
+entity Competition {
+  * id: bigint
+  * name: varchar
+  * competition_date: date
+  always_first_three_medals: boolean
+  * medal_percentage: int
+  locked: boolean
+  --
+  * series_id: bigint
+}
+
+entity Category {
+  * id: bigint
+  * abbreviation: varchar
+  * name: varchar
+  * gender: char
+  * year_from: int
+  * year_to: int
+  --
+  * series_id: bigint
+}
+
+entity Event {
+  * id: bigint
+  abbreviation: varchar
+  name: varchar
+  gender: char
+  event_type: varchar
+  * a: double
+  * b: double
+  * c: double
+  --
+  * organization_id: bigint
+}
+
+entity Athlete {
+  * id: bigint
+  * first_name: varchar
+  * last_name: varchar
+  * gender: char
+  * year_of_birth: int
+  --
+  club_id: bigint
+  organization_id: bigint
+}
+
+entity Club {
+  * id: bigint
+  * abbreviation: varchar
+  * name: varchar
+  --
+  * organization_id: bigint
+}
+
+entity Result {
+  * id: bigint
+  * position: int
+  * result: varchar
+  * points: int
+  --
+  * athlete_id: bigint
+  * category_id: bigint
+  * competition_id: bigint
+  * event_id: bigint
+}
+
+entity SecurityUser {
+  * id: bigint
+  * first_name: varchar
+  * last_name: varchar
+  * email: varchar
+  * secret: varchar
+  confirmation_id: varchar
+  confirmed: boolean
+}
+
+entity SecurityGroup {
+  * id: bigint
+  * name: varchar
+}
+
+' Junction Tables
+entity "CategoryAthlete" as category_athlete {
+  * category_id: bigint
+  * athlete_id: bigint
+  * dnf: boolean
+}
+
+entity "CategoryEvent" as category_event {
+  * category_id: bigint
+  * event_id: bigint
+  * position: int
+}
+
+entity "OrganizationUser" as organization_user {
+  * organization_id: bigint
+  * user_id: bigint
+}
+
+entity "UserGroup" as user_group {
+  * user_id: bigint
+  * group_id: bigint
+}
+
+' Relationships
+Organization ||--o{ Series
+Organization ||--o{ Event
+Organization ||--o{ Club
+Organization ||--o{ Athlete
+Organization }o--o{ SecurityUser : through organization_user
+
+Series ||--o{ Competition
+Series ||--o{ Category
+
+Category }o--o{ Athlete : through category_athlete
+Category }o--o{ Event : through category_event
+
+Club ||--o{ Athlete
+
+Result }|--|| Athlete
+Result }|--|| Category
+Result }|--|| Competition
+Result }|--|| Event
+
+SecurityUser }o--o{ SecurityGroup : through user_group
+
+@enduml

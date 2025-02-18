@@ -14,6 +14,7 @@ import static ch.jtaf.db.tables.Organization.ORGANIZATION;
 import static ch.jtaf.db.tables.OrganizationUser.ORGANIZATION_USER;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 
+// @formatter:off
 @Repository
 public class OrganizationDAO extends JooqDAO<Organization, OrganizationRecord, Long> {
 

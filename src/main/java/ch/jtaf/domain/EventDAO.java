@@ -13,6 +13,7 @@ import java.util.List;
 import static ch.jtaf.db.tables.CategoryEvent.CATEGORY_EVENT;
 import static ch.jtaf.db.tables.Event.EVENT;
 
+// @formatter:off
 @Repository
 public class EventDAO extends JooqDAO<Event, EventRecord, Long> {
 
@@ -21,7 +22,7 @@ public class EventDAO extends JooqDAO<Event, EventRecord, Long> {
     }
 
     public List<EventRecord> findAllByOrganizationGenderCategory(long organizationId, String gender, long categoryId,
-                                                                 Condition condition, int offset, int limit) {
+            Condition condition, int offset, int limit) {
         return dslContext
             .selectFrom(EVENT)
             .where(EVENT.ORGANIZATION_ID.eq(organizationId))
@@ -29,15 +30,16 @@ public class EventDAO extends JooqDAO<Event, EventRecord, Long> {
                 .and(EVENT.ID.notIn(DSL
                     .select(CATEGORY_EVENT.EVENT_ID)
                     .from(CATEGORY_EVENT)
-                    .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryId))
-                ))
+                    .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryId))))
                 .and(condition))
             .orderBy(EVENT.ABBREVIATION, EVENT.GENDER)
-            .offset(offset).limit(limit)
+            .offset(offset)
+            .limit(limit)
             .fetch();
     }
 
-    public int countByOrganizationGenderCategory(long organizationId, String gender, long categoryId, Condition condition) {
+    public int countByOrganizationGenderCategory(long organizationId, String gender, long categoryId,
+            Condition condition) {
         return dslContext
             .selectCount()
             .from(EVENT)
@@ -46,10 +48,10 @@ public class EventDAO extends JooqDAO<Event, EventRecord, Long> {
             .and(EVENT.ID.notIn(dslContext
                 .select(CATEGORY_EVENT.EVENT_ID)
                 .from(CATEGORY_EVENT)
-                .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryId))
-            ))
+                .where(CATEGORY_EVENT.CATEGORY_ID.eq(categoryId))))
             .and(condition)
-            .fetchOptionalInto(Integer.class).orElse(0);
+            .fetchOptionalInto(Integer.class)
+            .orElse(0);
     }
 
     public List<EventRecord> findByCategoryIdOrderByPosition(Long categoryId) {
@@ -60,4 +62,5 @@ public class EventDAO extends JooqDAO<Event, EventRecord, Long> {
             .orderBy(CATEGORY_EVENT.POSITION)
             .fetchInto(EventRecord.class);
     }
+
 }

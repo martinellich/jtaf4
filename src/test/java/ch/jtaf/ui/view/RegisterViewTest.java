@@ -24,6 +24,8 @@ class RegisterViewTest extends KaribuTest {
         _get(PasswordField.class, spec -> spec.withLabel("Password")).setValue("pass");
         _get(Button.class, spec -> spec.withText("Register")).click();
 
-        NotificationsKt.expectNotifications("Thanks for registering. An email was sent to your address. Please check your inbox.");
+        NotificationsKt
+            .expectNotifications("Thanks for registering. An email was sent to your address. Please check your inbox.");
     }
+
 }

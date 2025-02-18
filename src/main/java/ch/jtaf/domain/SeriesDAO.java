@@ -17,6 +17,7 @@ import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.select;
 
+// @formatter:off
 @Repository
 public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
 
@@ -26,38 +27,41 @@ public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
 
     @Transactional
     public void copyCategories(Long seriesIdToCopy, Long currentSeriesId) {
-        dslContext.selectFrom(CATEGORY)
+        dslContext
+            .selectFrom(CATEGORY)
             .where(CATEGORY.SERIES_ID.eq(seriesIdToCopy))
-            .fetch()
-            .forEach(category -> {
+            .fetch().forEach(category -> {
                 var copyCategory = category.copy();
                 copyCategory.setSeriesId(currentSeriesId);
                 dslContext.attach(copyCategory);
                 copyCategory.store();
-                dslContext.selectFrom(CATEGORY_EVENT)
+                dslContext
+                    .selectFrom(CATEGORY_EVENT)
                     .where(CATEGORY_EVENT.CATEGORY_ID.eq(category.getId()))
-                    .fetch()
-                    .forEach(categoryEvent -> {
+                    .fetch().forEach(categoryEvent -> {
                         var copyCategoryEvent = categoryEvent.copy();
                         copyCategoryEvent.setCategoryId(copyCategory.getId());
                         copyCategoryEvent.setEventId(categoryEvent.getEventId());
                         dslContext.attach(copyCategoryEvent);
                         copyCategoryEvent.store();
-                    });
-            });
+                });
+        });
     }
 
     @Transactional
     public void deleteSeries(long seriesId) {
-        dslContext.deleteFrom(CATEGORY_EVENT)
+        dslContext
+            .deleteFrom(CATEGORY_EVENT)
             .where(CATEGORY_EVENT.category().SERIES_ID.eq(seriesId))
             .execute();
 
-        dslContext.deleteFrom(CATEGORY)
+        dslContext
+            .deleteFrom(CATEGORY)
             .where(CATEGORY.SERIES_ID.eq(seriesId))
             .execute();
 
-        dslContext.deleteFrom(SERIES)
+        dslContext
+            .deleteFrom(SERIES)
             .where(SERIES.ID.eq(seriesId))
             .execute();
     }
@@ -68,14 +72,20 @@ public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
             .where(SERIES.ORGANIZATION_ID.eq(organizationId))
             .and(SERIES.ID.ne(seriesId))
             .orderBy(SERIES.NAME)
-            .offset(offset).limit(limit)
+            .offset(offset)
+            .limit(limit)
             .fetch();
     }
 
     public List<SeriesRecord> findAllOrderByCompetitionDate() {
         return dslContext
             .selectFrom(SERIES)
-            .orderBy(field(select(DSL.max(COMPETITION.COMPETITION_DATE)).from(COMPETITION).where(COMPETITION.SERIES_ID.eq(SERIES.ID))).desc())
+            .orderBy(
+                field(
+                    select(DSL.max(COMPETITION.COMPETITION_DATE))
+                        .from(COMPETITION)
+                        .where(COMPETITION.SERIES_ID.eq(SERIES.ID))).desc())
             .fetch();
     }
+
 }

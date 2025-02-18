@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static ch.jtaf.db.tables.Result.RESULT;
 
+// @formatter:off
 @Repository
 public class ResultDAO extends JooqDAO<Result, ResultRecord, Long> {
 
@@ -26,4 +27,5 @@ public class ResultDAO extends JooqDAO<Result, ResultRecord, Long> {
             .and(RESULT.EVENT_ID.eq(eventId))
             .fetchOptional();
     }
+
 }

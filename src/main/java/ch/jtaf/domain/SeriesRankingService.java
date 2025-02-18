@@ -18,6 +18,7 @@ import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 
+// @formatter:off
 @Service
 public class SeriesRankingService {
 

@@ -13,6 +13,7 @@ import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 
+// @formatter:off
 @Service
 @Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -38,11 +39,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .fetch();
 
             return new User(securityUserRecord.getEmail(), securityUserRecord.getSecret(),
-                groups.stream()
-                    .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getValue(SECURITY_GROUP.NAME)))
-                    .toList());
-        } else {
+                    groups.stream()
+                        .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getValue(SECURITY_GROUP.NAME)))
+                        .toList());
+        }
+        else {
             throw new UsernameNotFoundException(username);
         }
     }
+
 }

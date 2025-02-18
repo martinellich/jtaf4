@@ -31,12 +31,13 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     private final long organizationId;
 
     private final transient CategoryEventDAO categoryEventDAO;
+
     private final transient EventDAO eventDAO;
 
     private Grid<CategoryEventVO> categoryEventsGrid;
 
-    public CategoryDialog(String title, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO,
-                          EventDAO eventDAO, long organizationId) {
+    public CategoryDialog(String title, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO, EventDAO eventDAO,
+            long organizationId) {
         super(title, "1600px", categoryDAO);
         this.categoryEventDAO = categoryEventDAO;
         this.eventDAO = eventDAO;
@@ -68,8 +69,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
 
-        binder.forField(gender)
-            .bind(CategoryRecord::getGender, CategoryRecord::setGender);
+        binder.forField(gender).bind(CategoryRecord::getGender, CategoryRecord::setGender);
 
         var yearFrom = new TextField(getTranslation("Year.From"));
         yearFrom.setAutoselect(true);
@@ -94,24 +94,30 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
         categoryEventsGrid = new Grid<>();
         categoryEventsGrid.setHeight("380px");
         categoryEventsGrid.setId("category-events-grid");
-        categoryEventsGrid.addColumn(CategoryEventVO::abbreviation).setHeader(getTranslation("Abbreviation")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::abbreviation)
+            .setHeader(getTranslation("Abbreviation"))
+            .setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::name).setHeader(getTranslation("Name")).setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::gender).setHeader(getTranslation("Gender")).setAutoWidth(true);
-        categoryEventsGrid.addColumn(CategoryEventVO::eventType).setHeader(getTranslation("Event.Type")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::eventType)
+            .setHeader(getTranslation("Event.Type"))
+            .setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::a).setHeader("A").setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::b).setHeader("B").setAutoWidth(true);
         categoryEventsGrid.addColumn(CategoryEventVO::c).setHeader("C").setAutoWidth(true);
-        categoryEventsGrid.addColumn(CategoryEventVO::position).setHeader(getTranslation("Position")).setAutoWidth(true);
+        categoryEventsGrid.addColumn(CategoryEventVO::position)
+            .setHeader(getTranslation("Position"))
+            .setAutoWidth(true);
 
         var addEvent = new Button(getTranslation("Add.Event"));
         addEvent.setId("add-event");
         addEvent.addClickListener(event -> {
-            SearchEventDialog dialog = new SearchEventDialog(eventDAO, organizationId, binder.getBean(), this::onAssignEvent);
+            var dialog = new SearchEventDialog(eventDAO, organizationId, binder.getBean(), this::onAssignEvent);
             dialog.open();
         });
 
         categoryEventsGrid.addComponentColumn(categoryRecord -> {
-            Button remove = new Button(getTranslation("Remove"));
+            var remove = new Button(getTranslation("Remove"));
             remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
             remove.addClickListener(event -> {
                 removeEventFromCategory(categoryRecord);
@@ -152,27 +158,25 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
     }
 
     private List<CategoryEventVO> getCategoryEvents() {
-        CategoryRecord categoryRecord = binder.getBean();
+        var categoryRecord = binder.getBean();
         if (categoryRecord != null && categoryRecord.getId() != null) {
             return categoryEventDAO.findAllByCategoryId(categoryRecord.getId());
-        } else {
+        }
+        else {
             return Collections.emptyList();
         }
     }
 
     private void removeEventFromCategory(CategoryEventVO categoryEventVO) {
-        new ConfirmDialog(
-            "remove-event-from-category-confirm-dialog",
-            getTranslation("Confirm"),
-            getTranslation("Are.you.sure"),
-            getTranslation("Remove"), e -> {
-            categoryEventDAO.delete(
-                CATEGORY_EVENT.CATEGORY_ID.eq(categoryEventVO.categoryId())
-                    .and(CATEGORY_EVENT.EVENT_ID.eq(categoryEventVO.eventId())));
-            categoryEventsGrid.setItems(getCategoryEvents());
-            categoryEventsGrid.getDataProvider().refreshAll();
-        },
-            getTranslation("Cancel"), e -> {
-        }).open();
+        new ConfirmDialog("remove-event-from-category-confirm-dialog", getTranslation("Confirm"),
+                getTranslation("Are.you.sure"), getTranslation("Remove"), e -> {
+                    categoryEventDAO.delete(CATEGORY_EVENT.CATEGORY_ID.eq(categoryEventVO.categoryId())
+                        .and(CATEGORY_EVENT.EVENT_ID.eq(categoryEventVO.eventId())));
+                    categoryEventsGrid.setItems(getCategoryEvents());
+                    categoryEventsGrid.getDataProvider().refreshAll();
+                }, getTranslation("Cancel"), e -> {
+                })
+            .open();
     }
+
 }

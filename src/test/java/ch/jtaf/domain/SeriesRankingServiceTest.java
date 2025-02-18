@@ -48,4 +48,5 @@ class SeriesRankingServiceTest {
 
         assertThat(pdf).isNotEmpty();
     }
+
 }

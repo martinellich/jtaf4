@@ -13,23 +13,27 @@ import org.jooq.UpdatableRecord;
 import java.io.Serial;
 import java.util.List;
 
+@SuppressWarnings("java:S1452")
 public abstract class ProtectedGridView<R extends UpdatableRecord<R>> extends ProtectedView {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
-    final Grid<R> grid;
-    protected final transient JooqDAO<?, R, ?> JooqDAO;
 
-    protected ProtectedGridView(JooqDAO<?, R, ?> JooqDAO, OrganizationProvider organizationProvider, Table<R> table) {
+    final Grid<R> grid;
+
+    protected final transient JooqDAO<?, R, ?> jooqDAO;
+
+    protected ProtectedGridView(JooqDAO<?, R, ?> jooqDAO, OrganizationProvider organizationProvider, Table<R> table) {
         super(organizationProvider);
-        this.JooqDAO = JooqDAO;
+        this.jooqDAO = jooqDAO;
 
         grid = new Grid<>();
         grid.setHeightFull();
 
-        dataProvider = new JooqDataProviderProducer<>(JooqDAO, table, this::initialCondition, this::initialSort).getDataProvider();
+        dataProvider = new JooqDataProviderProducer<>(jooqDAO, table, this::initialCondition, this::initialSort)
+            .getDataProvider();
 
         grid.setItems(dataProvider);
 

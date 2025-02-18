@@ -1,12 +1,12 @@
 package ch.jtaf.ui.dialog;
 
+import ch.jtaf.ui.component.MaterialSymbol;
 import ch.martinelli.oss.jooqspring.JooqDAO;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.binder.Binder;
 import org.jooq.UpdatableRecord;
 
@@ -23,13 +23,17 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     private final String initialWidth;
 
     private boolean isFullScreen = false;
+
     private final Div content;
+
     private final Button toggle;
 
     final Binder<R> binder;
+
     final FormLayout formLayout;
 
     private transient Consumer<R> afterSave;
+
     private boolean initialized;
 
     protected EditDialog(String title, String initialWidth, JooqDAO<?, R, ?> jooqDAO) {
@@ -42,11 +46,11 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
 
         setHeaderTitle(title);
 
-        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
         toggle.addClickListener(event -> toggleFullscreen());
         toggle.setId("toggle");
 
-        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(MaterialSymbol.CLOSE.create());
         close.addClickListener(event -> close());
 
         getHeader().add(toggle, close);
@@ -63,7 +67,7 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
         save.setId("edit-save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         save.addClickListener(event -> {
-            R recordToSave = binder.getBean();
+            var recordToSave = binder.getBean();
             jooqDAO.save(recordToSave);
 
             if (afterSave != null) {
@@ -94,7 +98,7 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     }
 
     private void initialSize() {
-        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(MaterialSymbol.MAXIMIZE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth(initialWidth);
@@ -103,8 +107,9 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
     private void toggleFullscreen() {
         if (isFullScreen) {
             initialSize();
-        } else {
-            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+        }
+        else {
+            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);

@@ -3,8 +3,8 @@ package ch.jtaf.reporting.data;
 import java.time.LocalDate;
 import java.util.List;
 
-public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals, int medalPercentage,
-                                     List<Category> categories) {
+public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals,
+        int medalPercentage, List<Category> categories) {
 
     public record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
@@ -16,17 +16,17 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
         }
 
         public List<Athlete> sortedDnfAthletes() {
-            return athletes.stream()
-                .filter(athlete -> athlete.dnf)
-                .toList();
+            return athletes.stream().filter(athlete -> athlete.dnf).toList();
         }
 
-        public record Athlete(String firstName, String lastName, int yearOfBirth, String club, boolean dnf, List<Result> results) {
+        public record Athlete(String firstName, String lastName, int yearOfBirth, String club, boolean dnf,
+                List<Result> results) {
 
             public int totalPoints() {
                 if (results == null || dnf) {
                     return 0;
-                } else {
+                }
+                else {
                     return results.stream().mapToInt(Result::points).sum();
                 }
             }

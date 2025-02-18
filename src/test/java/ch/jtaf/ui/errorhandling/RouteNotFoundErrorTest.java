@@ -27,4 +27,5 @@ class RouteNotFoundErrorTest extends KaribuTest {
         H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
         assertThat(h1.getText()).isEqualTo("Dashboard");
     }
+
 }

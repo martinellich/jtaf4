@@ -32,3 +32,4 @@ error-screenshots/
 /src/main/resources/rebel.xml
 
 /src/main/resources/application-dev.properties
+/package-lock.json

@@ -35,7 +35,7 @@ public class EventsRankingReport extends RankingReport {
                 document = new Document(A4, border, border, border, border);
                 var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Event.Ranking"), ranking.name(),
-                    DATE_TIME_FORMATTER.format(ranking.competitionDate())));
+                        DATE_TIME_FORMATTER.format(ranking.competitionDate())));
                 document.open();
                 createRanking();
                 document.close();
@@ -44,7 +44,8 @@ public class EventsRankingReport extends RankingReport {
             }
 
             return ba;
-        } catch (DocumentException | IOException e) {
+        }
+        catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
@@ -52,14 +53,14 @@ public class EventsRankingReport extends RankingReport {
 
     private void createRanking() {
         for (var event : ranking.events()) {
-            PdfPTable table = new PdfPTable(new float[]{2f, 10f, 10f, 2f, 2f, 5f, 5f});
+            var table = new PdfPTable(new float[] { 2f, 10f, 10f, 2f, 2f, 5f, 5f });
             table.setWidthPercentage(100);
             table.setSpacingBefore(cmToPixel(1f));
             table.setKeepTogether(true);
 
             createEventTitle(table, event);
 
-            int position = 1;
+            var position = 1;
             for (var result : event.sortedResults()) {
                 createAthleteRow(table, position, result);
                 position++;

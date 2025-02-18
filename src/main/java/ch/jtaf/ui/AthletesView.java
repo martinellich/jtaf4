@@ -21,14 +21,16 @@ import java.util.stream.Collectors;
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 
-@Route(layout = MainLayout.class)
+@Route
 public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private final transient ClubDAO clubDAO;
+
     private final AthleteDialog dialog;
+
     private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
     public AthletesView(AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider) {
@@ -51,15 +53,32 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
     private void createGrid() {
         grid.setId("athletes-grid");
 
-        grid.addColumn(AthleteRecord::getLastName).setHeader(getTranslation("Last.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.LAST_NAME.getName());
-        grid.addColumn(AthleteRecord::getFirstName).setHeader(getTranslation("First.Name")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.FIRST_NAME.getName());
-        grid.addColumn(AthleteRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.GENDER.getName());
-        grid.addColumn(AthleteRecord::getYearOfBirth).setHeader(getTranslation("Year")).setSortable(true).setAutoWidth(true).setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-        grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null
-            ? null
-            : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation()).setHeader(getTranslation("Club")).setAutoWidth(true);
+        grid.addColumn(AthleteRecord::getLastName)
+            .setHeader(getTranslation("Last.Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.LAST_NAME.getName());
+        grid.addColumn(AthleteRecord::getFirstName)
+            .setHeader(getTranslation("First.Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.FIRST_NAME.getName());
+        grid.addColumn(AthleteRecord::getGender)
+            .setHeader(getTranslation("Gender"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.GENDER.getName());
+        grid.addColumn(AthleteRecord::getYearOfBirth)
+            .setHeader(getTranslation("Year"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(ATHLETE.YEAR_OF_BIRTH.getName());
+        grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
+                : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
+            .setHeader(getTranslation("Club"))
+            .setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(JooqDAO, grid, dialog, athleteRecord -> refreshAll(), () -> {
+        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, athleteRecord -> refreshAll(), () -> {
             AthleteRecord newRecord = ATHLETE.newRecord();
             newRecord.setOrganizationId(organizationRecord.getId());
             return newRecord;
@@ -97,6 +116,8 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
     @Override
     protected List<OrderField<?>> initialSort() {
-        return List.of(ATHLETE.GENDER.asc(), ATHLETE.YEAR_OF_BIRTH.asc(), ATHLETE.LAST_NAME.asc(), ATHLETE.FIRST_NAME.asc());
+        return List.of(ATHLETE.GENDER.asc(), ATHLETE.YEAR_OF_BIRTH.asc(), ATHLETE.LAST_NAME.asc(),
+                ATHLETE.FIRST_NAME.asc());
     }
+
 }

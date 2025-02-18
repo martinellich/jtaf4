@@ -57,8 +57,11 @@ class ClubsViewTest extends KaribuTest {
         assertThat(GridKt._get(clubsGrid, 0).getName()).isEqualTo("Test");
 
         // Remove club
-        GridKt._getCellComponent(clubsGrid, 0, "edit-column").getChildren()
-            .filter(component -> component instanceof Button).findFirst().map(component -> (Button) component)
+        GridKt._getCellComponent(clubsGrid, 0, "edit-column")
+            .getChildren()
+            .filter(Button.class::isInstance)
+            .findFirst()
+            .map(Button.class::cast)
             .ifPresent(Button::click);
 
         ConfirmDialog confirmDialog = _get(ConfirmDialog.class);

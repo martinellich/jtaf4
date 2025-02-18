@@ -23,6 +23,7 @@ public class OrganizationProvider {
     public static final String JTAF_ORGANIZATION_ID = "jtaf-organization-id";
 
     private final DSLContext dslContext;
+
     private final SecurityContext securityContext;
 
     private OrganizationRecord organization;
@@ -50,6 +51,7 @@ public class OrganizationProvider {
         if (request != null) {
             var cookies = request.getCookies();
             if (cookies != null) {
+                // @formatter:off
                 Arrays.stream(cookies)
                     .filter(cookie -> cookie.getName().equals(JTAF_ORGANIZATION_ID))
                     .findFirst()
@@ -62,6 +64,7 @@ public class OrganizationProvider {
                         .where(ORGANIZATION.ID.eq(Long.parseLong(s)))
                         .and(SECURITY_USER.EMAIL.eq(securityContext.getUsername()))
                         .fetchOneInto(OrganizationRecord.class));
+                // @formatter:on
             }
         }
     }
@@ -74,4 +77,5 @@ public class OrganizationProvider {
         cookie.setMaxAge(60 * 60 * 24);
         response.addCookie(cookie);
     }
+
 }

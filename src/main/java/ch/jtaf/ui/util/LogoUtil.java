@@ -26,10 +26,12 @@ public class LogoUtil {
                 logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
                 logo.setHeight("60px");
                 logo.setWidth(60 * ratio + "px");
-            } catch (IOException ignore) {
+            }
+            catch (IOException ignore) {
                 // Ignore
             }
         }
         return logo;
     }
+
 }

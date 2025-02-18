@@ -17,6 +17,7 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
+@SuppressWarnings("java:S2699")
 class DashboardViewTest extends KaribuTest {
 
     @BeforeEach
@@ -38,7 +39,8 @@ class DashboardViewTest extends KaribuTest {
 
     @Test
     void series_ranking() {
-        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("series-ranking-1"))));
+        assertThatNoException()
+            .isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("series-ranking-1"))));
     }
 
     @Test
@@ -48,7 +50,8 @@ class DashboardViewTest extends KaribuTest {
 
     @Test
     void competition_ranking() {
-        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("competition-ranking-1-1"))));
+        assertThatNoException()
+            .isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("competition-ranking-1-1"))));
     }
 
     @Test
@@ -58,6 +61,8 @@ class DashboardViewTest extends KaribuTest {
 
     @Test
     void event_ranking() {
-        assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("event-ranking-1-1"))));
+        assertThatNoException()
+            .isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("event-ranking-1-1"))));
     }
+
 }

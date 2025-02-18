@@ -32,8 +32,7 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
         var date = new DatePicker(getTranslation("Date"));
         name.setRequiredIndicatorVisible(true);
 
-        binder.forField(date)
-            .bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
+        binder.forField(date).bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
 
         var alwaysFirstThreeMedals = new Checkbox(getTranslation("Always.first.three.medals"));
 
@@ -42,4 +41,5 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
 
         formLayout.add(name, date);
     }
+
 }

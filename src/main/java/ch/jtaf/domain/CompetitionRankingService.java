@@ -20,6 +20,7 @@ import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 
+// @formatter:off
 @Service
 public class CompetitionRankingService {
 
@@ -126,10 +127,6 @@ public class CompetitionRankingService {
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOne();
-        if (logoRecord != null) {
-            return logoRecord.get(SERIES.LOGO);
-        } else {
-            return new byte[0];
-        }
+        return logoRecord != null ? logoRecord.get(SERIES.LOGO) : new byte[0];
     }
 }

@@ -23,7 +23,7 @@ class TranslationProviderTest {
     void get_provided_locales() {
         var providedLocales = translationProvider.getProvidedLocales();
 
-        assertThat(providedLocales).isNotEmpty().hasSize(2);
+        assertThat(providedLocales).hasSize(2);
     }
 
     @Test
@@ -53,4 +53,5 @@ class TranslationProviderTest {
 
         assertThat(nothing).isEmpty();
     }
+
 }

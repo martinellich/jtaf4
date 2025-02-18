@@ -22,11 +22,13 @@ class LoginViewTest extends KaribuTest {
 
         try {
             _login(_get(LoginOverlay.class), "not.existing@user.com", "pass");
-        } catch (IllegalStateException e) {
+        }
+        catch (IllegalStateException e) {
             // From GoogleAnalyticsTracker. Ignore
         }
 
-        assertThat(_get(LoginOverlay.class).getElement().getOuterHTML()).isEqualTo("<vaadin-login-overlay></vaadin-login-overlay>");
+        assertThat(_get(LoginOverlay.class).getElement().getOuterHTML())
+            .isEqualTo("<vaadin-login-overlay></vaadin-login-overlay>");
     }
 
     @Test

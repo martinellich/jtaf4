@@ -17,6 +17,7 @@ import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static org.jooq.impl.DSL.select;
 
+// @formatter:off
 @Repository
 public class AthleteDAO extends JooqDAO<Athlete, AthleteRecord, Long> {
 

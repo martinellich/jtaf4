@@ -3,13 +3,13 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.domain.EventDAO;
+import ch.jtaf.ui.component.MaterialSymbol;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -34,13 +34,15 @@ public class SearchEventDialog extends Dialog {
     public static final String FULLSCREEN = "fullscreen";
 
     private boolean isFullScreen = false;
+
     private final Div content;
+
     private final Button toggle;
 
     private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
     public SearchEventDialog(EventDAO eventDAO, long organizationId, CategoryRecord categoryRecord,
-                             ComponentEventListener<AssignEvent> assignEventListener) {
+            ComponentEventListener<AssignEvent> assignEventListener) {
         setId("search-event-dialog");
 
         addListener(AssignEvent.class, assignEventListener);
@@ -50,11 +52,11 @@ public class SearchEventDialog extends Dialog {
 
         setHeaderTitle(getTranslation("Events"));
 
-        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
         toggle.setId("search-event-dialog-toggle");
         toggle.addClickListener(event -> toggle());
 
-        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(MaterialSymbol.CLOSE.create());
         close.addClickListener(event -> close());
 
         getHeader().add(toggle, close);
@@ -66,11 +68,12 @@ public class SearchEventDialog extends Dialog {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
 
         CallbackDataProvider<EventRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
-            query -> eventDAO.findAllByOrganizationGenderCategory(
-                organizationId, categoryRecord.getGender(), categoryRecord.getId(), createCondition(query),
-                query.getOffset(), query.getLimit()).stream(),
-            query -> eventDAO.countByOrganizationGenderCategory(
-                organizationId, categoryRecord.getGender(), categoryRecord.getId(), createCondition(query)));
+                query -> eventDAO
+                    .findAllByOrganizationGenderCategory(organizationId, categoryRecord.getGender(),
+                            categoryRecord.getId(), createCondition(query), query.getOffset(), query.getLimit())
+                    .stream(),
+                query -> eventDAO.countByOrganizationGenderCategory(organizationId, categoryRecord.getGender(),
+                        categoryRecord.getId(), createCondition(query)));
 
         dataProvider = callbackDataProvider.withConfigurableFilter();
 
@@ -79,10 +82,26 @@ public class SearchEventDialog extends Dialog {
         grid.setItems(dataProvider);
         grid.setHeight("calc(100% - 60px");
 
-        grid.addColumn(EventRecord::getAbbreviation).setHeader(getTranslation("Abbreviation")).setSortable(true).setAutoWidth(true).setKey(EVENT.ABBREVIATION.getName());
-        grid.addColumn(EventRecord::getName).setHeader(getTranslation("Name")).setSortable(true).setAutoWidth(true).setKey(EVENT.NAME.getName());
-        grid.addColumn(EventRecord::getGender).setHeader(getTranslation("Gender")).setSortable(true).setAutoWidth(true).setKey(EVENT.GENDER.getName());
-        grid.addColumn(EventRecord::getEventType).setHeader(getTranslation("Event.Type")).setSortable(true).setAutoWidth(true).setKey(EVENT.EVENT_TYPE.getName());
+        grid.addColumn(EventRecord::getAbbreviation)
+            .setHeader(getTranslation("Abbreviation"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.ABBREVIATION.getName());
+        grid.addColumn(EventRecord::getName)
+            .setHeader(getTranslation("Name"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.NAME.getName());
+        grid.addColumn(EventRecord::getGender)
+            .setHeader(getTranslation("Gender"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.GENDER.getName());
+        grid.addColumn(EventRecord::getEventType)
+            .setHeader(getTranslation("Event.Type"))
+            .setSortable(true)
+            .setAutoWidth(true)
+            .setKey(EVENT.EVENT_TYPE.getName());
         grid.addColumn(EventRecord::getA).setHeader("A").setAutoWidth(true);
         grid.addColumn(EventRecord::getA).setHeader("B").setAutoWidth(true);
         grid.addColumn(EventRecord::getA).setHeader("C").setAutoWidth(true);
@@ -106,7 +125,7 @@ public class SearchEventDialog extends Dialog {
     }
 
     private void initialSize() {
-        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(MaterialSymbol.EXPAND.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
@@ -115,8 +134,9 @@ public class SearchEventDialog extends Dialog {
     private void toggle() {
         if (isFullScreen) {
             initialSize();
-        } else {
-            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+        }
+        else {
+            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);
@@ -127,14 +147,16 @@ public class SearchEventDialog extends Dialog {
     private Condition createCondition(Query<?, ?> query) {
         var optionalFilter = query.getFilter();
         if (optionalFilter.isPresent()) {
-            String filterString = (String) optionalFilter.get();
+            var filterString = (String) optionalFilter.get();
             if (StringUtils.isNumeric(filterString)) {
                 return EVENT.ID.eq(Long.valueOf(filterString));
-            } else {
+            }
+            else {
                 return upper(EVENT.ABBREVIATION).like(filterString.toUpperCase() + "%")
                     .or(upper(EVENT.NAME).like(filterString.toUpperCase() + "%"));
             }
-        } else {
+        }
+        else {
             return DSL.condition("1 = 1");
         }
     }
@@ -151,5 +173,7 @@ public class SearchEventDialog extends Dialog {
         public EventRecord getEventRecord() {
             return eventRecord;
         }
+
     }
+
 }

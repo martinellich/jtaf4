@@ -30,4 +30,5 @@ public class RankingReport extends AbstractReport {
         cell.setPaddingBottom(8f);
         table.addCell(cell);
     }
+
 }

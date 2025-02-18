@@ -10,6 +10,7 @@ import java.util.List;
 
 import static ch.jtaf.db.tables.Category.CATEGORY;
 
+// @formatter:off
 @Repository
 public class CategoryDAO extends JooqDAO<Category, CategoryRecord, Long> {
 
@@ -24,4 +25,5 @@ public class CategoryDAO extends JooqDAO<Category, CategoryRecord, Long> {
             .orderBy(CATEGORY.ABBREVIATION)
             .fetch();
     }
+
 }

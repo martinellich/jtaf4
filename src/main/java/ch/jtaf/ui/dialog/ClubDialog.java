@@ -32,10 +32,9 @@ public class ClubDialog extends EditDialog<ClubRecord> {
         name.setAutoselect(true);
         name.setRequiredIndicatorVisible(true);
 
-        binder.forField(name)
-            .withValidator(new NotEmptyValidator(this))
-            .bind(ClubRecord::getName, ClubRecord::setName);
+        binder.forField(name).withValidator(new NotEmptyValidator(this)).bind(ClubRecord::getName, ClubRecord::setName);
 
         formLayout.add(abbreviation, name);
     }
+
 }

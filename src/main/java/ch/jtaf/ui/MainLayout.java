@@ -13,22 +13,21 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.vaadin.googleanalytics.tracking.EnableGoogleAnalytics;
 
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-@EnableGoogleAnalytics("G-PH4RL4J6YT")
-public class MainLayout extends AppLayout implements BeforeEnterObserver{
+@Layout
+@AnonymousAllowed
+public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -36,22 +35,31 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
     private static final String LA_LA_FILE = "la la-file";
 
     private final transient OrganizationProvider organizationProvider;
+
     private final String applicationVersion;
+
     private final transient SecurityContext securityContext;
 
     private final Div version = new Div();
+
     private Button login;
+
     private Button logout;
 
     private H1 viewTitle;
 
     private RouterLink seriesLink;
+
     private RouterLink eventsLink;
+
     private RouterLink clubsLink;
+
     private RouterLink athletesLink;
+
     private RouterLink register;
 
-    public MainLayout(OrganizationProvider organizationProvider, @Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
+    public MainLayout(OrganizationProvider organizationProvider,
+            @Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
         this.organizationProvider = organizationProvider;
         this.applicationVersion = applicationVersion;
         this.securityContext = securityContext;
@@ -60,12 +68,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         addToNavbar(false, createHeaderContent());
         addToDrawer(createDrawerContent());
 
-        GoogleAnalytics analytics = new GoogleAnalytics("G-PH4RL4J6YT");
+        var analytics = new GoogleAnalytics("G-PH4RL4J6YT");
         addToDrawer(analytics);
 
-        UI.getCurrent().addBeforeEnterListener(event -> {
-            analytics.sendPageView(event.getLocation().getPath());
-        });
+        UI.getCurrent().addBeforeEnterListener(event -> analytics.sendPageView(event.getLocation().getPath()));
     }
 
     private Component createHeaderContent() {
@@ -99,8 +105,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         info.add(about, version, register, login, logout);
 
         var header = new Header(toggle, viewTitle, info);
-        header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER,
-            Display.FLEX, Height.XLARGE, AlignItems.CENTER, Width.FULL);
+        header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER, Display.FLEX,
+                Height.XLARGE, AlignItems.CENTER, Width.FULL);
         return header;
     }
 
@@ -118,8 +124,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         nav.getElement().setAttribute("aria-labelledby", "views");
 
         var views = new H3("Views");
-        views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM, Margin.Vertical.NONE,
-            FontSize.SMALL, TextColor.TERTIARY);
+        views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM,
+                Margin.Vertical.NONE, FontSize.SMALL, TextColor.TERTIARY);
         views.setId("views");
 
         for (var link : createLinks()) {
@@ -132,7 +138,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
         var links = new ArrayList<RouterLink>();
 
         links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
-        links.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
+        links
+            .add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
         seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
         seriesLink.setId("series-list-link");
@@ -154,7 +161,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
 
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
         var link = new RouterLink();
-        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE, TextColor.SECONDARY);
+        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE,
+                TextColor.SECONDARY);
         link.setRoute(menuItemInfo.view());
 
         var icon = new Span();
@@ -171,20 +179,32 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
     }
 
     private Footer createFooter() {
-        var layout = new Footer();
-        layout.addClassNames(Display.FLEX, Margin.Vertical.SMALL, Padding.Horizontal.MEDIUM, Padding.Vertical.XSMALL);
+        var footer = new Footer();
+        footer.addClassName(Margin.Left.LARGE);
 
-        var htmlByLink = new Html("<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
+        var locale = UI.getCurrent().getSession().getLocale();
+        var languageSwitch = new Button(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? "DE" : "EN");
+        languageSwitch.addClassName(Margin.Bottom.XLARGE);
+        languageSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        languageSwitch.addClickListener(e -> {
+            UI.getCurrent()
+                .getSession()
+                .setLocale(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? Locale.GERMAN : Locale.ENGLISH);
+            UI.getCurrent().getPage().reload();
+        });
+        footer.add(languageSwitch);
 
+        var htmlByLink = new Html(
+                "<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
         var byLink = new Anchor();
         byLink.setWidth("300px");
         byLink.getElement().getStyle().set("font-size", "small");
-        byLink.setHref("https://72.services");
+        byLink.setHref("https://martinelli.ch");
         byLink.setTarget("_blank");
         byLink.add(htmlByLink);
-        layout.add(byLink);
+        footer.add(byLink);
 
-        return layout;
+        return footer;
     }
 
     @Override
@@ -194,8 +214,12 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
     }
 
     private String getCurrentPageTitle() {
-        var title = (HasDynamicTitle) getContent();
-        return title == null ? "" : title.getPageTitle();
+        if (getContent() instanceof HasDynamicTitle hasDynamicTitle) {
+            return hasDynamicTitle.getPageTitle();
+        }
+        else {
+            return "";
+        }
     }
 
     @PostConstruct
@@ -217,7 +241,8 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
                 seriesLink.setText(organization.getOrganizationKey());
                 setVisibilityOfLinks(true);
             }
-        } else {
+        }
+        else {
             register.setVisible(true);
             login.setVisible(true);
             logout.setVisible(false);
@@ -236,4 +261,5 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver{
 
     public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
     }
+
 }

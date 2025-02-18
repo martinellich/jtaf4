@@ -2,6 +2,12 @@
 @import url('./main-layout.css');
 @import url('./views/dashboard-view.css');
 
+@font-face {
+    font-family: "Material Symbols";
+    font-weight: 400;
+    src: url("./fonts/MaterialSymbols.woff2") format("woff2");
+}
+
 html {
     --lumo-border-radius: calc(var(--lumo-size-m) / 2);
     --lumo-primary-text-color: rgb(255, 179, 25);
@@ -35,4 +41,22 @@ vaadin-grid {
 
 vaadin-button {
     cursor: pointer;
+}
+
+.material-symbols {
+    display: inline-block;
+    direction: ltr;
+    font-family: "Material Symbols";
+    font-feature-settings: "liga";
+    font-size: var(--lumo-icon-size-m);
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
 }

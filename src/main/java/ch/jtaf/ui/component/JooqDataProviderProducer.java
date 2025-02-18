@@ -1,8 +1,10 @@
 package ch.jtaf.ui.component;
 
 import ch.martinelli.oss.jooqspring.JooqDAO;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.Query;
-import com.vaadin.flow.data.provider.*;
+import com.vaadin.flow.data.provider.SortDirection;
 import org.jooq.*;
 
 import java.util.ArrayList;
@@ -15,14 +17,19 @@ import static org.jooq.impl.DSL.upper;
 
 public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
 
-    private final JooqDAO<?, R, ?> JooqDAO;
+    private final JooqDAO<?, R, ?> jooqDAO;
+
     private final Table<R> table;
+
     private final ConfigurableFilterDataProvider<R, Void, String> dataProvider;
+
     private final Supplier<Condition> initialCondition;
+
     private final Supplier<List<OrderField<?>>> initialSort;
 
-    public JooqDataProviderProducer(JooqDAO<?, R, ?> JooqDAO, Table<R> table, Supplier<Condition> initialCondition, Supplier<List<OrderField<?>>> initialSort) {
-        this.JooqDAO = JooqDAO;
+    public JooqDataProviderProducer(JooqDAO<?, R, ?> jooqDAO, Table<R> table, Supplier<Condition> initialCondition,
+            Supplier<List<OrderField<?>>> initialSort) {
+        this.jooqDAO = jooqDAO;
         this.table = table;
         this.initialCondition = initialCondition;
         this.initialSort = initialSort;
@@ -35,24 +42,25 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
     }
 
     private Stream<R> fetch(Query<R, String> query) {
-        List<R> all = JooqDAO.findAll(createCondition(query), query.getOffset(), query.getLimit(),
-            createOrderBy(query));
+        List<R> all = jooqDAO.findAll(createCondition(query), query.getOffset(), query.getLimit(),
+                createOrderBy(query));
         return all.stream();
     }
 
     private int count(Query<R, String> query) {
-        return JooqDAO.count(createCondition(query));
+        return jooqDAO.count(createCondition(query));
     }
 
     private Condition createCondition(Query<R, String> query) {
         var condition = noCondition();
         var filter = query.getFilter();
         if (filter.isPresent()) {
-            for (Field<?> field : table.fields()) {
+            for (var field : table.fields()) {
                 if (field.getType() == String.class) {
-                    //noinspection unchecked
+                    // noinspection unchecked
                     condition = condition.or(upper((Field<String>) field).like(upper("%" + filter.get() + "%")));
-                } else {
+                }
+                else {
                     condition = condition.or(field.like("%" + filter.get() + "%"));
                 }
             }
@@ -64,16 +72,18 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
     private List<OrderField<?>> createOrderBy(Query<R, String> query) {
         if (query.getSortOrders().isEmpty()) {
             return initialSort.get();
-        } else {
-            List<OrderField<?>> sortFields = new ArrayList<>();
-            for (QuerySortOrder sortOrder : query.getSortOrders()) {
-                String column = sortOrder.getSorted();
-                SortDirection sortDirection = sortOrder.getDirection();
-                Field<?> field = table.field(column);
+        }
+        else {
+            var sortFields = new ArrayList<OrderField<?>>();
+            for (var sortOrder : query.getSortOrders()) {
+                var column = sortOrder.getSorted();
+                var sortDirection = sortOrder.getDirection();
+                var field = table.field(column);
                 if (field != null) {
                     if (sortDirection == SortDirection.DESCENDING) {
                         sortFields.add(field.desc());
-                    } else {
+                    }
+                    else {
                         sortFields.add(field.asc());
                     }
                 }
@@ -81,4 +91,5 @@ public class JooqDataProviderProducer<R extends UpdatableRecord<R>> {
             return sortFields;
         }
     }
+
 }

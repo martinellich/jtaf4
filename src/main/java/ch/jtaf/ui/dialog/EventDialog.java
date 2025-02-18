@@ -47,8 +47,7 @@ public class EventDialog extends EditDialog<EventRecord> {
         gender.setRequiredIndicatorVisible(true);
         gender.setItems(Gender.valuesAsStrings());
 
-        binder.forField(gender)
-            .bind(EventRecord::getGender, EventRecord::setGender);
+        binder.forField(gender).bind(EventRecord::getGender, EventRecord::setGender);
 
         var eventType = new Select<String>();
         eventType.setLabel(getTranslation("Event.Type"));
@@ -88,4 +87,5 @@ public class EventDialog extends EditDialog<EventRecord> {
 
         formLayout.add(abbreviation, name, gender, eventType, a, b, c);
     }
+
 }

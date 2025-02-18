@@ -22,7 +22,7 @@ public class TranslationProvider implements I18NProvider {
 
     @Override
     public List<Locale> getProvidedLocales() {
-        return List.of(Locale.of("de", "CH"), Locale.of("en", "US"));
+        return List.of(Locale.ENGLISH, Locale.GERMAN);
     }
 
     @Override
@@ -38,9 +38,11 @@ public class TranslationProvider implements I18NProvider {
                 value = MessageFormat.format(value, params);
             }
             return value;
-        } catch (MissingResourceException e) {
+        }
+        catch (MissingResourceException e) {
             LOGGER.warn("Missing resource", e);
             return "!" + locale.getLanguage() + ": " + key;
         }
     }
+
 }

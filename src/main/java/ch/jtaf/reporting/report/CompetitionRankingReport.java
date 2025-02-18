@@ -18,6 +18,7 @@ public class CompetitionRankingReport extends RankingReport {
     private static final Logger LOGGER = LoggerFactory.getLogger(CompetitionRankingReport.class);
 
     private final CompetitionRankingData ranking;
+
     private Document document;
 
     public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale) {
@@ -33,7 +34,7 @@ public class CompetitionRankingReport extends RankingReport {
                 document = new Document(PageSize.A4, border, border, border, border);
                 var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
                 pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.name(),
-                    DATE_TIME_FORMATTER.format(ranking.competitionDate())));
+                        DATE_TIME_FORMATTER.format(ranking.competitionDate())));
                 document.open();
 
                 createRanking();
@@ -44,12 +45,14 @@ public class CompetitionRankingReport extends RankingReport {
             }
 
             return ba;
-        } catch (DocumentException | IOException e) {
+        }
+        catch (DocumentException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             return new byte[0];
         }
     }
 
+    @SuppressWarnings("java:S3776")
     private void createRanking() {
         for (var category : ranking.categories()) {
             if (!category.athletes().isEmpty()) {
@@ -60,7 +63,7 @@ public class CompetitionRankingReport extends RankingReport {
                 createCategoryTitle(table, category);
                 numberOfRows += 2;
 
-                int rank = 1;
+                var rank = 1;
                 for (var athlete : category.sortedAthletes()) {
                     if (numberOfRows > 23) {
                         document.add(table);
@@ -99,7 +102,7 @@ public class CompetitionRankingReport extends RankingReport {
     }
 
     private PdfPTable createAthletesTable() {
-        var table = new PdfPTable(new float[]{3f, 10f, 10f, 2f, 5f, 5f});
+        var table = new PdfPTable(new float[] { 3f, 10f, 10f, 2f, 5f, 5f });
         table.setWidthPercentage(100);
         table.setSpacingBefore(cmToPixel(0.6f));
         return table;
@@ -107,17 +110,21 @@ public class CompetitionRankingReport extends RankingReport {
 
     private void createCategoryTitle(PdfPTable table, CompetitionRankingData.Category category) {
         addCategoryTitleCellWithColspan(table, category.abbreviation(), 1);
-        addCategoryTitleCellWithColspan(table, "%s %d - %d".formatted(category.name(), category.yearFrom(), category.yearTo()), 5);
+        addCategoryTitleCellWithColspan(table,
+                "%s %d - %d".formatted(category.name(), category.yearFrom(), category.yearTo()), 5);
 
         addCategoryTitleCellWithColspan(table, " ", 6);
     }
 
-    private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingData.Category.Athlete athlete, int numberOfMedals) {
+    private void createAthleteRow(PdfPTable table, int rank, CompetitionRankingData.Category.Athlete athlete,
+            int numberOfMedals) {
         if (athlete.dnf()) {
             addCell(table, "DNF");
-        } else if (rank <= numberOfMedals) {
+        }
+        else if (rank <= numberOfMedals) {
             addCell(table, "* " + rank + ".");
-        } else {
+        }
+        else {
             addCell(table, rank + ".");
         }
         addCell(table, athlete.lastName());
@@ -126,7 +133,8 @@ public class CompetitionRankingReport extends RankingReport {
         addCell(table, athlete.club());
         if (athlete.dnf()) {
             addCellAlignRight(table, "DNF");
-        } else {
+        }
+        else {
             addCellAlignRight(table, String.valueOf(athlete.totalPoints()));
         }
 

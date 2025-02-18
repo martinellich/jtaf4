@@ -11,7 +11,7 @@ import jakarta.annotation.security.RolesAllowed;
 
 import java.io.Serial;
 
-@RolesAllowed({Role.USER, Role.ADMIN})
+@RolesAllowed({ Role.USER, Role.ADMIN })
 public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
 
     @Serial
@@ -33,10 +33,12 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
 
         if (organizationRecord == null) {
             event.rerouteTo(OrganizationsView.class);
-        } else {
+        }
+        else {
             refreshAll();
         }
     }
 
     protected abstract void refreshAll();
+
 }

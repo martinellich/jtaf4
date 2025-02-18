@@ -21,4 +21,5 @@ public class GridElement {
     public ElementHandle getCellByTextContent(String textContent) {
         return elementHandle.querySelector(String.format("vaadin-grid-cell-content >> '%s'", textContent));
     }
+
 }

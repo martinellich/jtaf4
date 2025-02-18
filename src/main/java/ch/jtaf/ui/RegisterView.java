@@ -15,7 +15,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @AnonymousAllowed
-@Route(value = "register", layout = MainLayout.class)
+@Route(value = "register")
 public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
     public RegisterView(UserService userService) {
@@ -43,11 +43,13 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
         var register = new Button(getTranslation("Register"), e -> {
             try {
-                userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue(), getLocale());
+                userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue(),
+                        getLocale());
 
                 Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
                 UI.getCurrent().navigate(DashboardView.class);
-            } catch (UserAlreadyExistException ex) {
+            }
+            catch (UserAlreadyExistException ex) {
                 Notification.show(getTranslation("User.already.exist"), 5000, Notification.Position.TOP_END);
             }
         });
@@ -61,4 +63,5 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
     public String getPageTitle() {
         return getTranslation("Register");
     }
+
 }
