@@ -3,13 +3,13 @@ package ch.jtaf.ui.dialog;
 import ch.jtaf.db.tables.records.CategoryRecord;
 import ch.jtaf.db.tables.records.EventRecord;
 import ch.jtaf.domain.EventDAO;
+import ch.jtaf.ui.component.MaterialSymbol;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -52,11 +52,11 @@ public class SearchEventDialog extends Dialog {
 
         setHeaderTitle(getTranslation("Events"));
 
-        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
         toggle.setId("search-event-dialog-toggle");
         toggle.addClickListener(event -> toggle());
 
-        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(MaterialSymbol.CLOSE.create());
         close.addClickListener(event -> close());
 
         getHeader().add(toggle, close);
@@ -125,7 +125,7 @@ public class SearchEventDialog extends Dialog {
     }
 
     private void initialSize() {
-        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(MaterialSymbol.EXPAND.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
@@ -136,7 +136,7 @@ public class SearchEventDialog extends Dialog {
             initialSize();
         }
         else {
-            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);

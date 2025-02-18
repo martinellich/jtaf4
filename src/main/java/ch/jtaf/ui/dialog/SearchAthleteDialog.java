@@ -5,13 +5,13 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.domain.AthleteDAO;
 import ch.jtaf.domain.ClubDAO;
+import ch.jtaf.ui.component.MaterialSymbol;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -56,11 +56,11 @@ public class SearchAthleteDialog extends Dialog {
 
         setHeaderTitle(getTranslation("Athletes"));
 
-        toggle = new Button(VaadinIcon.EXPAND_SQUARE.create());
+        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
         toggle.setId("toggle");
         toggle.addClickListener(event -> toggle());
 
-        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(MaterialSymbol.CLOSE.create());
         close.addClickListener(event -> close());
 
         getHeader().add(toggle, close);
@@ -136,7 +136,7 @@ public class SearchAthleteDialog extends Dialog {
     }
 
     private void initialSize() {
-        toggle.setIcon(VaadinIcon.EXPAND_SQUARE.create());
+        toggle.setIcon(MaterialSymbol.MAXIMIZE.create());
         getElement().getThemeList().remove(FULLSCREEN);
         setHeight("auto");
         setWidth("600px");
@@ -147,7 +147,7 @@ public class SearchAthleteDialog extends Dialog {
             initialSize();
         }
         else {
-            toggle.setIcon(VaadinIcon.COMPRESS_SQUARE.create());
+            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
             getElement().getThemeList().add(FULLSCREEN);
             setSizeFull();
             content.setVisible(true);

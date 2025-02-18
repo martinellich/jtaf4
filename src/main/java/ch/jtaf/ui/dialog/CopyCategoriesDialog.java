@@ -2,13 +2,13 @@ package ch.jtaf.ui.dialog;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
 import ch.jtaf.domain.SeriesDAO;
+import ch.jtaf.ui.component.MaterialSymbol;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 
 public class CopyCategoriesDialog extends Dialog {
@@ -16,7 +16,7 @@ public class CopyCategoriesDialog extends Dialog {
     public CopyCategoriesDialog(long organizationId, long currentSeriesId, SeriesDAO seriesDAO) {
         setHeaderTitle(getTranslation("Copy.Categories"));
 
-        var close = new Button(VaadinIcon.CLOSE_SMALL.create());
+        var close = new Button(MaterialSymbol.CLOSE.create());
         close.addClickListener(event -> close());
         getHeader().add(close);
 
