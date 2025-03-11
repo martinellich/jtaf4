@@ -395,7 +395,7 @@
             <plugin>
                 <groupId>com.hello2morrow</groupId>
                 <artifactId>sonargraph-maven-plugin</artifactId>
-                <version>15.0.5</version>
+                <version>15.0.6</version>
             </plugin>
         </plugins>
     </build>
