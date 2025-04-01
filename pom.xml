@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.9.10</version>
+    <version>4.9.11-SNAPSHOT</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
