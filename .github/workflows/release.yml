@@ -32,3 +32,11 @@ jobs:
 
             -   name: Maven Build
                 run: ./mvnw -B clean package -Pproduction
+
+            -   uses: superfly/flyctl-actions/setup-flyctl@master
+
+            -   name: Fly Deploy
+                run: flyctl deploy --remote-only
+                env:
+                    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
