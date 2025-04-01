@@ -1,27 +1,22 @@
-# fly.toml app configuration file generated for jtaf4-wispy-dream-3913 on 2024-07-12T11:16:22+02:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
 app = 'jtaf4'
 primary_region = 'ams'
 
 [build]
 
 [http_service]
-  internal_port = 8484
+  internal_port = 3000
   force_https = true
-  auto_stop_machines = "stop"
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 1
   processes = ['app']
 
-[[http_service.checks]]
-  grace_period = "20s"
-  interval = "30s"
-  method = "GET"
-  timeout = "5s"
-  path = "/actuator/health"
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '20s'
+    method = 'GET'
+    path = '/actuator/health'
 
 [[vm]]
   memory = '1gb'
