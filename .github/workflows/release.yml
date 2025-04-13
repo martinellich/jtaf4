@@ -22,6 +22,10 @@ jobs:
                     java-version: '21'
                     distribution: 'adopt'
 
+            -   uses: s4u/maven-settings-action@v3.1.0
+                with:
+                    properties: '[{"jelastic.username": "${{ JELASTIC_USERNAME }}"}, {"jelastic.password": "${{ JELASTIC_TOKEN }}" }]'
+
             -   name: Cache local Maven repository
                 uses: actions/cache@v4
                 with:
@@ -33,10 +37,5 @@ jobs:
             -   name: Maven Build
                 run: ./mvnw -B clean package -Pproduction
 
-            -   name: Run getenvs command
-                uses: abhisek91/github-actions-jelastic@master
-                with:
-                    jelastic_url: app.mycloud.by
-                    jelastic_username: ${{ secrets.JELASTIC_USERNAME }}
-                    jelastic_password: ${{ secrets.JELASTIC_TOKEN }}
-                    task: environment/control/getenvs
+            -   name: Maven Build
+                run: ./mvnw -B jelastic:deploy

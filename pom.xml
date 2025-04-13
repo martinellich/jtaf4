@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.9.12</version>
+    <version>4.9.13</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -396,6 +396,18 @@
                 <groupId>com.hello2morrow</groupId>
                 <artifactId>sonargraph-maven-plugin</artifactId>
                 <version>15.0.6</version>
+            </plugin>
+            <plugin>
+                <groupId>com.jelastic</groupId>
+                <artifactId>jelastic-maven-plugin</artifactId>
+                <version>1.9.3</version>
+                <configuration>
+                    <email>${jelastic.username}</email>
+                    <password>${jelastic.password}</password>
+                    <context>ROOT</context>
+                    <environment>jtaf4</environment>
+                    <api_hoster>api.hidora.com</api_hoster>
+                </configuration>
             </plugin>
         </plugins>
     </build>
