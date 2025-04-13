@@ -33,9 +33,10 @@ jobs:
             -   name: Maven Build
                 run: ./mvnw -B clean package -Pproduction
 
-            -   name: Deploy to Jelastic
-                uses: jelastic/jelastic-maven-plugin@v1
+            -   name: Run getenvs command
+                uses: abhisek91/github-actions-jelastic@master
                 with:
-                    jelastic_url: https://app.hidora.com
-                    jelastic_token: ${{ secrets.JELASTIC_TOKEN }}
-                    environment: jtaf4
+                    jelastic_url: app.mycloud.by
+                    jelastic_username: ${{ secrets.JELASTIC_USERNAME }}
+                    jelastic_password: ${{ secrets.JELASTIC_TOKEN }}
+                    task: environment/control/getenvs
