@@ -397,6 +397,18 @@
                 <artifactId>sonargraph-maven-plugin</artifactId>
                 <version>15.0.6</version>
             </plugin>
+            <plugin>
+                <groupId>com.jelastic</groupId>
+                <artifactId>jelastic-maven-plugin</artifactId>
+                <version>1.9.3</version>
+                <configuration>
+                    <email>${jelastic.username}</email>
+                    <password>${jelastic.password}</password>
+                    <context>ROOT</context>
+                    <environment>jtaf4</environment>
+                    <api_hoster>api.hidora.com</api_hoster>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
