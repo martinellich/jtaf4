@@ -406,7 +406,7 @@
                     <password>${jelastic.password}</password>
                     <context>ROOT</context>
                     <environment>jtaf4</environment>
-                    <api_hoster>api.hidora.com</api_hoster>
+                    <api_hoster>app.hidora.com</api_hoster>
                 </configuration>
             </plugin>
         </plugins>
