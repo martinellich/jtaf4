@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.3</version>
+        <version>3.4.4</version>
     </parent>
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.9.10</version>
+    <version>4.9.11</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -60,8 +60,8 @@
         <testcontainers-jooq-codegen-maven-plugin.version>0.0.4</testcontainers-jooq-codegen-maven-plugin.version>
         <spring-javaformat-maven-plugin.version>0.0.43</spring-javaformat-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
-        <jacoco.version>0.8.12</jacoco.version>
-        <playwright.version>1.50.0</playwright.version>
+        <jacoco.version>0.8.13</jacoco.version>
+        <playwright.version>1.51.0</playwright.version>
         <mopo.version>0.0.3</mopo.version>
 
         <karibu-testing.version>2.2.2</karibu-testing.version>
@@ -374,7 +374,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.3</version>
                 <dependencies>
                     <dependency>
                         <groupId>me.fabriciorby</groupId>
@@ -395,7 +395,7 @@
             <plugin>
                 <groupId>com.hello2morrow</groupId>
                 <artifactId>sonargraph-maven-plugin</artifactId>
-                <version>15.0.5</version>
+                <version>15.0.6</version>
             </plugin>
         </plugins>
     </build>
