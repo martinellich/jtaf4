@@ -24,7 +24,7 @@ jobs:
 
             -   uses: s4u/maven-settings-action@v3.1.0
                 with:
-                    properties: '[{"jelastic.username": "${{ JELASTIC_USERNAME }}"}, {"jelastic.password": "${{ JELASTIC_TOKEN }}" }]'
+                    properties: '[{"jelastic.username": "${{ secrets.JELASTIC_USERNAME }}"}, {"jelastic.password": "${{ secrets.JELASTIC_TOKEN }}" }]'
 
             -   name: Cache local Maven repository
                 uses: actions/cache@v4
