@@ -400,7 +400,7 @@
             <plugin>
                 <groupId>com.jelastic</groupId>
                 <artifactId>jelastic-maven-plugin</artifactId>
-                <version>1.9.3</version>
+                <version>1.9.5</version>
                 <configuration>
                     <email>${jelastic.username}</email>
                     <password>${jelastic.password}</password>
