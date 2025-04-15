@@ -15,34 +15,34 @@ import java.util.ResourceBundle;
 @Component
 public class TranslationProvider implements I18NProvider {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TranslationProvider.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TranslationProvider.class);
 
-    @Override
-    public List<Locale> getProvidedLocales() {
-        return List.of(Locale.ENGLISH, Locale.GERMAN);
-    }
+	@Override
+	public List<Locale> getProvidedLocales() {
+		return List.of(Locale.ENGLISH, Locale.GERMAN);
+	}
 
-    @Override
-    public String getTranslation(String key, Locale locale, Object... params) {
-        if (key == null) {
-            LOGGER.warn("Got lang request for key with null value!");
-            return "";
-        }
-        var bundle = ResourceBundle.getBundle("messages", locale);
-        try {
-            var value = bundle.getString(key);
-            if (params.length > 0) {
-                value = MessageFormat.format(value, params);
-            }
-            return value;
-        }
-        catch (MissingResourceException e) {
-            LOGGER.warn("Missing resource", e);
-            return "!" + locale.getLanguage() + ": " + key;
-        }
-    }
+	@Override
+	public String getTranslation(String key, Locale locale, Object... params) {
+		if (key == null) {
+			LOGGER.warn("Got lang request for key with null value!");
+			return "";
+		}
+		var bundle = ResourceBundle.getBundle("messages", locale);
+		try {
+			var value = bundle.getString(key);
+			if (params.length > 0) {
+				value = MessageFormat.format(value, params);
+			}
+			return value;
+		}
+		catch (MissingResourceException e) {
+			LOGGER.warn("Missing resource", e);
+			return "!" + locale.getLanguage() + ": " + key;
+		}
+	}
 
 }

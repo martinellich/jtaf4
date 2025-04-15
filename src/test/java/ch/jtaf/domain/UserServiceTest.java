@@ -15,35 +15,35 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class UserServiceTest {
 
-    @MockitoBean
-    private JavaMailSender javaMailSender;
+	@MockitoBean
+	private JavaMailSender javaMailSender;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Test
-    void create_user_and_confirm() {
-        assertThatNoException().isThrownBy(() -> {
-            SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass",
-                    Locale.of("de", "CH"));
+	@Test
+	void create_user_and_confirm() {
+		assertThatNoException().isThrownBy(() -> {
+			SecurityUserRecord user = userService.createUser("Peter", "Muster", "peter.muster@nodomain.xyz", "pass",
+					Locale.of("de", "CH"));
 
-            boolean confirmed = userService.confirm(user.getConfirmationId());
+			boolean confirmed = userService.confirm(user.getConfirmationId());
 
-            assertThat(confirmed).isTrue();
-        });
-    }
+			assertThat(confirmed).isTrue();
+		});
+	}
 
-    @Test
-    void confirm_with_invalid_confirmation_id() {
-        boolean confirmed = userService.confirm(UUID.randomUUID().toString());
+	@Test
+	void confirm_with_invalid_confirmation_id() {
+		boolean confirmed = userService.confirm(UUID.randomUUID().toString());
 
-        assertThat(confirmed).isFalse();
-    }
+		assertThat(confirmed).isFalse();
+	}
 
-    @Test
-    void user_exist() {
-        assertThatExceptionOfType(UserAlreadyExistException.class)
-            .isThrownBy(() -> userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null));
-    }
+	@Test
+	void user_exist() {
+		assertThatExceptionOfType(UserAlreadyExistException.class)
+			.isThrownBy(() -> userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null));
+	}
 
 }

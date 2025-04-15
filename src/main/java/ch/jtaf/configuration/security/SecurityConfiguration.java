@@ -21,32 +21,32 @@ import java.util.Base64;
 @Configuration
 public class SecurityConfiguration extends VaadinWebSecurity {
 
-    public static final String LOGOUT_URL = "/";
+	public static final String LOGOUT_URL = "/";
 
-    private final String authSecret;
+	private final String authSecret;
 
-    public SecurityConfiguration(@Value("${jwt.auth.secret}") String authSecret) {
-        this.authSecret = authSecret;
-    }
+	public SecurityConfiguration(@Value("${jwt.auth.secret}") String authSecret) {
+		this.authSecret = authSecret;
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(c -> c
-            .requestMatchers(new AntPathRequestMatcher("/icons/*.png"), new AntPathRequestMatcher("/line-awesome/**"),
-                    EndpointRequest.to(HealthEndpoint.class))
-            .permitAll());
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeHttpRequests(c -> c
+			.requestMatchers(new AntPathRequestMatcher("/icons/*.png"), new AntPathRequestMatcher("/line-awesome/**"),
+					EndpointRequest.to(HealthEndpoint.class))
+			.permitAll());
 
-        super.configure(http);
+		super.configure(http);
 
-        setLoginView(http, LoginView.class, LOGOUT_URL);
+		setLoginView(http, LoginView.class, LOGOUT_URL);
 
-        setStatelessAuthentication(http, new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256),
-                "ch.jtaf", 3600);
-    }
+		setStatelessAuthentication(http, new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256),
+				"ch.jtaf", 3600);
+	}
 
 }

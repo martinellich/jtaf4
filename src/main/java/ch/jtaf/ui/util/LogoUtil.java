@@ -10,28 +10,28 @@ import java.io.IOException;
 
 public class LogoUtil {
 
-    private LogoUtil() {
-    }
+	private LogoUtil() {
+	}
 
-    public static Image resizeLogo(SeriesRecord series) {
-        var logo = new Image();
+	public static Image resizeLogo(SeriesRecord series) {
+		var logo = new Image();
 
-        if (series.getLogo() != null) {
-            try {
-                var image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
-                double width = image.getWidth(null);
-                double height = image.getHeight(null);
-                double ratio = width / height;
+		if (series.getLogo() != null) {
+			try {
+				var image = ImageIO.read(new ByteArrayInputStream(series.getLogo()));
+				double width = image.getWidth(null);
+				double height = image.getHeight(null);
+				double ratio = width / height;
 
-                logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
-                logo.setHeight("60px");
-                logo.setWidth(60 * ratio + "px");
-            }
-            catch (IOException ignore) {
-                // Ignore
-            }
-        }
-        return logo;
-    }
+				logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
+				logo.setHeight("60px");
+				logo.setWidth(60 * ratio + "px");
+			}
+			catch (IOException ignore) {
+				// Ignore
+			}
+		}
+		return logo;
+	}
 
 }

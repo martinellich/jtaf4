@@ -20,26 +20,26 @@ import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 @Service
 public class UserService {
 
-    private final DSLContext dslContext;
+	private final DSLContext dslContext;
 
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    private final JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 
-    private final I18NProvider i18n;
+	private final I18NProvider i18n;
 
-    private final String publicAddress;
+	private final String publicAddress;
 
-    public UserService(DSLContext dslContext, PasswordEncoder passwordEncoder, JavaMailSender mailSender,
-            I18NProvider i18n, @Value("${jtaf.public.address}") String publicAddress) {
-        this.dslContext = dslContext;
-        this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
-        this.i18n = i18n;
-        this.publicAddress = publicAddress;
-    }
+	public UserService(DSLContext dslContext, PasswordEncoder passwordEncoder, JavaMailSender mailSender,
+			I18NProvider i18n, @Value("${jtaf.public.address}") String publicAddress) {
+		this.dslContext = dslContext;
+		this.passwordEncoder = passwordEncoder;
+		this.mailSender = mailSender;
+		this.i18n = i18n;
+		this.publicAddress = publicAddress;
+	}
 
-    // @formatter:off
+	// @formatter:off
     @Transactional(rollbackFor = UserAlreadyExistException.class)
     public SecurityUserRecord createUser(String firstName, String lastName, String email, String password,
             Locale locale) throws UserAlreadyExistException {
@@ -79,16 +79,16 @@ public class UserService {
     }
     // @formatter:on
 
-    public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
-        var message = new SimpleMailMessage();
-        message.setFrom("no-reply@jtaf.ch");
-        message.setTo(user.getEmail());
-        message.setSubject(i18n.getTranslation("Confirm.Email.Subject", locale));
-        message.setText(i18n.getTranslation("Confirm.Email.Body", locale, publicAddress, user.getConfirmationId()));
-        mailSender.send(message);
-    }
+	public void sendConfirmationEmail(SecurityUserRecord user, Locale locale) {
+		var message = new SimpleMailMessage();
+		message.setFrom("no-reply@jtaf.ch");
+		message.setTo(user.getEmail());
+		message.setSubject(i18n.getTranslation("Confirm.Email.Subject", locale));
+		message.setText(i18n.getTranslation("Confirm.Email.Body", locale, publicAddress, user.getConfirmationId()));
+		mailSender.send(message);
+	}
 
-    // @formatter:off
+	// @formatter:off
     @Transactional
     public boolean confirm(String confirmationId) {
         var securityUser = dslContext

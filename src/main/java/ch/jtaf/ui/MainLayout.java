@@ -29,237 +29,237 @@ import java.util.Locale;
 @AnonymousAllowed
 public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    private static final String LA_LA_FILE = "la la-file";
+	private static final String LA_LA_FILE = "la la-file";
 
-    private final transient OrganizationProvider organizationProvider;
+	private final transient OrganizationProvider organizationProvider;
 
-    private final String applicationVersion;
+	private final String applicationVersion;
 
-    private final transient SecurityContext securityContext;
+	private final transient SecurityContext securityContext;
 
-    private final Div version = new Div();
+	private final Div version = new Div();
 
-    private Button login;
+	private Button login;
 
-    private Button logout;
+	private Button logout;
 
-    private H1 viewTitle;
+	private H1 viewTitle;
 
-    private RouterLink seriesLink;
+	private RouterLink seriesLink;
 
-    private RouterLink eventsLink;
+	private RouterLink eventsLink;
 
-    private RouterLink clubsLink;
+	private RouterLink clubsLink;
 
-    private RouterLink athletesLink;
+	private RouterLink athletesLink;
 
-    private RouterLink register;
+	private RouterLink register;
 
-    public MainLayout(OrganizationProvider organizationProvider,
-            @Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
-        this.organizationProvider = organizationProvider;
-        this.applicationVersion = applicationVersion;
-        this.securityContext = securityContext;
+	public MainLayout(OrganizationProvider organizationProvider,
+			@Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
+		this.organizationProvider = organizationProvider;
+		this.applicationVersion = applicationVersion;
+		this.securityContext = securityContext;
 
-        setPrimarySection(Section.DRAWER);
-        addToNavbar(false, createHeaderContent());
-        addToDrawer(createDrawerContent());
+		setPrimarySection(Section.DRAWER);
+		addToNavbar(false, createHeaderContent());
+		addToDrawer(createDrawerContent());
 
-        var analytics = new GoogleAnalytics("G-PH4RL4J6YT");
-        addToDrawer(analytics);
+		var analytics = new GoogleAnalytics("G-PH4RL4J6YT");
+		addToDrawer(analytics);
 
-        UI.getCurrent().addBeforeEnterListener(event -> analytics.sendPageView(event.getLocation().getPath()));
-    }
+		UI.getCurrent().addBeforeEnterListener(event -> analytics.sendPageView(event.getLocation().getPath()));
+	}
 
-    private Component createHeaderContent() {
-        var toggle = new DrawerToggle();
-        toggle.addClassName("text-secondary");
-        toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        toggle.getElement().setAttribute("aria-label", "Menu toggle");
+	private Component createHeaderContent() {
+		var toggle = new DrawerToggle();
+		toggle.addClassName("text-secondary");
+		toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+		toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
-        viewTitle = new H1();
-        viewTitle.setId("view-title");
-        viewTitle.addClassNames(LumoUtility.Margin.NONE, LumoUtility.FontSize.LARGE);
-        viewTitle.setMinWidth("400px");
+		viewTitle = new H1();
+		viewTitle.setId("view-title");
+		viewTitle.addClassNames(LumoUtility.Margin.NONE, LumoUtility.FontSize.LARGE);
+		viewTitle.setMinWidth("400px");
 
-        var info = new HorizontalLayout();
-        info.setWidthFull();
-        info.getStyle().set("padding-right", "20px");
-        info.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        info.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+		var info = new HorizontalLayout();
+		info.setWidthFull();
+		info.getStyle().set("padding-right", "20px");
+		info.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+		info.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
-        var about = new Anchor("https://github.com/martinellich/jtaf4", "About");
-        about.setTarget("_blank");
+		var about = new Anchor("https://github.com/martinellich/jtaf4", "About");
+		about.setTarget("_blank");
 
-        register = new RouterLink(getTranslation("Register"), RegisterView.class);
+		register = new RouterLink(getTranslation("Register"), RegisterView.class);
 
-        login = new Button("Login", e -> UI.getCurrent().navigate(OrganizationsView.class));
-        login.setVisible(false);
+		login = new Button("Login", e -> UI.getCurrent().navigate(OrganizationsView.class));
+		login.setVisible(false);
 
-        logout = new Button("Logout", e -> securityContext.logout());
-        logout.setId("logout");
+		logout = new Button("Logout", e -> securityContext.logout());
+		logout.setId("logout");
 
-        info.add(about, version, register, login, logout);
+		info.add(about, version, register, login, logout);
 
-        var header = new Header(toggle, viewTitle, info);
-        header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER, Display.FLEX,
-                Height.XLARGE, AlignItems.CENTER, Width.FULL);
-        return header;
-    }
+		var header = new Header(toggle, viewTitle, info);
+		header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER, Display.FLEX,
+				Height.XLARGE, AlignItems.CENTER, Width.FULL);
+		return header;
+	}
 
-    private Component createDrawerContent() {
-        var logo = new Image("icons/logo.png", "JTAF");
+	private Component createDrawerContent() {
+		var logo = new Image("icons/logo.png", "JTAF");
 
-        var section = new com.vaadin.flow.component.html.Section(logo, createNavigation(), createFooter());
-        section.addClassNames(Display.FLEX, FlexDirection.COLUMN, AlignItems.STRETCH, MaxHeight.FULL, MinHeight.FULL);
-        return section;
-    }
+		var section = new com.vaadin.flow.component.html.Section(logo, createNavigation(), createFooter());
+		section.addClassNames(Display.FLEX, FlexDirection.COLUMN, AlignItems.STRETCH, MaxHeight.FULL, MinHeight.FULL);
+		return section;
+	}
 
-    private Nav createNavigation() {
-        var nav = new Nav();
-        nav.addClassNames(Border.BOTTOM, BorderColor.CONTRAST_10, Flex.GROW, Overflow.AUTO);
-        nav.getElement().setAttribute("aria-labelledby", "views");
+	private Nav createNavigation() {
+		var nav = new Nav();
+		nav.addClassNames(Border.BOTTOM, BorderColor.CONTRAST_10, Flex.GROW, Overflow.AUTO);
+		nav.getElement().setAttribute("aria-labelledby", "views");
 
-        var views = new H3("Views");
-        views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM,
-                Margin.Vertical.NONE, FontSize.SMALL, TextColor.TERTIARY);
-        views.setId("views");
+		var views = new H3("Views");
+		views.addClassNames(Display.FLEX, Height.MEDIUM, AlignItems.CENTER, Margin.Horizontal.MEDIUM,
+				Margin.Vertical.NONE, FontSize.SMALL, TextColor.TERTIARY);
+		views.setId("views");
 
-        for (var link : createLinks()) {
-            nav.add(link);
-        }
-        return nav;
-    }
+		for (var link : createLinks()) {
+			nav.add(link);
+		}
+		return nav;
+	}
 
-    private List<RouterLink> createLinks() {
-        var links = new ArrayList<RouterLink>();
+	private List<RouterLink> createLinks() {
+		var links = new ArrayList<RouterLink>();
 
-        links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
-        links
-            .add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
+		links.add(createLink(new MenuItemInfo(getTranslation("Dashboard"), "la la-globe", DashboardView.class)));
+		links
+			.add(createLink(new MenuItemInfo(getTranslation("My.Organizations"), LA_LA_FILE, OrganizationsView.class)));
 
-        seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
-        seriesLink.setId("series-list-link");
-        links.add(seriesLink);
+		seriesLink = createLink(new MenuItemInfo("", LA_LA_FILE, SeriesListView.class));
+		seriesLink.setId("series-list-link");
+		links.add(seriesLink);
 
-        eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), LA_LA_FILE, EventsView.class));
-        links.add(eventsLink);
+		eventsLink = createLink(new MenuItemInfo(getTranslation("Events"), LA_LA_FILE, EventsView.class));
+		links.add(eventsLink);
 
-        clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), LA_LA_FILE, ClubsView.class));
-        links.add(clubsLink);
+		clubsLink = createLink(new MenuItemInfo(getTranslation("Clubs"), LA_LA_FILE, ClubsView.class));
+		links.add(clubsLink);
 
-        athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), LA_LA_FILE, AthletesView.class));
-        links.add(athletesLink);
+		athletesLink = createLink(new MenuItemInfo(getTranslation("Athletes"), LA_LA_FILE, AthletesView.class));
+		links.add(athletesLink);
 
-        setVisibilityOfLinks(false);
+		setVisibilityOfLinks(false);
 
-        return links;
-    }
+		return links;
+	}
 
-    private static RouterLink createLink(MenuItemInfo menuItemInfo) {
-        var link = new RouterLink();
-        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE,
-                TextColor.SECONDARY);
-        link.setRoute(menuItemInfo.view());
+	private static RouterLink createLink(MenuItemInfo menuItemInfo) {
+		var link = new RouterLink();
+		link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL, Position.RELATIVE,
+				TextColor.SECONDARY);
+		link.setRoute(menuItemInfo.view());
 
-        var icon = new Span();
-        icon.addClassNames(Margin.End.SMALL, FontSize.LARGE);
-        if (!menuItemInfo.iconClass().isEmpty()) {
-            icon.addClassNames(menuItemInfo.iconClass());
-        }
+		var icon = new Span();
+		icon.addClassNames(Margin.End.SMALL, FontSize.LARGE);
+		if (!menuItemInfo.iconClass().isEmpty()) {
+			icon.addClassNames(menuItemInfo.iconClass());
+		}
 
-        var text = new Span(menuItemInfo.text());
-        text.addClassNames(FontWeight.MEDIUM, FontSize.SMALL);
+		var text = new Span(menuItemInfo.text());
+		text.addClassNames(FontWeight.MEDIUM, FontSize.SMALL);
 
-        link.add(icon, text);
-        return link;
-    }
+		link.add(icon, text);
+		return link;
+	}
 
-    private Footer createFooter() {
-        var footer = new Footer();
-        footer.addClassName(Margin.Left.LARGE);
+	private Footer createFooter() {
+		var footer = new Footer();
+		footer.addClassName(Margin.Left.LARGE);
 
-        var locale = UI.getCurrent().getSession().getLocale();
-        var languageSwitch = new Button(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? "DE" : "EN");
-        languageSwitch.addClassName(Margin.Bottom.XLARGE);
-        languageSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
-        languageSwitch.addClickListener(e -> {
-            UI.getCurrent()
-                .getSession()
-                .setLocale(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? Locale.GERMAN : Locale.ENGLISH);
-            UI.getCurrent().getPage().reload();
-        });
-        footer.add(languageSwitch);
+		var locale = UI.getCurrent().getSession().getLocale();
+		var languageSwitch = new Button(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? "DE" : "EN");
+		languageSwitch.addClassName(Margin.Bottom.XLARGE);
+		languageSwitch.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+		languageSwitch.addClickListener(e -> {
+			UI.getCurrent()
+				.getSession()
+				.setLocale(locale.getLanguage().equals(Locale.ENGLISH.getLanguage()) ? Locale.GERMAN : Locale.ENGLISH);
+			UI.getCurrent().getPage().reload();
+		});
+		footer.add(languageSwitch);
 
-        var htmlByLink = new Html(
-                "<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
-        var byLink = new Anchor();
-        byLink.setWidth("300px");
-        byLink.getElement().getStyle().set("font-size", "small");
-        byLink.setHref("https://martinelli.ch");
-        byLink.setTarget("_blank");
-        byLink.add(htmlByLink);
-        footer.add(byLink);
+		var htmlByLink = new Html(
+				"<p style='color: var(--lumo-primary-color)'>Free and<br>Open Source<br>by Martinelli LLC</p>");
+		var byLink = new Anchor();
+		byLink.setWidth("300px");
+		byLink.getElement().getStyle().set("font-size", "small");
+		byLink.setHref("https://martinelli.ch");
+		byLink.setTarget("_blank");
+		byLink.add(htmlByLink);
+		footer.add(byLink);
 
-        return footer;
-    }
+		return footer;
+	}
 
-    @Override
-    protected void afterNavigation() {
-        super.afterNavigation();
-        viewTitle.setText(getCurrentPageTitle());
-    }
+	@Override
+	protected void afterNavigation() {
+		super.afterNavigation();
+		viewTitle.setText(getCurrentPageTitle());
+	}
 
-    private String getCurrentPageTitle() {
-        if (getContent() instanceof HasDynamicTitle hasDynamicTitle) {
-            return hasDynamicTitle.getPageTitle();
-        }
-        else {
-            return "";
-        }
-    }
+	private String getCurrentPageTitle() {
+		if (getContent() instanceof HasDynamicTitle hasDynamicTitle) {
+			return hasDynamicTitle.getPageTitle();
+		}
+		else {
+			return "";
+		}
+	}
 
-    @PostConstruct
-    public void postConstruct() {
-        version.setText(applicationVersion);
-    }
+	@PostConstruct
+	public void postConstruct() {
+		version.setText(applicationVersion);
+	}
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        if (securityContext.isUserLoggedIn()) {
-            register.setVisible(false);
-            login.setVisible(false);
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		if (securityContext.isUserLoggedIn()) {
+			register.setVisible(false);
+			login.setVisible(false);
 
-            logout.setText("Logout (%s)".formatted(securityContext.getUsername()));
-            logout.setVisible(true);
+			logout.setText("Logout (%s)".formatted(securityContext.getUsername()));
+			logout.setVisible(true);
 
-            var organization = organizationProvider.getOrganization();
-            if (organization != null) {
-                seriesLink.setText(organization.getOrganizationKey());
-                setVisibilityOfLinks(true);
-            }
-        }
-        else {
-            register.setVisible(true);
-            login.setVisible(true);
-            logout.setVisible(false);
+			var organization = organizationProvider.getOrganization();
+			if (organization != null) {
+				seriesLink.setText(organization.getOrganizationKey());
+				setVisibilityOfLinks(true);
+			}
+		}
+		else {
+			register.setVisible(true);
+			login.setVisible(true);
+			logout.setVisible(false);
 
-            seriesLink.setText("");
-            setVisibilityOfLinks(false);
-        }
-    }
+			seriesLink.setText("");
+			setVisibilityOfLinks(false);
+		}
+	}
 
-    private void setVisibilityOfLinks(boolean visible) {
-        seriesLink.setVisible(visible);
-        eventsLink.setVisible(visible);
-        clubsLink.setVisible(visible);
-        athletesLink.setVisible(visible);
-    }
+	private void setVisibilityOfLinks(boolean visible) {
+		seriesLink.setVisible(visible);
+		eventsLink.setVisible(visible);
+		clubsLink.setVisible(visible);
+		athletesLink.setVisible(visible);
+	}
 
-    public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
-    }
+	public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {
+	}
 
 }

@@ -11,45 +11,45 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route(value = "confirm")
 public class ConfirmView extends VerticalLayout implements HasDynamicTitle, BeforeEnterObserver {
 
-    private final transient UserService userService;
+	private final transient UserService userService;
 
-    private final VerticalLayout okDiv;
+	private final VerticalLayout okDiv;
 
-    private final H1 failure;
+	private final H1 failure;
 
-    public ConfirmView(UserService userService) {
-        this.userService = userService;
+	public ConfirmView(UserService userService) {
+		this.userService = userService;
 
-        okDiv = new VerticalLayout();
-        okDiv.add(new H1(getTranslation("Confirm.success")));
-        okDiv.add(new RouterLink("Login", OrganizationsView.class));
-        okDiv.setVisible(false);
-        add(okDiv);
+		okDiv = new VerticalLayout();
+		okDiv.add(new H1(getTranslation("Confirm.success")));
+		okDiv.add(new RouterLink("Login", OrganizationsView.class));
+		okDiv.setVisible(false);
+		add(okDiv);
 
-        failure = new H1(getTranslation("Confirm.failure"));
-        add(failure);
-    }
+		failure = new H1(getTranslation("Confirm.failure"));
+		add(failure);
+	}
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        var queryParameters = beforeEnterEvent.getLocation().getQueryParameters();
-        if (queryParameters.getParameters().containsKey("cf")) {
-            boolean confirmed = userService.confirm(queryParameters.getParameters().get("cf").getFirst());
+	@Override
+	public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+		var queryParameters = beforeEnterEvent.getLocation().getQueryParameters();
+		if (queryParameters.getParameters().containsKey("cf")) {
+			boolean confirmed = userService.confirm(queryParameters.getParameters().get("cf").getFirst());
 
-            if (confirmed) {
-                okDiv.setVisible(true);
-                failure.setVisible(false);
-            }
-            else {
-                okDiv.setVisible(false);
-                failure.setVisible(true);
-            }
-        }
-    }
+			if (confirmed) {
+				okDiv.setVisible(true);
+				failure.setVisible(false);
+			}
+			else {
+				okDiv.setVisible(false);
+				failure.setVisible(true);
+			}
+		}
+	}
 
-    @Override
-    public String getPageTitle() {
-        return getTranslation("Confirm");
-    }
+	@Override
+	public String getPageTitle() {
+		return getTranslation("Confirm");
+	}
 
 }

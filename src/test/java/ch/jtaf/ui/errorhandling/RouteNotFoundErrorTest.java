@@ -14,18 +14,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RouteNotFoundErrorTest extends KaribuTest {
 
-    @BeforeEach
-    public void login() {
-        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
-        UI.getCurrent().getPage().reload();
-    }
+	@BeforeEach
+	public void login() {
+		login("simon@martinelli.ch", "", List.of(Role.ADMIN));
+		UI.getCurrent().getPage().reload();
+	}
 
-    @Test
-    void navigate_to_unknown_route() {
-        UI.getCurrent().navigate("unknown");
+	@Test
+	void navigate_to_unknown_route() {
+		UI.getCurrent().navigate("unknown");
 
-        H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
-        assertThat(h1.getText()).isEqualTo("Dashboard");
-    }
+		H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
+		assertThat(h1.getText()).isEqualTo("Dashboard");
+	}
 
 }

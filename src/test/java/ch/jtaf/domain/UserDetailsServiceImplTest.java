@@ -14,23 +14,23 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @SpringBootTest
 class UserDetailsServiceImplTest {
 
-    @MockitoBean
-    private JavaMailSender javaMailSender;
+	@MockitoBean
+	private JavaMailSender javaMailSender;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+	@Autowired
+	private UserDetailsServiceImpl userDetailsService;
 
-    @Test
-    void load_user_by_username() {
-        UserDetails userDetails = userDetailsService.loadUserByUsername("simon@martinelli.ch");
+	@Test
+	void load_user_by_username() {
+		UserDetails userDetails = userDetailsService.loadUserByUsername("simon@martinelli.ch");
 
-        assertThat(userDetails.getUsername()).isEqualTo("simon@martinelli.ch");
-    }
+		assertThat(userDetails.getUsername()).isEqualTo("simon@martinelli.ch");
+	}
 
-    @Test
-    void load_unknown_user() {
-        assertThatExceptionOfType(UsernameNotFoundException.class)
-            .isThrownBy(() -> userDetailsService.loadUserByUsername("jane@doe.com"));
-    }
+	@Test
+	void load_unknown_user() {
+		assertThatExceptionOfType(UsernameNotFoundException.class)
+			.isThrownBy(() -> userDetailsService.loadUserByUsername("jane@doe.com"));
+	}
 
 }

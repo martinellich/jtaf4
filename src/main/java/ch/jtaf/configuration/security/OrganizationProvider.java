@@ -20,38 +20,38 @@ import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 @Component
 public class OrganizationProvider {
 
-    public static final String JTAF_ORGANIZATION_ID = "jtaf-organization-id";
+	public static final String JTAF_ORGANIZATION_ID = "jtaf-organization-id";
 
-    private final DSLContext dslContext;
+	private final DSLContext dslContext;
 
-    private final SecurityContext securityContext;
+	private final SecurityContext securityContext;
 
-    private OrganizationRecord organization;
+	private OrganizationRecord organization;
 
-    public OrganizationProvider(DSLContext dslContext, SecurityContext securityContext) {
-        this.dslContext = dslContext;
-        this.securityContext = securityContext;
-    }
+	public OrganizationProvider(DSLContext dslContext, SecurityContext securityContext) {
+		this.dslContext = dslContext;
+		this.securityContext = securityContext;
+	}
 
-    public OrganizationRecord getOrganization() {
-        if (organization == null) {
-            loadOrganizationFromCookie();
-        }
-        return organization;
-    }
+	public OrganizationRecord getOrganization() {
+		if (organization == null) {
+			loadOrganizationFromCookie();
+		}
+		return organization;
+	}
 
-    public void setOrganization(OrganizationRecord organization) {
-        this.organization = organization;
-        saveOrganizationToCookie();
-    }
+	public void setOrganization(OrganizationRecord organization) {
+		this.organization = organization;
+		saveOrganizationToCookie();
+	}
 
-    private void loadOrganizationFromCookie() {
-        var request = (HttpServletRequest) VaadinRequest.getCurrent();
+	private void loadOrganizationFromCookie() {
+		var request = (HttpServletRequest) VaadinRequest.getCurrent();
 
-        if (request != null) {
-            var cookies = request.getCookies();
-            if (cookies != null) {
-                // @formatter:off
+		if (request != null) {
+			var cookies = request.getCookies();
+			if (cookies != null) {
+				// @formatter:off
                 Arrays.stream(cookies)
                     .filter(cookie -> cookie.getName().equals(JTAF_ORGANIZATION_ID))
                     .findFirst()
@@ -65,17 +65,17 @@ public class OrganizationProvider {
                         .and(SECURITY_USER.EMAIL.eq(securityContext.getUsername()))
                         .fetchOneInto(OrganizationRecord.class));
                 // @formatter:on
-            }
-        }
-    }
+			}
+		}
+	}
 
-    private void saveOrganizationToCookie() {
-        var response = (HttpServletResponse) VaadinResponse.getCurrent();
+	private void saveOrganizationToCookie() {
+		var response = (HttpServletResponse) VaadinResponse.getCurrent();
 
-        var cookie = new Cookie(JTAF_ORGANIZATION_ID, organization.getId().toString());
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(60 * 60 * 24);
-        response.addCookie(cookie);
-    }
+		var cookie = new Cookie(JTAF_ORGANIZATION_ID, organization.getId().toString());
+		cookie.setHttpOnly(true);
+		cookie.setMaxAge(60 * 60 * 24);
+		response.addCookie(cookie);
+	}
 
 }

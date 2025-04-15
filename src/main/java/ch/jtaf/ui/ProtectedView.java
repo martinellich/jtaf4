@@ -14,31 +14,31 @@ import java.io.Serial;
 @RolesAllowed({ Role.USER, Role.ADMIN })
 public abstract class ProtectedView extends VerticalLayout implements BeforeEnterObserver, HasDynamicTitle {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    final transient OrganizationProvider organizationProvider;
+	final transient OrganizationProvider organizationProvider;
 
-    OrganizationRecord organizationRecord;
+	OrganizationRecord organizationRecord;
 
-    ProtectedView(OrganizationProvider organizationProvider) {
-        this.organizationProvider = organizationProvider;
+	ProtectedView(OrganizationProvider organizationProvider) {
+		this.organizationProvider = organizationProvider;
 
-        setHeightFull();
-    }
+		setHeightFull();
+	}
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        organizationRecord = organizationProvider.getOrganization();
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		organizationRecord = organizationProvider.getOrganization();
 
-        if (organizationRecord == null) {
-            event.rerouteTo(OrganizationsView.class);
-        }
-        else {
-            refreshAll();
-        }
-    }
+		if (organizationRecord == null) {
+			event.rerouteTo(OrganizationsView.class);
+		}
+		else {
+			refreshAll();
+		}
+	}
 
-    protected abstract void refreshAll();
+	protected abstract void refreshAll();
 
 }

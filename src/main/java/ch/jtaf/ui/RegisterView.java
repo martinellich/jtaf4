@@ -18,50 +18,50 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route(value = "register")
 public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
-    public RegisterView(UserService userService) {
-        addClassName("p-xl");
+	public RegisterView(UserService userService) {
+		addClassName("p-xl");
 
-        var formLayout = new FormLayout();
-        add(formLayout);
+		var formLayout = new FormLayout();
+		add(formLayout);
 
-        var firstName = new TextField(getTranslation("First.Name"));
-        firstName.setAutoselect(true);
-        firstName.setAutofocus(true);
-        firstName.setRequired(true);
+		var firstName = new TextField(getTranslation("First.Name"));
+		firstName.setAutoselect(true);
+		firstName.setAutofocus(true);
+		firstName.setRequired(true);
 
-        var lastName = new TextField(getTranslation("Last.Name"));
-        lastName.setAutoselect(true);
-        lastName.setRequired(true);
+		var lastName = new TextField(getTranslation("Last.Name"));
+		lastName.setAutoselect(true);
+		lastName.setRequired(true);
 
-        var email = new EmailField(getTranslation("Email"));
-        email.setRequiredIndicatorVisible(true);
-        email.setAutoselect(true);
+		var email = new EmailField(getTranslation("Email"));
+		email.setRequiredIndicatorVisible(true);
+		email.setAutoselect(true);
 
-        var password = new PasswordField(getTranslation("Password"));
-        password.setAutoselect(true);
-        password.setRequired(true);
+		var password = new PasswordField(getTranslation("Password"));
+		password.setAutoselect(true);
+		password.setRequired(true);
 
-        var register = new Button(getTranslation("Register"), e -> {
-            try {
-                userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue(),
-                        getLocale());
+		var register = new Button(getTranslation("Register"), e -> {
+			try {
+				userService.createUser(firstName.getValue(), lastName.getValue(), email.getValue(), password.getValue(),
+						getLocale());
 
-                Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
-                UI.getCurrent().navigate(DashboardView.class);
-            }
-            catch (UserAlreadyExistException ex) {
-                Notification.show(getTranslation("User.already.exist"), 5000, Notification.Position.TOP_END);
-            }
-        });
+				Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
+				UI.getCurrent().navigate(DashboardView.class);
+			}
+			catch (UserAlreadyExistException ex) {
+				Notification.show(getTranslation("User.already.exist"), 5000, Notification.Position.TOP_END);
+			}
+		});
 
-        formLayout.add(firstName, lastName, email, password, register);
+		formLayout.add(firstName, lastName, email, password, register);
 
-        firstName.focus();
-    }
+		firstName.focus();
+	}
 
-    @Override
-    public String getPageTitle() {
-        return getTranslation("Register");
-    }
+	@Override
+	public String getPageTitle() {
+		return getTranslation("Register");
+	}
 
 }

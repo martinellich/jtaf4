@@ -18,52 +18,52 @@ import java.util.function.Supplier;
 
 public class GridBuilder {
 
-    private GridBuilder() {
-    }
+	private GridBuilder() {
+	}
 
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
-            Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord, Runnable afterDelete) {
-        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
-    }
+	public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
+			Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord, Runnable afterDelete) {
+		addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, afterSave, onNewRecord, null, null, afterDelete);
+	}
 
-    @SuppressWarnings("java:S107")
-    public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
-            Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord,
-            String insteadOfDeleteTitle, Consumer<R> insteadOfDelete, Runnable afterDelete) {
-        var buttonAdd = new Button(grid.getTranslation("Add"));
-        buttonAdd.setId("add-button");
-        buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
+	@SuppressWarnings("java:S107")
+	public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
+			Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord,
+			String insteadOfDeleteTitle, Consumer<R> insteadOfDelete, Runnable afterDelete) {
+		var buttonAdd = new Button(grid.getTranslation("Add"));
+		buttonAdd.setId("add-button");
+		buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));
 
-        grid.addComponentColumn(updatableRecord -> {
-            var delete = new Button(
-                    insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
-            delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            delete.addClickListener(event -> {
-                if (insteadOfDelete != null) {
-                    insteadOfDelete.accept(updatableRecord);
-                }
-                else {
-                    new ConfirmDialog("delete-confirm-dialog", grid.getTranslation("Confirm"),
-                            grid.getTranslation("Are.you.sure"), grid.getTranslation("Delete"), e -> {
-                                try {
-                                    jooqDAO.delete(updatableRecord);
-                                    afterDelete.run();
-                                }
-                                catch (DataAccessException ex) {
-                                    Notification.show(ex.getMessage());
-                                }
-                            }, grid.getTranslation("Cancel"), e -> {
-                            })
-                        .open();
-                }
-            });
+		grid.addComponentColumn(updatableRecord -> {
+			var delete = new Button(
+					insteadOfDeleteTitle != null ? insteadOfDeleteTitle : grid.getTranslation("Delete"));
+			delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+			delete.addClickListener(event -> {
+				if (insteadOfDelete != null) {
+					insteadOfDelete.accept(updatableRecord);
+				}
+				else {
+					new ConfirmDialog("delete-confirm-dialog", grid.getTranslation("Confirm"),
+							grid.getTranslation("Are.you.sure"), grid.getTranslation("Delete"), e -> {
+								try {
+									jooqDAO.delete(updatableRecord);
+									afterDelete.run();
+								}
+								catch (DataAccessException ex) {
+									Notification.show(ex.getMessage());
+								}
+							}, grid.getTranslation("Cancel"), e -> {
+							})
+						.open();
+				}
+			});
 
-            var horizontalLayout = new HorizontalLayout(delete);
-            horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-            return horizontalLayout;
-        }).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setAutoWidth(true).setKey("edit-column");
+			var horizontalLayout = new HorizontalLayout(delete);
+			horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+			return horizontalLayout;
+		}).setTextAlign(ColumnTextAlign.END).setHeader(buttonAdd).setAutoWidth(true).setKey("edit-column");
 
-        grid.addItemClickListener(event -> dialog.open(event.getItem(), afterSave));
-    }
+		grid.addItemClickListener(event -> dialog.open(event.getItem(), afterSave));
+	}
 
 }

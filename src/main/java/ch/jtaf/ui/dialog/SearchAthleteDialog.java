@@ -32,160 +32,160 @@ import static org.jooq.impl.DSL.lower;
 
 public class SearchAthleteDialog extends Dialog {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    public static final String FULLSCREEN = "fullscreen";
+	public static final String FULLSCREEN = "fullscreen";
 
-    private boolean isFullScreen = false;
+	private boolean isFullScreen = false;
 
-    private final Div content;
+	private final Div content;
 
-    private final Button toggle;
+	private final Button toggle;
 
-    private final Map<Long, ClubRecord> clubRecordMap;
+	private final Map<Long, ClubRecord> clubRecordMap;
 
-    private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
+	private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
-    public SearchAthleteDialog(AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider,
-            Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
-        setDraggable(true);
-        setResizable(true);
+	public SearchAthleteDialog(AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider,
+			Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
+		setDraggable(true);
+		setResizable(true);
 
-        addListener(AthleteSelectedEvent.class, athleteSelectedListener);
+		addListener(AthleteSelectedEvent.class, athleteSelectedListener);
 
-        setHeaderTitle(getTranslation("Athletes"));
+		setHeaderTitle(getTranslation("Athletes"));
 
-        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
-        toggle.setId("toggle");
-        toggle.addClickListener(event -> toggle());
+		toggle = new Button(MaterialSymbol.MAXIMIZE.create());
+		toggle.setId("toggle");
+		toggle.addClickListener(event -> toggle());
 
-        var close = new Button(MaterialSymbol.CLOSE.create());
-        close.addClickListener(event -> close());
+		var close = new Button(MaterialSymbol.CLOSE.create());
+		close.addClickListener(event -> close());
 
-        getHeader().add(toggle, close);
+		getHeader().add(toggle, close);
 
-        var dialog = new AthleteDialog(getTranslation("Athlete"), athleteDAO, clubDAO, organizationProvider);
+		var dialog = new AthleteDialog(getTranslation("Athlete"), athleteDAO, clubDAO, organizationProvider);
 
-        var filter = new TextField(getTranslation("Filter"));
-        filter.setAutoselect(true);
-        filter.setAutofocus(true);
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
+		var filter = new TextField(getTranslation("Filter"));
+		filter.setAutoselect(true);
+		filter.setAutofocus(true);
+		filter.setValueChangeMode(ValueChangeMode.EAGER);
 
-        var clubs = clubDAO.findByOrganizationId(organizationId);
-        clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+		var clubs = clubDAO.findByOrganizationId(organizationId);
+		clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 
-        CallbackDataProvider<AthleteRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
-                query -> athleteDAO
-                    .findByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query),
-                            query.getOffset(), query.getLimit())
-                    .stream(),
-                query -> athleteDAO.countByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query)));
+		CallbackDataProvider<AthleteRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
+				query -> athleteDAO
+					.findByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query),
+							query.getOffset(), query.getLimit())
+					.stream(),
+				query -> athleteDAO.countByOrganizationIdAndSeriesId(organizationId, seriesId, createCondition(query)));
 
-        dataProvider = callbackDataProvider.withConfigurableFilter();
+		dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        var grid = new Grid<AthleteRecord>();
-        grid.setId("search-athletes-grid");
-        grid.setItems(dataProvider);
-        grid.setHeight("calc(100% - 60px");
+		var grid = new Grid<AthleteRecord>();
+		grid.setId("search-athletes-grid");
+		grid.setItems(dataProvider);
+		grid.setHeight("calc(100% - 60px");
 
-        grid.addColumn(AthleteRecord::getLastName)
-            .setHeader(getTranslation("Last.Name"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(ATHLETE.LAST_NAME.getName());
-        grid.addColumn(AthleteRecord::getFirstName)
-            .setHeader(getTranslation("First.Name"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(ATHLETE.FIRST_NAME.getName());
-        grid.addColumn(AthleteRecord::getGender)
-            .setHeader(getTranslation("Gender"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(ATHLETE.GENDER.getName());
-        grid.addColumn(AthleteRecord::getYearOfBirth)
-            .setHeader(getTranslation("Year"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-        grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-                : clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
-            .setHeader(getTranslation("Club"))
-            .setAutoWidth(true);
+		grid.addColumn(AthleteRecord::getLastName)
+			.setHeader(getTranslation("Last.Name"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(ATHLETE.LAST_NAME.getName());
+		grid.addColumn(AthleteRecord::getFirstName)
+			.setHeader(getTranslation("First.Name"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(ATHLETE.FIRST_NAME.getName());
+		grid.addColumn(AthleteRecord::getGender)
+			.setHeader(getTranslation("Gender"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(ATHLETE.GENDER.getName());
+		grid.addColumn(AthleteRecord::getYearOfBirth)
+			.setHeader(getTranslation("Year"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(ATHLETE.YEAR_OF_BIRTH.getName());
+		grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
+				: clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
+			.setHeader(getTranslation("Club"))
+			.setAutoWidth(true);
 
-        addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(),
-                () -> {
-                    var newRecord = ATHLETE.newRecord();
-                    newRecord.setOrganizationId(organizationId);
-                    return newRecord;
-                }, getTranslation("Assign.Athlete"), athleteRecord -> {
-                    fireEvent(new AthleteSelectedEvent(this, athleteRecord));
-                    close();
-                }, dataProvider::refreshAll);
+		addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(),
+				() -> {
+					var newRecord = ATHLETE.newRecord();
+					newRecord.setOrganizationId(organizationId);
+					return newRecord;
+				}, getTranslation("Assign.Athlete"), athleteRecord -> {
+					fireEvent(new AthleteSelectedEvent(this, athleteRecord));
+					close();
+				}, dataProvider::refreshAll);
 
-        filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
+		filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
-        content = new Div(filter, grid);
-        content.setSizeFull();
-        add(content);
+		content = new Div(filter, grid);
+		content.setSizeFull();
+		add(content);
 
-        toggle();
+		toggle();
 
-        filter.focus();
-    }
+		filter.focus();
+	}
 
-    private void initialSize() {
-        toggle.setIcon(MaterialSymbol.MAXIMIZE.create());
-        getElement().getThemeList().remove(FULLSCREEN);
-        setHeight("auto");
-        setWidth("600px");
-    }
+	private void initialSize() {
+		toggle.setIcon(MaterialSymbol.MAXIMIZE.create());
+		getElement().getThemeList().remove(FULLSCREEN);
+		setHeight("auto");
+		setWidth("600px");
+	}
 
-    private void toggle() {
-        if (isFullScreen) {
-            initialSize();
-        }
-        else {
-            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
-            getElement().getThemeList().add(FULLSCREEN);
-            setSizeFull();
-            content.setVisible(true);
-        }
-        isFullScreen = !isFullScreen;
-    }
+	private void toggle() {
+		if (isFullScreen) {
+			initialSize();
+		}
+		else {
+			toggle.setIcon(MaterialSymbol.MINIMIZE.create());
+			getElement().getThemeList().add(FULLSCREEN);
+			setSizeFull();
+			content.setVisible(true);
+		}
+		isFullScreen = !isFullScreen;
+	}
 
-    private Condition createCondition(Query<?, ?> query) {
-        var optionalFilter = query.getFilter();
-        if (optionalFilter.isPresent()) {
-            var filterString = (String) optionalFilter.get();
-            if (StringUtils.isNumeric(filterString)) {
-                return ATHLETE.ID.eq(Long.valueOf(filterString));
-            }
-            else {
-                return lower(ATHLETE.LAST_NAME).like(filterString.toLowerCase() + "%")
-                    .or(lower(ATHLETE.FIRST_NAME).like(filterString.toLowerCase() + "%"));
-            }
-        }
-        else {
-            return DSL.condition("1 = 2");
-        }
-    }
+	private Condition createCondition(Query<?, ?> query) {
+		var optionalFilter = query.getFilter();
+		if (optionalFilter.isPresent()) {
+			var filterString = (String) optionalFilter.get();
+			if (StringUtils.isNumeric(filterString)) {
+				return ATHLETE.ID.eq(Long.valueOf(filterString));
+			}
+			else {
+				return lower(ATHLETE.LAST_NAME).like(filterString.toLowerCase() + "%")
+					.or(lower(ATHLETE.FIRST_NAME).like(filterString.toLowerCase() + "%"));
+			}
+		}
+		else {
+			return DSL.condition("1 = 2");
+		}
+	}
 
-    public static class AthleteSelectedEvent extends ComponentEvent<SearchAthleteDialog> {
+	public static class AthleteSelectedEvent extends ComponentEvent<SearchAthleteDialog> {
 
-        private final AthleteRecord athleteRecord;
+		private final AthleteRecord athleteRecord;
 
-        public AthleteSelectedEvent(SearchAthleteDialog source, AthleteRecord athleteRecord) {
-            super(source, false);
+		public AthleteSelectedEvent(SearchAthleteDialog source, AthleteRecord athleteRecord) {
+			super(source, false);
 
-            this.athleteRecord = athleteRecord;
-        }
+			this.athleteRecord = athleteRecord;
+		}
 
-        public AthleteRecord getAthleteRecord() {
-            return athleteRecord;
-        }
+		public AthleteRecord getAthleteRecord() {
+			return athleteRecord;
+		}
 
-    }
+	}
 
 }

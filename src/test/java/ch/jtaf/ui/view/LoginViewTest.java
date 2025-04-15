@@ -16,29 +16,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class LoginViewTest extends KaribuTest {
 
-    @Test
-    void login_with_unknown_user() {
-        UI.getCurrent().navigate(LoginView.class);
+	@Test
+	void login_with_unknown_user() {
+		UI.getCurrent().navigate(LoginView.class);
 
-        try {
-            _login(_get(LoginOverlay.class), "not.existing@user.com", "pass");
-        }
-        catch (IllegalStateException e) {
-            // From GoogleAnalyticsTracker. Ignore
-        }
+		try {
+			_login(_get(LoginOverlay.class), "not.existing@user.com", "pass");
+		}
+		catch (IllegalStateException e) {
+			// From GoogleAnalyticsTracker. Ignore
+		}
 
-        assertThat(_get(LoginOverlay.class).getElement().getOuterHTML())
-            .isEqualTo("<vaadin-login-overlay></vaadin-login-overlay>");
-    }
+		assertThat(_get(LoginOverlay.class).getElement().getOuterHTML())
+			.isEqualTo("<vaadin-login-overlay></vaadin-login-overlay>");
+	}
 
-    @Test
-    void already_logged_in() {
-        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
+	@Test
+	void already_logged_in() {
+		login("simon@martinelli.ch", "", List.of(Role.ADMIN));
 
-        UI.getCurrent().navigate(LoginView.class);
+		UI.getCurrent().navigate(LoginView.class);
 
-        H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
-        assertThat(h1.getText()).isEqualTo("Dashboard");
-    }
+		H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
+		assertThat(h1.getText()).isEqualTo("Dashboard");
+	}
 
 }

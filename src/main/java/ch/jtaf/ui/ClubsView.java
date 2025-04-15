@@ -17,57 +17,57 @@ import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionLis
 @Route
 public class ClubsView extends ProtectedGridView<ClubRecord> {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    private final ClubDialog dialog;
+	private final ClubDialog dialog;
 
-    public ClubsView(ClubDAO clubDAO, OrganizationProvider organizationProvider) {
-        super(clubDAO, organizationProvider, CLUB);
+	public ClubsView(ClubDAO clubDAO, OrganizationProvider organizationProvider) {
+		super(clubDAO, organizationProvider, CLUB);
 
-        setHeightFull();
+		setHeightFull();
 
-        dialog = new ClubDialog(getTranslation("Clubs"), clubDAO);
+		dialog = new ClubDialog(getTranslation("Clubs"), clubDAO);
 
-        createGrid();
+		createGrid();
 
-        add(grid);
-    }
+		add(grid);
+	}
 
-    private void createGrid() {
-        grid.setId("clubs-grid");
+	private void createGrid() {
+		grid.setId("clubs-grid");
 
-        grid.addColumn(ClubRecord::getAbbreviation)
-            .setHeader(getTranslation("Abbreviation"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(CLUB.ABBREVIATION.getName());
-        grid.addColumn(ClubRecord::getName)
-            .setHeader(getTranslation("Name"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(CLUB.NAME.getName());
+		grid.addColumn(ClubRecord::getAbbreviation)
+			.setHeader(getTranslation("Abbreviation"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(CLUB.ABBREVIATION.getName());
+		grid.addColumn(ClubRecord::getName)
+			.setHeader(getTranslation("Name"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(CLUB.NAME.getName());
 
-        addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, clubRecord -> refreshAll(), () -> {
-            ClubRecord newRecord = CLUB.newRecord();
-            newRecord.setOrganizationId(organizationRecord.getId());
-            return newRecord;
-        }, this::refreshAll);
-    }
+		addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, clubRecord -> refreshAll(), () -> {
+			ClubRecord newRecord = CLUB.newRecord();
+			newRecord.setOrganizationId(organizationRecord.getId());
+			return newRecord;
+		}, this::refreshAll);
+	}
 
-    @Override
-    public String getPageTitle() {
-        return getTranslation("Clubs");
-    }
+	@Override
+	public String getPageTitle() {
+		return getTranslation("Clubs");
+	}
 
-    @Override
-    protected Condition initialCondition() {
-        return CLUB.ORGANIZATION_ID.eq(organizationRecord.getId());
-    }
+	@Override
+	protected Condition initialCondition() {
+		return CLUB.ORGANIZATION_ID.eq(organizationRecord.getId());
+	}
 
-    @Override
-    protected List<OrderField<?>> initialSort() {
-        return List.of(CLUB.ABBREVIATION.asc());
-    }
+	@Override
+	protected List<OrderField<?>> initialSort() {
+		return List.of(CLUB.ABBREVIATION.asc());
+	}
 
 }

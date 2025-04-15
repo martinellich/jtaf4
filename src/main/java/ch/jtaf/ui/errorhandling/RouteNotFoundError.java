@@ -18,14 +18,14 @@ import static com.vaadin.flow.component.Tag.DIV;
 @Tag(DIV)
 public class RouteNotFoundError extends Component implements HasErrorParameter<NotFoundException> {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    @Override
-    public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NotFoundException> parameter) {
-        event.rerouteTo("");
+	@Override
+	public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NotFoundException> parameter) {
+		event.rerouteTo("");
 
-        return HttpServletResponse.SC_TEMPORARY_REDIRECT;
-    }
+		return HttpServletResponse.SC_TEMPORARY_REDIRECT;
+	}
 
 }

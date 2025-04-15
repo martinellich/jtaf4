@@ -5,14 +5,14 @@ import java.util.List;
 
 public enum Gender {
 
-    M, F;
+	M, F;
 
-    public static List<String> valuesAsStrings() {
-        var valuesAsStrings = new ArrayList<String>();
-        for (var value : values()) {
-            valuesAsStrings.add(value.name());
-        }
-        return valuesAsStrings;
-    }
+	public static List<String> valuesAsStrings() {
+		var valuesAsStrings = new ArrayList<String>();
+		for (var value : values()) {
+			valuesAsStrings.add(value.name());
+		}
+		return valuesAsStrings;
+	}
 
 }
