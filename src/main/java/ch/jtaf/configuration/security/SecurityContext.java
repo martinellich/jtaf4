@@ -20,66 +20,66 @@ import org.springframework.util.StringUtils;
 @Component
 public final class SecurityContext {
 
-    private final AuthenticationContext authenticationContext;
+	private final AuthenticationContext authenticationContext;
 
-    public SecurityContext(AuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
-    }
+	public SecurityContext(AuthenticationContext authenticationContext) {
+		this.authenticationContext = authenticationContext;
+	}
 
-    /**
-     * Gets the username of the currently signed-in user.
-     * @return the username of the current user or <code>null</code> if the user has not
-     * signed in
-     */
-    public String getUsername() {
-        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return switch (principal) {
-            case UserDetails userDetails -> userDetails.getUsername();
-            case Jwt jwt -> jwt.getSubject();
-            case null, default -> ""; // Anonymous or no authentication.
-        };
-    }
+	/**
+	 * Gets the username of the currently signed-in user.
+	 * @return the username of the current user or <code>null</code> if the user has not
+	 * signed in
+	 */
+	public String getUsername() {
+		var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return switch (principal) {
+			case UserDetails userDetails -> userDetails.getUsername();
+			case Jwt jwt -> jwt.getSubject();
+			case null, default -> ""; // Anonymous or no authentication.
+		};
+	}
 
-    /**
-     * Checks if the user is logged in.
-     * @return true if the user is logged in. False otherwise.
-     */
-    public boolean isUserLoggedIn() {
-        return isUserLoggedIn(SecurityContextHolder.getContext().getAuthentication());
-    }
+	/**
+	 * Checks if the user is logged in.
+	 * @return true if the user is logged in. False otherwise.
+	 */
+	public boolean isUserLoggedIn() {
+		return isUserLoggedIn(SecurityContextHolder.getContext().getAuthentication());
+	}
 
-    /**
-     * Determines if a user is currently logged in based on the provided authentication
-     * object.
-     * @param authentication the {@link Authentication} object representing the current
-     * security context
-     * @return true if the user is authenticated and not anonymous, false otherwise
-     */
-    private boolean isUserLoggedIn(Authentication authentication) {
-        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
-    }
+	/**
+	 * Determines if a user is currently logged in based on the provided authentication
+	 * object.
+	 * @param authentication the {@link Authentication} object representing the current
+	 * security context
+	 * @return true if the user is authenticated and not anonymous, false otherwise
+	 */
+	private boolean isUserLoggedIn(Authentication authentication) {
+		return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
+	}
 
-    /**
-     * Logs out the currently authenticated user.
-     * <p>
-     * This method performs the following tasks: - Invalidates the current authentication
-     * context, effectively logging out the user. - Removes the "remember-me" cookie by
-     * creating a new cookie with the same name and setting its value to null and its max
-     * age to zero. This ensures the cookie is deleted from the client. - Sets the path
-     * for the cookie based on the application's context path to ensure proper deletion. -
-     * Adds the updated cookie to the HTTP response to propagate the change to the client.
-     */
-    public void logout() {
-        var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
+	/**
+	 * Logs out the currently authenticated user.
+	 * <p>
+	 * This method performs the following tasks: - Invalidates the current authentication
+	 * context, effectively logging out the user. - Removes the "remember-me" cookie by
+	 * creating a new cookie with the same name and setting its value to null and its max
+	 * age to zero. This ensures the cookie is deleted from the client. - Sets the path
+	 * for the cookie based on the application's context path to ensure proper deletion. -
+	 * Adds the updated cookie to the HTTP response to propagate the change to the client.
+	 */
+	public void logout() {
+		var request = VaadinServletRequest.getCurrent().getHttpServletRequest();
 
-        authenticationContext.logout();
+		authenticationContext.logout();
 
-        var cookie = new Cookie("remember-me", null);
-        cookie.setMaxAge(0);
-        cookie.setPath(StringUtils.hasLength(request.getContextPath()) ? request.getContextPath() : "/");
+		var cookie = new Cookie("remember-me", null);
+		cookie.setMaxAge(0);
+		cookie.setPath(StringUtils.hasLength(request.getContextPath()) ? request.getContextPath() : "/");
 
-        var response = (HttpServletResponse) VaadinResponse.getCurrent();
-        response.addCookie(cookie);
-    }
+		var response = (HttpServletResponse) VaadinResponse.getCurrent();
+		response.addCookie(cookie);
+	}
 
 }

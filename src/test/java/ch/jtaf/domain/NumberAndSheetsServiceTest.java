@@ -16,47 +16,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class NumberAndSheetsServiceTest {
 
-    @MockitoBean
-    private JavaMailSender javaMailSender;
+	@MockitoBean
+	private JavaMailSender javaMailSender;
 
-    @Autowired
-    private NumberAndSheetsService numberAndSheetsService;
+	@Autowired
+	private NumberAndSheetsService numberAndSheetsService;
 
-    @Test
-    void create_numbers() {
-        byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"));
+	@Test
+	void create_numbers() {
+		byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"));
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
-    @Test
-    void create_numbers_ordered_by_club() {
-        byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"), CLUB.ABBREVIATION,
-                CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+	@Test
+	void create_numbers_ordered_by_club() {
+		byte[] pdf = numberAndSheetsService.createNumbers(1L, Locale.of("de", "CH"), CLUB.ABBREVIATION,
+				CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
-    @Test
-    void create_empty_sheets() {
-        byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L, Locale.of("de", "CH"));
+	@Test
+	void create_empty_sheets() {
+		byte[] pdf = numberAndSheetsService.createEmptySheets(1L, 1L, Locale.of("de", "CH"));
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
-    @Test
-    void create_sheets() {
-        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"));
+	@Test
+	void create_sheets() {
+		byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"));
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
-    @Test
-    void create_sheets_ordered_by_club() {
-        byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"), CLUB.ABBREVIATION,
-                CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
+	@Test
+	void create_sheets_ordered_by_club() {
+		byte[] pdf = numberAndSheetsService.createSheets(1L, 6L, Locale.of("de", "CH"), CLUB.ABBREVIATION,
+				CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
 }

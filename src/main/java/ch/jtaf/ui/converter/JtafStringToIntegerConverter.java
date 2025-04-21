@@ -7,15 +7,15 @@ import java.util.Locale;
 
 public class JtafStringToIntegerConverter extends StringToIntegerConverter {
 
-    public JtafStringToIntegerConverter(String errorMessage) {
-        super(errorMessage);
-    }
+	public JtafStringToIntegerConverter(String errorMessage) {
+		super(errorMessage);
+	}
 
-    @Override
-    protected NumberFormat getFormat(Locale locale) {
-        var format = super.getFormat(locale);
-        format.setGroupingUsed(false);
-        return format;
-    }
+	@Override
+	protected NumberFormat getFormat(Locale locale) {
+		var format = super.getFormat(locale);
+		format.setGroupingUsed(false);
+		return format;
+	}
 
 }

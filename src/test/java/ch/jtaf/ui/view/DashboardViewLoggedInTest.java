@@ -16,34 +16,34 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 @SuppressWarnings("java:S2699")
 class DashboardViewLoggedInTest extends KaribuTest {
 
-    @BeforeEach
-    public void login() {
-        login("simon@martinelli.ch", "", List.of(Role.ADMIN));
-    }
+	@BeforeEach
+	public void login() {
+		login("simon@martinelli.ch", "", List.of(Role.ADMIN));
+	}
 
-    @Test
-    void enter_results_is_enabled() {
-        UI.getCurrent().getPage().reload();
+	@Test
+	void enter_results_is_enabled() {
+		UI.getCurrent().getPage().reload();
 
-        _assert(Button.class, 6, spec -> spec.withText("Enter Results"));
+		_assert(Button.class, 6, spec -> spec.withText("Enter Results"));
 
-        try {
-            _get(Button.class, spec -> spec.withId("logout")).click();
-        }
-        catch (Exception ignored) {
-            // https://github.com/mvysny/karibu-testing/issues/148
-        }
-    }
+		try {
+			_get(Button.class, spec -> spec.withId("logout")).click();
+		}
+		catch (Exception ignored) {
+			// https://github.com/mvysny/karibu-testing/issues/148
+		}
+	}
 
-    @Test
-    void resultate_eingeben_is_displayed() {
-        Locale.setDefault(Locale.GERMAN);
+	@Test
+	void resultate_eingeben_is_displayed() {
+		Locale.setDefault(Locale.GERMAN);
 
-        UI.getCurrent().getPage().reload();
+		UI.getCurrent().getPage().reload();
 
-        _assert(Button.class, 6, spec -> spec.withText("Resultate eingeben"));
+		_assert(Button.class, 6, spec -> spec.withText("Resultate eingeben"));
 
-        Locale.setDefault(Locale.ENGLISH);
-    }
+		Locale.setDefault(Locale.ENGLISH);
+	}
 
 }

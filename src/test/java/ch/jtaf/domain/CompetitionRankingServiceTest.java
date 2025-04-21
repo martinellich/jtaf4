@@ -13,47 +13,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class CompetitionRankingServiceTest {
 
-    @MockitoBean
-    private JavaMailSender javaMailSender;
+	@MockitoBean
+	private JavaMailSender javaMailSender;
 
-    @Autowired
-    private CompetitionRankingService competitionRankingService;
+	@Autowired
+	private CompetitionRankingService competitionRankingService;
 
-    @Test
-    void get_competition_ranking() {
-        var competitionRanking = competitionRankingService.getCompetitionRanking(6L);
+	@Test
+	void get_competition_ranking() {
+		var competitionRanking = competitionRankingService.getCompetitionRanking(6L);
 
-        assertThat(competitionRanking).isPresent();
-        assertThat(competitionRanking.get().name()).isEqualTo("39. Jugendmeisterschaft");
-    }
+		assertThat(competitionRanking).isPresent();
+		assertThat(competitionRanking.get().name()).isEqualTo("39. Jugendmeisterschaft");
+	}
 
-    @Test
-    void create_competition_ranking_pdf() {
-        byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(6L, Locale.of("de", "CH"));
+	@Test
+	void create_competition_ranking_pdf() {
+		byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(6L, Locale.of("de", "CH"));
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
-    @Test
-    void get_events_ranking() {
-        var eventsRanking = competitionRankingService.getEventsRanking(6L);
+	@Test
+	void get_events_ranking() {
+		var eventsRanking = competitionRankingService.getEventsRanking(6L);
 
-        assertThat(eventsRanking).isPresent();
-        assertThat(eventsRanking.get().name()).isEqualTo("39. Jugendmeisterschaft");
-    }
+		assertThat(eventsRanking).isPresent();
+		assertThat(eventsRanking.get().name()).isEqualTo("39. Jugendmeisterschaft");
+	}
 
-    @Test
-    void get_events_ranking_pdf() {
-        byte[] pdf = competitionRankingService.getEventRankingAsPdf(6L, Locale.of("de", "CH"));
+	@Test
+	void get_events_ranking_pdf() {
+		byte[] pdf = competitionRankingService.getEventRankingAsPdf(6L, Locale.of("de", "CH"));
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
-    @Test
-    void get_diplomas_pdf() {
-        byte[] pdf = competitionRankingService.getDiplomasAsPdf(6L, Locale.of("de", "CH"));
+	@Test
+	void get_diplomas_pdf() {
+		byte[] pdf = competitionRankingService.getDiplomasAsPdf(6L, Locale.of("de", "CH"));
 
-        assertThat(pdf).isNotEmpty();
-    }
+		assertThat(pdf).isNotEmpty();
+	}
 
 }

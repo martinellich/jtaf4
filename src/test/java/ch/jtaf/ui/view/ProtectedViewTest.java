@@ -14,16 +14,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ProtectedViewTest extends KaribuTest {
 
-    @Test
-    void user_without_organization() {
-        // This user has no organization
-        login("susan.miller@mail.com", "pass", List.of(Role.ADMIN));
+	@Test
+	void user_without_organization() {
+		// This user has no organization
+		login("susan.miller@mail.com", "pass", List.of(Role.ADMIN));
 
-        UI.getCurrent().navigate(ClubsView.class);
+		UI.getCurrent().navigate(ClubsView.class);
 
-        // Assert that the user was rerouted to organization
-        H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
-        assertThat(h1.getText()).isEqualTo("Organizations");
-    }
+		// Assert that the user was rerouted to organization
+		H1 h1 = _get(H1.class, spec -> spec.withId("view-title"));
+		assertThat(h1.getText()).isEqualTo("Organizations");
+	}
 
 }

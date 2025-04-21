@@ -13,8 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Jtaf4Application implements AppShellConfigurator {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Jtaf4Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Jtaf4Application.class, args);
+	}
 
 }

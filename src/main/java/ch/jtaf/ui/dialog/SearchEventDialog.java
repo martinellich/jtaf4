@@ -28,152 +28,152 @@ import static org.jooq.impl.DSL.upper;
 
 public class SearchEventDialog extends Dialog {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    public static final String FULLSCREEN = "fullscreen";
+	public static final String FULLSCREEN = "fullscreen";
 
-    private boolean isFullScreen = false;
+	private boolean isFullScreen = false;
 
-    private final Div content;
+	private final Div content;
 
-    private final Button toggle;
+	private final Button toggle;
 
-    private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
+	private final ConfigurableFilterDataProvider<EventRecord, Void, String> dataProvider;
 
-    public SearchEventDialog(EventDAO eventDAO, long organizationId, CategoryRecord categoryRecord,
-            ComponentEventListener<AssignEvent> assignEventListener) {
-        setId("search-event-dialog");
+	public SearchEventDialog(EventDAO eventDAO, long organizationId, CategoryRecord categoryRecord,
+			ComponentEventListener<AssignEvent> assignEventListener) {
+		setId("search-event-dialog");
 
-        addListener(AssignEvent.class, assignEventListener);
+		addListener(AssignEvent.class, assignEventListener);
 
-        setDraggable(true);
-        setResizable(true);
+		setDraggable(true);
+		setResizable(true);
 
-        setHeaderTitle(getTranslation("Events"));
+		setHeaderTitle(getTranslation("Events"));
 
-        toggle = new Button(MaterialSymbol.MAXIMIZE.create());
-        toggle.setId("search-event-dialog-toggle");
-        toggle.addClickListener(event -> toggle());
+		toggle = new Button(MaterialSymbol.MAXIMIZE.create());
+		toggle.setId("search-event-dialog-toggle");
+		toggle.addClickListener(event -> toggle());
 
-        var close = new Button(MaterialSymbol.CLOSE.create());
-        close.addClickListener(event -> close());
+		var close = new Button(MaterialSymbol.CLOSE.create());
+		close.addClickListener(event -> close());
 
-        getHeader().add(toggle, close);
+		getHeader().add(toggle, close);
 
-        var filter = new TextField(getTranslation("Filter"));
-        filter.setId("event-filter");
-        filter.setAutoselect(true);
-        filter.setAutofocus(true);
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
+		var filter = new TextField(getTranslation("Filter"));
+		filter.setId("event-filter");
+		filter.setAutoselect(true);
+		filter.setAutofocus(true);
+		filter.setValueChangeMode(ValueChangeMode.EAGER);
 
-        CallbackDataProvider<EventRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
-                query -> eventDAO
-                    .findAllByOrganizationGenderCategory(organizationId, categoryRecord.getGender(),
-                            categoryRecord.getId(), createCondition(query), query.getOffset(), query.getLimit())
-                    .stream(),
-                query -> eventDAO.countByOrganizationGenderCategory(organizationId, categoryRecord.getGender(),
-                        categoryRecord.getId(), createCondition(query)));
+		CallbackDataProvider<EventRecord, String> callbackDataProvider = DataProvider.fromFilteringCallbacks(
+				query -> eventDAO
+					.findAllByOrganizationGenderCategory(organizationId, categoryRecord.getGender(),
+							categoryRecord.getId(), createCondition(query), query.getOffset(), query.getLimit())
+					.stream(),
+				query -> eventDAO.countByOrganizationGenderCategory(organizationId, categoryRecord.getGender(),
+						categoryRecord.getId(), createCondition(query)));
 
-        dataProvider = callbackDataProvider.withConfigurableFilter();
+		dataProvider = callbackDataProvider.withConfigurableFilter();
 
-        var grid = new Grid<EventRecord>();
-        grid.setId("events-grid");
-        grid.setItems(dataProvider);
-        grid.setHeight("calc(100% - 60px");
+		var grid = new Grid<EventRecord>();
+		grid.setId("events-grid");
+		grid.setItems(dataProvider);
+		grid.setHeight("calc(100% - 60px");
 
-        grid.addColumn(EventRecord::getAbbreviation)
-            .setHeader(getTranslation("Abbreviation"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(EVENT.ABBREVIATION.getName());
-        grid.addColumn(EventRecord::getName)
-            .setHeader(getTranslation("Name"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(EVENT.NAME.getName());
-        grid.addColumn(EventRecord::getGender)
-            .setHeader(getTranslation("Gender"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(EVENT.GENDER.getName());
-        grid.addColumn(EventRecord::getEventType)
-            .setHeader(getTranslation("Event.Type"))
-            .setSortable(true)
-            .setAutoWidth(true)
-            .setKey(EVENT.EVENT_TYPE.getName());
-        grid.addColumn(EventRecord::getA).setHeader("A").setAutoWidth(true);
-        grid.addColumn(EventRecord::getA).setHeader("B").setAutoWidth(true);
-        grid.addColumn(EventRecord::getA).setHeader("C").setAutoWidth(true);
+		grid.addColumn(EventRecord::getAbbreviation)
+			.setHeader(getTranslation("Abbreviation"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(EVENT.ABBREVIATION.getName());
+		grid.addColumn(EventRecord::getName)
+			.setHeader(getTranslation("Name"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(EVENT.NAME.getName());
+		grid.addColumn(EventRecord::getGender)
+			.setHeader(getTranslation("Gender"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(EVENT.GENDER.getName());
+		grid.addColumn(EventRecord::getEventType)
+			.setHeader(getTranslation("Event.Type"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(EVENT.EVENT_TYPE.getName());
+		grid.addColumn(EventRecord::getA).setHeader("A").setAutoWidth(true);
+		grid.addColumn(EventRecord::getA).setHeader("B").setAutoWidth(true);
+		grid.addColumn(EventRecord::getA).setHeader("C").setAutoWidth(true);
 
-        grid.addComponentColumn(eventRecord -> new Button(getTranslation("Assign.Event"), e -> {
-            fireEvent(new AssignEvent(this, eventRecord));
+		grid.addComponentColumn(eventRecord -> new Button(getTranslation("Assign.Event"), e -> {
+			fireEvent(new AssignEvent(this, eventRecord));
 
-            Notification.show(getTranslation("Event.assigned"), 6000, Notification.Position.TOP_END);
-            dataProvider.refreshAll();
-        })).setAutoWidth(true).setKey("assign-column");
+			Notification.show(getTranslation("Event.assigned"), 6000, Notification.Position.TOP_END);
+			dataProvider.refreshAll();
+		})).setAutoWidth(true).setKey("assign-column");
 
-        filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
+		filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
-        content = new Div(filter, grid);
-        content.setSizeFull();
-        add(content);
+		content = new Div(filter, grid);
+		content.setSizeFull();
+		add(content);
 
-        toggle();
+		toggle();
 
-        filter.focus();
-    }
+		filter.focus();
+	}
 
-    private void initialSize() {
-        toggle.setIcon(MaterialSymbol.EXPAND.create());
-        getElement().getThemeList().remove(FULLSCREEN);
-        setHeight("auto");
-        setWidth("600px");
-    }
+	private void initialSize() {
+		toggle.setIcon(MaterialSymbol.EXPAND.create());
+		getElement().getThemeList().remove(FULLSCREEN);
+		setHeight("auto");
+		setWidth("600px");
+	}
 
-    private void toggle() {
-        if (isFullScreen) {
-            initialSize();
-        }
-        else {
-            toggle.setIcon(MaterialSymbol.MINIMIZE.create());
-            getElement().getThemeList().add(FULLSCREEN);
-            setSizeFull();
-            content.setVisible(true);
-        }
-        isFullScreen = !isFullScreen;
-    }
+	private void toggle() {
+		if (isFullScreen) {
+			initialSize();
+		}
+		else {
+			toggle.setIcon(MaterialSymbol.MINIMIZE.create());
+			getElement().getThemeList().add(FULLSCREEN);
+			setSizeFull();
+			content.setVisible(true);
+		}
+		isFullScreen = !isFullScreen;
+	}
 
-    private Condition createCondition(Query<?, ?> query) {
-        var optionalFilter = query.getFilter();
-        if (optionalFilter.isPresent()) {
-            var filterString = (String) optionalFilter.get();
-            if (StringUtils.isNumeric(filterString)) {
-                return EVENT.ID.eq(Long.valueOf(filterString));
-            }
-            else {
-                return upper(EVENT.ABBREVIATION).like(filterString.toUpperCase() + "%")
-                    .or(upper(EVENT.NAME).like(filterString.toUpperCase() + "%"));
-            }
-        }
-        else {
-            return DSL.condition("1 = 1");
-        }
-    }
+	private Condition createCondition(Query<?, ?> query) {
+		var optionalFilter = query.getFilter();
+		if (optionalFilter.isPresent()) {
+			var filterString = (String) optionalFilter.get();
+			if (StringUtils.isNumeric(filterString)) {
+				return EVENT.ID.eq(Long.valueOf(filterString));
+			}
+			else {
+				return upper(EVENT.ABBREVIATION).like(filterString.toUpperCase() + "%")
+					.or(upper(EVENT.NAME).like(filterString.toUpperCase() + "%"));
+			}
+		}
+		else {
+			return DSL.condition("1 = 1");
+		}
+	}
 
-    public static class AssignEvent extends ComponentEvent<SearchEventDialog> {
+	public static class AssignEvent extends ComponentEvent<SearchEventDialog> {
 
-        private final EventRecord eventRecord;
+		private final EventRecord eventRecord;
 
-        public AssignEvent(SearchEventDialog source, EventRecord eventRecord) {
-            super(source, false);
-            this.eventRecord = eventRecord;
-        }
+		public AssignEvent(SearchEventDialog source, EventRecord eventRecord) {
+			super(source, false);
+			this.eventRecord = eventRecord;
+		}
 
-        public EventRecord getEventRecord() {
-            return eventRecord;
-        }
+		public EventRecord getEventRecord() {
+			return eventRecord;
+		}
 
-    }
+	}
 
 }
