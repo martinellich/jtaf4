@@ -24,7 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import jakarta.annotation.security.RolesAllowed;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
-import org.jooq.Record4;
+import org.jooq.Record5;
 import org.jooq.impl.DSL;
 
 import java.io.Serial;
@@ -54,11 +54,11 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	private final transient EventDAO eventDAO;
 
-	private final Grid<Record4<Long, String, String, Long>> grid = new Grid<>();
+	private final Grid<Record5<Long, String, String, String, Long>> grid = new Grid<>();
 
 	private final Div form = new Div();
 
-	private ConfigurableFilterDataProvider<Record4<Long, String, String, Long>, Void, String> dataProvider;
+	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> dataProvider;
 
 	private TextField resultTextField;
 
@@ -102,6 +102,11 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 			.setSortable(true)
 			.setAutoWidth(true)
 			.setKey(ATHLETE.FIRST_NAME.getName());
+		grid.addColumn(athleteRecord -> athleteRecord.get(CATEGORY.ABBREVIATION))
+			.setHeader(getTranslation("Category"))
+			.setSortable(true)
+			.setAutoWidth(true)
+			.setKey(CATEGORY.ABBREVIATION.getName());
 		grid.setItems(dataProvider);
 		grid.setHeight("200px");
 	}
@@ -126,7 +131,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 				}
 			}
 			return athletes.stream();
-		}, (Query<Record4<Long, String, String, Long>, String> query) -> {
+		}, (Query<Record5<Long, String, String, String, Long>, String> query) -> {
 			int count = athleteDAO.countAthletes(competitionId, createCondition(query));
 			if (count == 0) {
 				form.removeAll();
@@ -137,7 +142,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	@SuppressWarnings("java:S3776")
 	private void createForm(
-			AbstractField.ComponentValueChangeEvent<Grid<Record4<Long, String, String, Long>>, Record4<Long, String, String, Long>> event) {
+			AbstractField.ComponentValueChangeEvent<Grid<Record5<Long, String, String, String, Long>>, Record5<Long, String, String, String, Long>> event) {
 		form.removeAll();
 
 		if (event.getValue() != null) {

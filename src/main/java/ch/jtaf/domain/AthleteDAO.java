@@ -5,7 +5,7 @@ import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Record4;
+import org.jooq.Record5;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
@@ -64,12 +64,13 @@ public class AthleteDAO extends JooqDAO<Athlete, AthleteRecord, Long> {
             .fetchOptionalInto(Integer.class).orElse(0);
     }
 
-    public Result<Record4<Long, String, String, Long>> getAthletes(long competitionId, Condition condition, int offset, int limit) {
+    public Result<Record5<Long, String, String, String, Long>> getAthletes(long competitionId, Condition condition, int offset, int limit) {
         return dslContext
             .select(
                 ATHLETE.ID,
                 ATHLETE.LAST_NAME,
                 ATHLETE.FIRST_NAME,
+                CATEGORY.ABBREVIATION,
                 CATEGORY.ID)
             .from(ATHLETE)
             .join(CATEGORY_ATHLETE).on(CATEGORY_ATHLETE.ATHLETE_ID.eq(ATHLETE.ID))
