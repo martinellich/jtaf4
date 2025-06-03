@@ -58,7 +58,7 @@
 
         <testcontainers.version>1.21.0</testcontainers.version>
         <testcontainers-jooq-codegen-maven-plugin.version>0.0.4</testcontainers-jooq-codegen-maven-plugin.version>
-        <spring-javaformat-maven-plugin.version>0.0.45</spring-javaformat-maven-plugin.version>
+        <spring-javaformat-maven-plugin.version>0.0.46</spring-javaformat-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.13</jacoco.version>
         <playwright.version>1.52.0</playwright.version>
