@@ -34,7 +34,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	private static final String NAME_MIN_WIDTH = "350px";
+	private static final String NAME_MIN_WIDTH = "300px";
 
 	private static final String BUTTON_WIDTH = "220px";
 
@@ -181,7 +181,7 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 					enterResults.addClickListener(event -> UI.getCurrent()
 						.navigate(ResultCapturingView.class, competition.getId().toString()));
 					var enterResultsDiv = new Div(enterResults);
-					links.add(enterResultsDiv);
+					competitionRankingDiv.add(enterResultsDiv);
 
 					competitionIndex++;
 				}

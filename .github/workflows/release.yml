@@ -22,11 +22,6 @@ jobs:
                     java-version: '21'
                     distribution: 'adopt'
 
-            -   name: Maven settings.xml
-                uses: s4u/maven-settings-action@v3.1.0
-                with:
-                    properties: '[{"jelastic.username": "${{ secrets.JELASTIC_USERNAME }}"}, {"jelastic.password": "${{ secrets.JELASTIC_TOKEN }}" }]'
-
             -   name: Cache local Maven repository
                 uses: actions/cache@v4
                 with:
@@ -38,5 +33,9 @@ jobs:
             -   name: Maven Build
                 run: ./mvnw -B clean package -Pproduction
 
-            -   name: Jelastic Deploy
-                run: ./mvnw -B jelastic:deploy
+            -   name: Deploy to Fly.io
+                uses: superfly/flyctl-actions/setup-flyctl@master
+                run: flyctl deploy --remote-only
+                env:
+                    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
