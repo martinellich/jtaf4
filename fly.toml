@@ -28,6 +28,6 @@ primary_region = 'fra'
     path = '/actuator/health'
 
 [[vm]]
-  memory = '512mb'
+  memory = '1g'
   cpu_kind = 'shared'
   cpus = 1
