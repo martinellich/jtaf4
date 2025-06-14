@@ -73,6 +73,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient NumberAndSheetsService numberAndSheetsService;
 
+	@Nullable
 	private Button copyCategories;
 
 	@Nullable
@@ -216,14 +217,13 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		copyCategories.setId("copy-categories");
 		copyCategories.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		copyCategories.addClickListener(event -> {
-			if (seriesRecord != null) {
-				if (organizationProvider.getOrganization() != null) {
-					var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
-							seriesRecord.getId(), seriesDAO);
-					dialog.addAfterCopyListener(e -> refreshAll());
-					dialog.open();
-				}
+			if (seriesRecord != null && organizationProvider.getOrganization() != null) {
+				var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
+						seriesRecord.getId(), seriesDAO);
+				dialog.addAfterCopyListener(e -> refreshAll());
+				dialog.open();
 			}
+
 		});
 		buttons.add(copyCategories);
 	}

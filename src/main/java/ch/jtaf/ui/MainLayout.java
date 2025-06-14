@@ -239,6 +239,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 		version.setText(applicationVersion);
 	}
 
+	@SuppressWarnings("java:S3776")
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		if (securityContext.isUserLoggedIn()) {
