@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class TranslationProviderTest {
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private JavaMailSender javaMailSender;
 
@@ -49,7 +50,7 @@ class TranslationProviderTest {
 
 	@Test
 	void get_null_translation() {
-		String nothing = translationProvider.getTranslation(null, Locale.ENGLISH);
+		String nothing = translationProvider.getTranslation("", Locale.ENGLISH);
 
 		assertThat(nothing).isEmpty();
 	}

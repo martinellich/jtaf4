@@ -80,7 +80,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private Grid<CompetitionRecord> competitionsGrid;
 
-	private Grid<CategoryRecord> categoriesGrid;
+	private Grid<CategoryRecord> categoriesGrid = new Grid<>();
 
 	private Grid<AthleteRecord> athletesGrid;
 
@@ -88,7 +88,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient Binder<SeriesRecord> binder = new Binder<>();
 
-	private Map<Long, ClubRecord> clubRecordMap;
+	private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
 	@SuppressWarnings("java:S107")
 	public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
@@ -139,7 +139,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			tabsToGrids.values().forEach(grid -> grid.setVisible(false));
 
 			var selectedGrid = tabsToGrids.get(sectionTabs.getSelectedTab());
-			selectedGrid.setVisible(true);
+			if (selectedGrid != null) {
+				selectedGrid.setVisible(true);
+			}
 		});
 	}
 
@@ -215,10 +217,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		copyCategories.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		copyCategories.addClickListener(event -> {
 			if (seriesRecord != null) {
-				var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
-						seriesRecord.getId(), seriesDAO);
-				dialog.addAfterCopyListener(e -> refreshAll());
-				dialog.open();
+				if (organizationProvider.getOrganization() != null) {
+					var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
+							seriesRecord.getId(), seriesDAO);
+					dialog.addAfterCopyListener(e -> refreshAll());
+					dialog.open();
+				}
 			}
 		});
 		buttons.add(copyCategories);
@@ -226,19 +230,21 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	@Override
 	protected void refreshAll() {
-		var competitionRecords = competitionDAO.findBySeriesId(seriesRecord.getId());
-		competitionsGrid.setItems(competitionRecords);
+		if (seriesRecord != null) {
+			var competitionRecords = competitionDAO.findBySeriesId(seriesRecord.getId());
+			competitionsGrid.setItems(competitionRecords);
 
-		var categoryRecords = categoryDAO.findBySeriesId(seriesRecord.getId());
-		categoriesGrid.setItems(categoryRecords);
+			var categoryRecords = categoryDAO.findBySeriesId(seriesRecord.getId());
+			categoriesGrid.setItems(categoryRecords);
+
+			var athleteRecords = athleteDAO.findBySeriesId(seriesRecord.getId());
+			athletesGrid.setItems(athleteRecords);
+		}
 
 		if (organizationProvider.getOrganization() != null) {
 			var clubs = clubDAO.findByOrganizationId(organizationProvider.getOrganization().getId());
 			clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 		}
-
-		var athleteRecords = athleteDAO.findBySeriesId(seriesRecord.getId());
-		athletesGrid.setItems(athleteRecords);
 	}
 
 	@Override
@@ -247,12 +253,16 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			organizationRecord = organizationProvider.getOrganization();
 
 			seriesRecord = SERIES.newRecord();
-			seriesRecord.setOrganizationId(organizationRecord.getId());
+			if (organizationRecord != null) {
+				seriesRecord.setOrganizationId(organizationRecord.getId());
+			}
 		}
 		else {
 			seriesRecord = seriesDAO.findById(seriesId).orElse(null);
 		}
-		binder.setBean(seriesRecord);
+		if (seriesRecord != null) {
+			binder.setBean(seriesRecord);
+		}
 
 		if (seriesId == null) {
 			// Series must be saved first
@@ -330,56 +340,65 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				competitionRecord -> refreshAll(), () -> {
 					var newRecord = COMPETITION.newRecord();
 					newRecord.setMedalPercentage(0);
-					newRecord.setSeriesId(seriesRecord.getId());
+					if (seriesRecord != null) {
+						newRecord.setSeriesId(seriesRecord.getId());
+					}
 					return newRecord;
 				}, this::refreshAll);
 	}
 
 	private void createCategoriesSection() {
-		var dialog = new CategoryDialog(getTranslation("Category"), categoryDAO, categoryEventDAO, eventDAO,
-				organizationProvider.getOrganization().getId());
+		if (organizationProvider.getOrganization() != null) {
+			var dialog = new CategoryDialog(getTranslation("Category"), categoryDAO, categoryEventDAO, eventDAO,
+					organizationProvider.getOrganization().getId());
 
-		categoriesGrid = new Grid<>();
-		categoriesGrid.setId("categories-grid");
-		categoriesGrid.setHeightFull();
+			categoriesGrid = new Grid<>();
+			categoriesGrid.setId("categories-grid");
+			categoriesGrid.setHeightFull();
 
-		categoriesGrid.addColumn(CategoryRecord::getAbbreviation)
-			.setHeader(getTranslation("Abbreviation"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.ABBREVIATION.getName());
-		categoriesGrid.addColumn(CategoryRecord::getName)
-			.setHeader(getTranslation("Name"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.NAME.getName());
-		categoriesGrid.addColumn(CategoryRecord::getYearFrom)
-			.setHeader(getTranslation("Year.From"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.YEAR_FROM.getName());
-		categoriesGrid.addColumn(CategoryRecord::getYearTo)
-			.setHeader(getTranslation("Year.To"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.YEAR_TO.getName());
-		categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
-			var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf", () -> {
-				byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
-						getLocale());
-				return new ByteArrayInputStream(pdf);
-			}), getTranslation("Sheets"));
-			sheet.setTarget(BLANK);
+			categoriesGrid.addColumn(CategoryRecord::getAbbreviation)
+				.setHeader(getTranslation("Abbreviation"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.ABBREVIATION.getName());
+			categoriesGrid.addColumn(CategoryRecord::getName)
+				.setHeader(getTranslation("Name"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.NAME.getName());
+			categoriesGrid.addColumn(CategoryRecord::getYearFrom)
+				.setHeader(getTranslation("Year.From"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.YEAR_FROM.getName());
+			categoriesGrid.addColumn(CategoryRecord::getYearTo)
+				.setHeader(getTranslation("Year.To"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.YEAR_TO.getName());
+			categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
+				var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf", () -> {
+					byte[] pdf = new byte[0];
+					if (seriesRecord != null) {
+						pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
+								getLocale());
+					}
+					return new ByteArrayInputStream(pdf);
+				}), getTranslation("Sheets"));
+				sheet.setTarget(BLANK);
 
-			return new HorizontalLayout(sheet);
-		})).setAutoWidth(true);
+				return new HorizontalLayout(sheet);
+			})).setAutoWidth(true);
 
-		addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(),
-				() -> {
-					var newRecord = CATEGORY.newRecord();
-					newRecord.setSeriesId(seriesRecord.getId());
-					return newRecord;
-				}, this::refreshAll);
+			addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(),
+					() -> {
+						var newRecord = CATEGORY.newRecord();
+						if (seriesRecord != null) {
+							newRecord.setSeriesId(seriesRecord.getId());
+						}
+						return newRecord;
+					}, this::refreshAll);
+		}
 	}
 
 	private void createAthletesSection() {
@@ -407,18 +426,24 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			.setSortable(true)
 			.setAutoWidth(true)
 			.setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-		athletesGrid
-			.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-					: clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
-			.setHeader(getTranslation("Club"))
-			.setAutoWidth(true);
+		athletesGrid.addColumn(athleteRecord -> {
+			if (athleteRecord.getClubId() != null) {
+				var clubRecord = clubRecordMap.get(athleteRecord.getClubId());
+				if (clubRecord != null) {
+					return clubRecord.getAbbreviation();
+				}
+			}
+			return null;
+		}).setHeader(getTranslation("Club")).setAutoWidth(true);
 
 		var assign = new Button(getTranslation("Assign.Athlete"));
 		assign.setId("assign-athlete");
 		assign.addClickListener(event -> {
-			var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider, organizationRecord.getId(),
-					seriesRecord.getId(), this::onAthleteSelect);
-			dialog.open();
+			if (organizationRecord != null && seriesRecord != null) {
+				var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider,
+						organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
+				dialog.open();
+			}
 		});
 
 		athletesGrid.addComponentColumn(athleteRecord -> {
@@ -438,14 +463,18 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
 		var athleteRecord = athleteSelectedEvent.getAthleteRecord();
-		categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId());
+		if (seriesRecord != null) {
+			categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId());
+		}
 
 		refreshAll();
 	}
 
 	private void removeAthleteFromSeries(UpdatableRecord<?> updatableRecord) {
 		var athleteRecord = (AthleteRecord) updatableRecord;
-		categoryAthleteDAO.deleteCategoryAthlete(athleteRecord, seriesRecord.getId());
+		if (seriesRecord != null) {
+			categoryAthleteDAO.deleteCategoryAthlete(athleteRecord, seriesRecord.getId());
+		}
 		refreshAll();
 	}
 

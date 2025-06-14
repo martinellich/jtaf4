@@ -20,6 +20,7 @@ class OrganizationsViewIT extends PlaywrightIT {
     @LocalServerPort
     private int port;
 
+    @SuppressWarnings("unused")
     @MockitoBean
     private JavaMailSender javaMailSender;
 

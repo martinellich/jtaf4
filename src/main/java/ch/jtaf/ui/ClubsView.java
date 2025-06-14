@@ -7,6 +7,7 @@ import ch.jtaf.ui.dialog.ClubDialog;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.OrderField;
+import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.List;
@@ -50,7 +51,9 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
 		addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, clubRecord -> refreshAll(), () -> {
 			ClubRecord newRecord = CLUB.newRecord();
-			newRecord.setOrganizationId(organizationRecord.getId());
+			if (organizationRecord != null) {
+				newRecord.setOrganizationId(organizationRecord.getId());
+			}
 			return newRecord;
 		}, this::refreshAll);
 	}
@@ -62,7 +65,12 @@ public class ClubsView extends ProtectedGridView<ClubRecord> {
 
 	@Override
 	protected Condition initialCondition() {
-		return CLUB.ORGANIZATION_ID.eq(organizationRecord.getId());
+		if (organizationRecord != null) {
+			return CLUB.ORGANIZATION_ID.eq(organizationRecord.getId());
+		}
+		else {
+			return DSL.falseCondition();
+		}
 	}
 
 	@Override

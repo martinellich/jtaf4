@@ -35,7 +35,7 @@ public class OrganizationProvider {
 		this.securityContext = securityContext;
 	}
 
-	@Nullable public OrganizationRecord getOrganization() {
+	public @Nullable OrganizationRecord getOrganization() {
 		if (organization == null) {
 			loadOrganizationFromCookie();
 		}

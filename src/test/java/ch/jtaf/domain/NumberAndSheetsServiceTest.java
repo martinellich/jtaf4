@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class NumberAndSheetsServiceTest {
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private JavaMailSender javaMailSender;
 

@@ -99,16 +99,16 @@ public class SheetsReport extends AbstractReport {
 	}
 
 	private void createLogo() throws DocumentException {
-		if (logo != null) {
-			try {
-				var image = Image.getInstance(logo);
-				image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));
-				image.scaleToFit(120, 60);
+		try {
+			var image = Image.getInstance(logo);
+			image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));
+			image.scaleToFit(120, 60);
+			if (document != null) {
 				document.add(image);
 			}
-			catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+		}
+		catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -118,9 +118,11 @@ public class SheetsReport extends AbstractReport {
 		addCategoryAbbreviationCell(table, athlete.categoryAbbreviation());
 		addCategoryNameCell(table, athlete.categoryName());
 
-		var page = document.getPageSize();
-		table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-		table.writeSelectedRows(0, 2, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
+		if (document != null && pdfWriter != null) {
+			var page = document.getPageSize();
+			table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
+			table.writeSelectedRows(0, 2, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
+		}
 	}
 
 	private void createAthleteInfo(NumbersAndSheetsAthlete athlete, int number) throws DocumentException {

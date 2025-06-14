@@ -17,6 +17,7 @@ import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.OrderField;
 import org.jooq.exception.DataAccessException;
+import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.List;
@@ -102,7 +103,12 @@ public class SeriesListView extends ProtectedGridView<SeriesRecord> {
 
 	@Override
 	protected Condition initialCondition() {
-		return SERIES.ORGANIZATION_ID.eq(organizationRecord.getId());
+		if (organizationRecord != null) {
+			return SERIES.ORGANIZATION_ID.eq(organizationRecord.getId());
+		}
+		else {
+			return DSL.falseCondition();
+		}
 	}
 
 	@Override

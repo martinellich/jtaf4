@@ -89,7 +89,7 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 			}
 
 			@Override
-			public ClubRecord convertToPresentation(@Nullable Long value, ValueContext context) {
+			public @Nullable ClubRecord convertToPresentation(@Nullable Long value, ValueContext context) {
 				return clubRecordMap.get(value);
 			}
 		}).bind(AthleteRecord::getClubId, AthleteRecord::setClubId);

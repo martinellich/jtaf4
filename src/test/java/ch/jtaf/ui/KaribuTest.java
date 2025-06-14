@@ -40,6 +40,7 @@ public abstract class KaribuTest {
 
 	private static Routes routes;
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private JavaMailSender javaMailSender;
 
