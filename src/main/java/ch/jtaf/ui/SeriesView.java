@@ -264,14 +264,16 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			binder.setBean(seriesRecord);
 		}
 
-		if (seriesId == null) {
-			// Series must be saved first
-			copyCategories.setVisible(false);
-		}
-		else {
-			if (categoryDAO.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
-				// Copy is only possible if no categories are added
+		if (copyCategories != null) {
+			if (seriesId == null) {
+				// Series must be saved first
 				copyCategories.setVisible(false);
+			}
+			else {
+				if (categoryDAO.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
+					// Copy is only possible if no categories are added
+					copyCategories.setVisible(false);
+				}
 			}
 		}
 	}
