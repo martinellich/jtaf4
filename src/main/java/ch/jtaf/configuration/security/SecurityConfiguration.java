@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
@@ -36,10 +35,10 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(c -> c
-			.requestMatchers(new AntPathRequestMatcher("/icons/*.png"), new AntPathRequestMatcher("/line-awesome/**"),
-					EndpointRequest.to(HealthEndpoint.class))
-			.permitAll());
+		http.authorizeHttpRequests(c -> {
+			c.requestMatchers("/icons/*.png", "/line-awesome/*").permitAll();
+			c.requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll();
+		});
 
 		super.configure(http);
 

@@ -2,6 +2,7 @@ package ch.jtaf.ui.component;
 
 import com.vaadin.flow.component.html.Span;
 
+@SuppressWarnings("java:S115")
 public enum MaterialSymbol {
 
 	_10K, _10MP, _11MP, _123, _12MP, _13MP, _14MP, _15MP, _16MP, _17MP, _18_UP_RATING, _18MP, _19MP, _1K, _1K_PLUS,
@@ -501,6 +502,7 @@ public enum MaterialSymbol {
 
 	public static final String MATERIAL_ICONS = "material-symbols";
 
+	@SuppressWarnings("StringCaseLocaleUsage")
 	public Span create(String... classNames) {
 		Span icon = new Span((this.name().startsWith("_") ? this.name().substring(1) : this.name()).toLowerCase());
 		icon.addClassName(MATERIAL_ICONS);

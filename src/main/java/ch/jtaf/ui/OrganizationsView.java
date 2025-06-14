@@ -19,6 +19,7 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import org.jooq.exception.DataAccessException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 
@@ -116,7 +117,7 @@ public class OrganizationsView extends VerticalLayout implements HasDynamicTitle
 		grid.addItemClickListener(event -> dialog.open(event.getItem(), this::loadData));
 	}
 
-	private void loadData(OrganizationRecord organizationRecord) {
+	private void loadData(@Nullable OrganizationRecord organizationRecord) {
 		if (organizationRecord != null) {
 			organizationDAO.createOrganizationUser(securityContext.getUsername(), organizationRecord);
 		}

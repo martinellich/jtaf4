@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.util.Collections;
@@ -83,12 +84,12 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
 		binder.forField(club).withConverter(new Converter<ClubRecord, Long>() {
 			@Override
-			public Result<Long> convertToModel(ClubRecord value, ValueContext context) {
+			public Result<@Nullable Long> convertToModel(@Nullable ClubRecord value, ValueContext context) {
 				return Result.ok(value == null ? null : value.getId());
 			}
 
 			@Override
-			public ClubRecord convertToPresentation(Long value, ValueContext context) {
+			public ClubRecord convertToPresentation(@Nullable Long value, ValueContext context) {
 				return clubRecordMap.get(value);
 			}
 		}).bind(AthleteRecord::getClubId, AthleteRecord::setClubId);

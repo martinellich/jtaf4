@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.Record5;
 import org.jooq.impl.DSL;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 
@@ -60,6 +61,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> dataProvider;
 
+	@Nullable
 	private TextField resultTextField;
 
 	private long competitionId;
@@ -73,7 +75,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		this.competitionDAO = competitionDAO;
 		this.eventDAO = eventDAO;
 
-		createDataProvider(athleteDAO);
+		this.dataProvider = createDataProvider(athleteDAO);
 
 		var filter = createFilter();
 		add(filter);
@@ -120,8 +122,9 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		return filter;
 	}
 
-	private void createDataProvider(AthleteDAO athleteDAO) {
-		this.dataProvider = new CallbackDataProvider<>(query -> {
+	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> createDataProvider(
+			AthleteDAO athleteDAO) {
+		return new CallbackDataProvider<>(query -> {
 			var athletes = athleteDAO.getAthletes(competitionId, createCondition(query), query.getOffset(),
 					query.getLimit());
 			if (athletes.size() == 1) {
@@ -234,6 +237,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		}
 	}
 
+	@SuppressWarnings("StringCaseLocaleUsage")
 	private Condition createCondition(Query<?, ?> query) {
 		var optionalFilter = query.getFilter();
 		if (optionalFilter.isPresent()) {

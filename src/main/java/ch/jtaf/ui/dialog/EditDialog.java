@@ -9,6 +9,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.data.binder.Binder;
 import org.jooq.UpdatableRecord;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.util.function.Consumer;
@@ -32,6 +33,7 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
 
 	final FormLayout formLayout;
 
+	@Nullable
 	private transient Consumer<R> afterSave;
 
 	private boolean initialized;

@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 class DashboardViewTest extends KaribuTest {
 
 	@BeforeEach
-	public void login() {
+	void login() {
 		login("simon@martinelli.ch", "", List.of(Role.ADMIN));
 		UI.getCurrent().getPage().reload();
 	}

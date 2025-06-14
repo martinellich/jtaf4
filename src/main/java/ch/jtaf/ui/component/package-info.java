@@ -1,4 +1,4 @@
 @NullMarked
-package ch.jtaf.domain;
+package ch.jtaf.ui.component;
 
 import org.jspecify.annotations.NullMarked;

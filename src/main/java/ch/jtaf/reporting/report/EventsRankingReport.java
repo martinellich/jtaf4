@@ -20,19 +20,20 @@ public class EventsRankingReport extends RankingReport {
 
 	private final EventsRankingData ranking;
 
-	private Document document;
+	private final Document document;
 
 	public EventsRankingReport(EventsRankingData ranking, Locale locale) {
 		super(locale);
 		this.ranking = ranking;
+
+		float border = cmToPixel(1.5f);
+		this.document = new Document(A4, border, border, border, border);
 	}
 
 	public byte[] create() {
 		try {
 			byte[] ba;
 			try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
-				float border = cmToPixel(1.5f);
-				document = new Document(A4, border, border, border, border);
 				var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 				pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Event.Ranking"), ranking.name(),
 						DATE_TIME_FORMATTER.format(ranking.competitionDate())));
@@ -82,7 +83,7 @@ public class EventsRankingReport extends RankingReport {
 		addCell(table, String.valueOf(result.yearOfBirth()));
 		addCell(table, result.category());
 		addCell(table, result.club() != null ? result.club() : "");
-		addCellAlignRight(table, result.result() != null ? result.result() : "");
+		addCellAlignRight(table, result.result());
 	}
 
 }

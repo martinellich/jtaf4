@@ -12,6 +12,7 @@ public class ResultCalculator {
 			points = event.getA() * Math.pow((event.getB() - Double.parseDouble(result) * 100) / 100, event.getC());
 		}
 		else if (EventType.valueOf(event.getEventType()) == EventType.RUN_LONG) {
+			@SuppressWarnings("StringSplitter")
 			String[] parts = result.split("\\.");
 			double time;
 			if (parts.length == 1) {

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import org.jooq.UpdatableRecord;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.util.Collections;
@@ -34,6 +35,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
 	private final transient EventDAO eventDAO;
 
+	@Nullable
 	private Grid<CategoryEventVO> categoryEventsGrid;
 
 	public CategoryDialog(String title, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO, EventDAO eventDAO,

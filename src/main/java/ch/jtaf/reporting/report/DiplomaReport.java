@@ -27,17 +27,18 @@ public class DiplomaReport extends AbstractReport {
 
 	private final byte[] logo;
 
-	private Document document;
+	private final Document document;
 
 	public DiplomaReport(CompetitionRankingData competitionRankingData, byte[] logo, Locale locale) {
 		super(locale);
 		this.ranking = competitionRankingData;
 		this.logo = logo;
+
+		this.document = new Document(A5, cmToPixel(1.5f), cmToPixel(1.5f), cmToPixel(1f), cmToPixel(1.5f));
 	}
 
 	public byte[] create() {
 		try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
-			document = new Document(A5, cmToPixel(1.5f), cmToPixel(1.5f), cmToPixel(1f), cmToPixel(1.5f));
 			var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 			document.open();
 

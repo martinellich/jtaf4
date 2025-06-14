@@ -18,6 +18,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.Serial;
@@ -42,20 +43,28 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
 	private final Div version = new Div();
 
+	@Nullable
 	private Button login;
 
+	@Nullable
 	private Button logout;
 
+	@Nullable
 	private H1 viewTitle;
 
+	@Nullable
 	private RouterLink seriesLink;
 
+	@Nullable
 	private RouterLink eventsLink;
 
+	@Nullable
 	private RouterLink clubsLink;
 
+	@Nullable
 	private RouterLink athletesLink;
 
+	@Nullable
 	private RouterLink register;
 
 	public MainLayout(OrganizationProvider organizationProvider,

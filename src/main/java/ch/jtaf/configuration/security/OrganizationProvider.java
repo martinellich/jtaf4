@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jooq.DSLContext;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class OrganizationProvider {
 
 	private final SecurityContext securityContext;
 
+	@Nullable
 	private OrganizationRecord organization;
 
 	public OrganizationProvider(DSLContext dslContext, SecurityContext securityContext) {
@@ -33,7 +35,7 @@ public class OrganizationProvider {
 		this.securityContext = securityContext;
 	}
 
-	public OrganizationRecord getOrganization() {
+	@Nullable public OrganizationRecord getOrganization() {
 		if (organization == null) {
 			loadOrganizationFromCookie();
 		}
@@ -72,10 +74,12 @@ public class OrganizationProvider {
 	private void saveOrganizationToCookie() {
 		var response = (HttpServletResponse) VaadinResponse.getCurrent();
 
-		var cookie = new Cookie(JTAF_ORGANIZATION_ID, organization.getId().toString());
-		cookie.setHttpOnly(true);
-		cookie.setMaxAge(60 * 60 * 24);
-		response.addCookie(cookie);
+		if (organization != null && response != null) {
+			var cookie = new Cookie(JTAF_ORGANIZATION_ID, organization.getId().toString());
+			cookie.setHttpOnly(true);
+			cookie.setMaxAge(60 * 60 * 24);
+			response.addCookie(cookie);
+		}
 	}
 
 }

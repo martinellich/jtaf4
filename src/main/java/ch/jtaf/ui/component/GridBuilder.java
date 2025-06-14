@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.jooq.UpdatableRecord;
 import org.jooq.exception.DataAccessException;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -29,7 +30,7 @@ public class GridBuilder {
 	@SuppressWarnings("java:S107")
 	public static <R extends UpdatableRecord<R>> void addActionColumnAndSetSelectionListener(JooqDAO<?, R, ?> jooqDAO,
 			Grid<R> grid, EditDialog<R> dialog, Consumer<R> afterSave, Supplier<R> onNewRecord,
-			String insteadOfDeleteTitle, Consumer<R> insteadOfDelete, Runnable afterDelete) {
+			@Nullable String insteadOfDeleteTitle, @Nullable Consumer<R> insteadOfDelete, Runnable afterDelete) {
 		var buttonAdd = new Button(grid.getTranslation("Add"));
 		buttonAdd.setId("add-button");
 		buttonAdd.addClickListener(event -> dialog.open(onNewRecord.get(), afterSave));

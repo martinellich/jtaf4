@@ -20,18 +20,18 @@ public class SeriesRankingReport extends RankingReport {
 
 	private final SeriesRankingData ranking;
 
-	private Document document;
+	private final Document document;
 
 	public SeriesRankingReport(SeriesRankingData ranking, Locale locale) {
 		super(locale);
 		this.ranking = ranking;
+		this.document = new Document(A4);
 	}
 
 	public byte[] create() {
 		try {
 			byte[] ba;
 			try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
-				document = new Document(A4);
 				var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 				pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Series.Ranking"), ranking.name(), ""));
 				document.open();

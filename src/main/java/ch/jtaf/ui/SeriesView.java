@@ -31,6 +31,7 @@ import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import org.jooq.UpdatableRecord;
+import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private Button copyCategories;
 
+	@Nullable
 	private SeriesRecord seriesRecord;
 
 	private Grid<CompetitionRecord> competitionsGrid;
@@ -230,15 +232,17 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		var categoryRecords = categoryDAO.findBySeriesId(seriesRecord.getId());
 		categoriesGrid.setItems(categoryRecords);
 
-		var clubs = clubDAO.findByOrganizationId(organizationProvider.getOrganization().getId());
-		clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+		if (organizationProvider.getOrganization() != null) {
+			var clubs = clubDAO.findByOrganizationId(organizationProvider.getOrganization().getId());
+			clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+		}
 
 		var athleteRecords = athleteDAO.findBySeriesId(seriesRecord.getId());
 		athletesGrid.setItems(athleteRecords);
 	}
 
 	@Override
-	public void setParameter(BeforeEvent event, @OptionalParameter Long seriesId) {
+	public void setParameter(BeforeEvent event, @OptionalParameter @Nullable Long seriesId) {
 		if (seriesId == null) {
 			organizationRecord = organizationProvider.getOrganization();
 

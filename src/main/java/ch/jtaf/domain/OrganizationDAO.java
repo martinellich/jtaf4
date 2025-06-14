@@ -22,6 +22,7 @@ public class OrganizationDAO extends JooqDAO<Organization, OrganizationRecord, L
         super(dslContext, ORGANIZATION);
     }
 
+    @SuppressWarnings("java:S6809")
     @Transactional
     public void deleteWithUsers(OrganizationRecord organizationRecord) {
         dslContext

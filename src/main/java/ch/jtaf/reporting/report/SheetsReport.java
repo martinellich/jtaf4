@@ -7,6 +7,7 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +30,13 @@ public class SheetsReport extends AbstractReport {
 
 	private static final float FONT_SIZE_TEXT = 16f;
 
+	@Nullable
 	private Document document;
 
+	@Nullable
 	private PdfWriter pdfWriter;
 
+	@Nullable
 	private final NumbersAndSheetsCompetition competition;
 
 	private final List<NumbersAndSheetsAthlete> athletes;
@@ -162,7 +166,9 @@ public class SheetsReport extends AbstractReport {
 			addInfoCell(table, athlete.club());
 		}
 
-		document.add(table);
+		if (document != null) {
+			document.add(table);
+		}
 	}
 
 	private void createCompetitionRow() throws DocumentException {
@@ -174,7 +180,9 @@ public class SheetsReport extends AbstractReport {
 		addCompetitionCell(table, competition == null ? ""
 				: "%s %s".formatted(competition.name(), DATE_TIME_FORMATTER.format(competition.competitionDate())));
 
-		document.add(table);
+		if (document != null) {
+			document.add(table);
+		}
 	}
 
 	private void createEventTable(NumbersAndSheetsAthlete athlete) throws DocumentException {
@@ -195,7 +203,9 @@ public class SheetsReport extends AbstractReport {
 			}
 		}
 
-		document.add(table);
+		if (document != null) {
+			document.add(table);
+		}
 	}
 
 	protected void addCategoryAbbreviationCell(PdfPTable table, String text) {

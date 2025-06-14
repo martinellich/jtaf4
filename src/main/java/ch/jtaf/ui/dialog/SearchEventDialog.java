@@ -144,6 +144,7 @@ public class SearchEventDialog extends Dialog {
 		isFullScreen = !isFullScreen;
 	}
 
+	@SuppressWarnings("StringCaseLocaleUsage")
 	private Condition createCondition(Query<?, ?> query) {
 		var optionalFilter = query.getFilter();
 		if (optionalFilter.isPresent()) {

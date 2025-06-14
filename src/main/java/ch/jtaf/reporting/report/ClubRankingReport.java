@@ -20,19 +20,19 @@ public class ClubRankingReport extends RankingReport {
 
 	private final ClubRankingData ranking;
 
-	private Document document;
+	private final Document document;
 
 	public ClubRankingReport(ClubRankingData ranking, Locale locale) {
 		super(locale);
 		this.ranking = ranking;
+
+		var border = cmToPixel(1.5f);
+		this.document = new Document(A4, border, border, border, border);
 	}
 
 	public byte[] create() {
 		try {
 			try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
-				var border = cmToPixel(1.5f);
-				document = new Document(A4, border, border, border, border);
-
 				var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 				pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Club.Ranking"), ranking.seriesName(), ""));
 
@@ -69,7 +69,7 @@ public class ClubRankingReport extends RankingReport {
 	private void createClubRow(PdfPTable table, ClubRankingData.Result result, int rank) {
 		addCell(table, rank + ".");
 		addCell(table, result.club());
-		addCellAlignRight(table, result.points() != null ? result.points().toString() : "");
+		addCellAlignRight(table, result.points().toString());
 	}
 
 }
