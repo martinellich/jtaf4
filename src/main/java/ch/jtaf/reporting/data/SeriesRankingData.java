@@ -1,5 +1,7 @@
 package ch.jtaf.reporting.data;
 
+import org.jspecify.annotations.Nullable;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,7 +18,8 @@ public record SeriesRankingData(String name, int numberOfCompetitions, List<Cate
 				.toList();
 		}
 
-		public record Athlete(String firstName, String lastName, int yearOfBirth, String club, List<Result> results) {
+		public record Athlete(String firstName, String lastName, int yearOfBirth, @Nullable String club,
+				List<Result> results) {
 
 			public int totalPoints() {
 				return results.stream().map(Result::points).mapToInt(BigDecimal::intValue).sum();

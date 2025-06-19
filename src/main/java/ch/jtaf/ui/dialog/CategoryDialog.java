@@ -34,7 +34,7 @@ public class CategoryDialog extends EditDialog<CategoryRecord> {
 
 	private final transient EventDAO eventDAO;
 
-	private Grid<CategoryEventVO> categoryEventsGrid;
+	private Grid<CategoryEventVO> categoryEventsGrid = new Grid<>();
 
 	public CategoryDialog(String title, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO, EventDAO eventDAO,
 			long organizationId) {

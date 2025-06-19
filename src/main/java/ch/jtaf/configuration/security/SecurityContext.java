@@ -5,6 +5,7 @@ import com.vaadin.flow.server.VaadinServletRequest;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +56,7 @@ public final class SecurityContext {
 	 * security context
 	 * @return true if the user is authenticated and not anonymous, false otherwise
 	 */
-	private boolean isUserLoggedIn(Authentication authentication) {
+	private boolean isUserLoggedIn(@Nullable Authentication authentication) {
 		return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
 	}
 

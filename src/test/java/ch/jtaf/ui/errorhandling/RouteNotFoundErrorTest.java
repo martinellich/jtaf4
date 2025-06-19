@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RouteNotFoundErrorTest extends KaribuTest {
 
 	@BeforeEach
-	public void login() {
+	void login() {
 		login("simon@martinelli.ch", "", List.of(Role.ADMIN));
 		UI.getCurrent().getPage().reload();
 	}

@@ -17,11 +17,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import java.io.ByteArrayInputStream;
 import java.io.Serial;
 import java.time.format.DateTimeFormatter;
 
@@ -66,10 +64,10 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 			buttonLayout.getClassNames().add("button-layout");
 			seriesLayout.add(buttonLayout);
 
-			var seriesRankingAnchor = new Anchor(new StreamResource("series_ranking" + series.getId() + ".pdf", () -> {
-				var pdf = seriesRankingService.getSeriesRankingAsPdf(series.getId(), getLocale());
-				return new ByteArrayInputStream(pdf);
-			}), "");
+			var seriesRankingAnchor = new Anchor(event -> {
+				event.setFileName("series_ranking" + series.getId() + ".pdf");
+				event.getOutputStream().write(seriesRankingService.getSeriesRankingAsPdf(series.getId(), getLocale()));
+			}, "");
 			seriesRankingAnchor.setId("series-ranking-" + seriesIndex);
 			seriesRankingAnchor.setTarget("_blank");
 
@@ -82,10 +80,10 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 			var seriesRankingDiv = new Div(seriesRankingAnchor);
 			buttonLayout.add(seriesRankingDiv);
 
-			var clubRankingAnchor = new Anchor(new StreamResource("club_ranking" + series.getId() + ".pdf", () -> {
-				byte[] pdf = seriesRankingService.getClubRankingAsPdf(series.getId(), getLocale());
-				return new ByteArrayInputStream(pdf);
-			}), "");
+			var clubRankingAnchor = new Anchor(event -> {
+				event.setFileName("club_ranking" + series.getId() + ".pdf");
+				event.getOutputStream().write(seriesRankingService.getClubRankingAsPdf(series.getId(), getLocale()));
+			}, "");
 			clubRankingAnchor.setId("club-ranking-" + seriesIndex);
 			clubRankingAnchor.setTarget("_blank");
 
@@ -120,12 +118,11 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 				links.getClassNames().add("links-layout");
 				competitionLayout.add(links);
 
-				var competitionRankingAnchor = new Anchor(
-						new StreamResource("competition_ranking" + competition.getId() + ".pdf", () -> {
-							byte[] pdf = competitionRankingService.getCompetitionRankingAsPdf(competition.getId(),
-									getLocale());
-							return new ByteArrayInputStream(pdf);
-						}), "");
+				var competitionRankingAnchor = new Anchor(event -> {
+					event.setFileName("competition_ranking" + competition.getId() + ".pdf");
+					event.getOutputStream()
+						.write(competitionRankingService.getCompetitionRankingAsPdf(competition.getId(), getLocale()));
+				}, "");
 				competitionRankingAnchor.setId("competition-ranking-" + seriesIndex + "-" + competitionIndex);
 				competitionRankingAnchor.setTarget("_blank");
 
@@ -140,10 +137,11 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 				links.add(competitionRankingDiv);
 
 				if (securityContext.isUserLoggedIn()) {
-					var diplomaAnchor = new Anchor(new StreamResource("diploma" + competition.getId() + ".pdf", () -> {
-						var pdf = competitionRankingService.getDiplomasAsPdf(competition.getId(), getLocale());
-						return new ByteArrayInputStream(pdf);
-					}), "");
+					var diplomaAnchor = new Anchor(event -> {
+						event.setFileName("diploma" + competition.getId() + ".pdf");
+						event.getOutputStream()
+							.write(competitionRankingService.getDiplomasAsPdf(competition.getId(), getLocale()));
+					}, "");
 					diplomaAnchor.setId("diploma-" + seriesIndex + "-" + competitionIndex);
 					diplomaAnchor.setTarget("_blank");
 
@@ -156,12 +154,11 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 					var diplomaDiv = new Div(diplomaAnchor);
 					links.add(diplomaDiv);
 
-					var eventRankingAnchor = new Anchor(
-							new StreamResource("event_ranking" + competition.getId() + ".pdf", () -> {
-								var pdf = competitionRankingService.getEventRankingAsPdf(competition.getId(),
-										getLocale());
-								return new ByteArrayInputStream(pdf);
-							}), "");
+					var eventRankingAnchor = new Anchor(event -> {
+						event.setFileName("event_ranking" + competition.getId() + ".pdf");
+						event.getOutputStream()
+							.write(competitionRankingService.getEventRankingAsPdf(competition.getId(), getLocale()));
+					}, "");
 					eventRankingAnchor.setId("event-ranking-" + seriesIndex + "-" + competitionIndex);
 					eventRankingAnchor.setTarget("_blank");
 

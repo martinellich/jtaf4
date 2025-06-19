@@ -21,7 +21,6 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -29,11 +28,10 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.streams.UploadHandler;
 import org.jooq.UpdatableRecord;
+import org.jspecify.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,13 +70,15 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient NumberAndSheetsService numberAndSheetsService;
 
+	@Nullable
 	private Button copyCategories;
 
+	@Nullable
 	private SeriesRecord seriesRecord;
 
 	private Grid<CompetitionRecord> competitionsGrid;
 
-	private Grid<CategoryRecord> categoriesGrid;
+	private Grid<CategoryRecord> categoriesGrid = new Grid<>();
 
 	private Grid<AthleteRecord> athletesGrid;
 
@@ -86,7 +86,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient Binder<SeriesRecord> binder = new Binder<>();
 
-	private Map<Long, ClubRecord> clubRecordMap;
+	private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
 	@SuppressWarnings("java:S107")
 	public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
@@ -137,7 +137,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			tabsToGrids.values().forEach(grid -> grid.setVisible(false));
 
 			var selectedGrid = tabsToGrids.get(sectionTabs.getSelectedTab());
-			selectedGrid.setVisible(true);
+			if (selectedGrid != null) {
+				selectedGrid.setVisible(true);
+			}
 		});
 	}
 
@@ -150,8 +152,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		name.setRequiredIndicatorVisible(true);
 		formLayout.add(name);
 
-		var buffer = new MultiFileMemoryBuffer();
-		var upload = new Upload(buffer);
+		var inMemoryHandler = UploadHandler.inMemory((metadata, data) -> {
+			SeriesRecord recordToSave = binder.getBean();
+			recordToSave.setLogo(data);
+			seriesDAO.save(recordToSave);
+		});
+		var upload = new Upload(inMemoryHandler);
 		upload.setId("logo-upload");
 		upload.setMaxFiles(1);
 
@@ -161,18 +167,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 		upload.setDropLabel(new Span(getTranslation("Logo.drop.here")));
 
-		upload.addSucceededListener(event -> {
-			try {
-				var fileName = event.getFileName();
-				var inputStream = buffer.getInputStream(fileName);
-				SeriesRecord recordToSave = binder.getBean();
-				recordToSave.setLogo(inputStream.readAllBytes());
-				seriesDAO.save(recordToSave);
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		});
 		formLayout.add(upload);
 
 		var checkboxes = new HorizontalLayout();
@@ -212,52 +206,63 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		copyCategories.setId("copy-categories");
 		copyCategories.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		copyCategories.addClickListener(event -> {
-			if (seriesRecord != null) {
+			if (seriesRecord != null && organizationProvider.getOrganization() != null) {
 				var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
 						seriesRecord.getId(), seriesDAO);
 				dialog.addAfterCopyListener(e -> refreshAll());
 				dialog.open();
 			}
+
 		});
 		buttons.add(copyCategories);
 	}
 
 	@Override
 	protected void refreshAll() {
-		var competitionRecords = competitionDAO.findBySeriesId(seriesRecord.getId());
-		competitionsGrid.setItems(competitionRecords);
+		if (seriesRecord != null) {
+			var competitionRecords = competitionDAO.findBySeriesId(seriesRecord.getId());
+			competitionsGrid.setItems(competitionRecords);
 
-		var categoryRecords = categoryDAO.findBySeriesId(seriesRecord.getId());
-		categoriesGrid.setItems(categoryRecords);
+			var categoryRecords = categoryDAO.findBySeriesId(seriesRecord.getId());
+			categoriesGrid.setItems(categoryRecords);
 
-		var clubs = clubDAO.findByOrganizationId(organizationProvider.getOrganization().getId());
-		clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+			var athleteRecords = athleteDAO.findBySeriesId(seriesRecord.getId());
+			athletesGrid.setItems(athleteRecords);
+		}
 
-		var athleteRecords = athleteDAO.findBySeriesId(seriesRecord.getId());
-		athletesGrid.setItems(athleteRecords);
+		if (organizationProvider.getOrganization() != null) {
+			var clubs = clubDAO.findByOrganizationId(organizationProvider.getOrganization().getId());
+			clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+		}
 	}
 
 	@Override
-	public void setParameter(BeforeEvent event, @OptionalParameter Long seriesId) {
+	public void setParameter(BeforeEvent event, @OptionalParameter @Nullable Long seriesId) {
 		if (seriesId == null) {
 			organizationRecord = organizationProvider.getOrganization();
 
 			seriesRecord = SERIES.newRecord();
-			seriesRecord.setOrganizationId(organizationRecord.getId());
+			if (organizationRecord != null) {
+				seriesRecord.setOrganizationId(organizationRecord.getId());
+			}
 		}
 		else {
 			seriesRecord = seriesDAO.findById(seriesId).orElse(null);
 		}
-		binder.setBean(seriesRecord);
-
-		if (seriesId == null) {
-			// Series must be saved first
-			copyCategories.setVisible(false);
+		if (seriesRecord != null) {
+			binder.setBean(seriesRecord);
 		}
-		else {
-			if (categoryDAO.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
-				// Copy is only possible if no categories are added
+
+		if (copyCategories != null) {
+			if (seriesId == null) {
+				// Series must be saved first
 				copyCategories.setVisible(false);
+			}
+			else {
+				if (categoryDAO.count(CATEGORY.SERIES_ID.eq(seriesId)) > 0) {
+					// Copy is only possible if no categories are added
+					copyCategories.setVisible(false);
+				}
 			}
 		}
 	}
@@ -285,37 +290,38 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			.setAutoWidth(true)
 			.setKey(COMPETITION.COMPETITION_DATE.getName());
 		competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
-			var sheetsOrderedByAthlete = new Anchor(
-					new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
-								getLocale(), CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Sheets"));
+			var sheetsOrderedByAthlete = new Anchor(event -> {
+				event.setFileName("sheets_orderby_athlete" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+							getLocale(), CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
 			sheetsOrderedByAthlete.setTarget(BLANK);
 
-			var sheetsOrderedByClub = new Anchor(
-					new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
-								getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
-								ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Ordered.by.club"));
+			var sheetsOrderedByClub = new Anchor(event -> {
+				event.setFileName("sheets_orderby_club" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+							getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
+							ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
 			sheetsOrderedByClub.setTarget(BLANK);
 
-			var numbersOrderedByAthlete = new Anchor(
-					new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
-								CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Numbers"));
+			var numbersOrderedByAthlete = new Anchor(event -> {
+				event.setFileName("numbers_orderby_athlete" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
+							CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
 			numbersOrderedByAthlete.setTarget(BLANK);
 
-			var numbersOrderedByClub = new Anchor(
-					new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
-								CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Ordered.by.club"));
+			var numbersOrderedByClub = new Anchor(event -> {
+				event.setFileName("numbers_orderby_club" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
+							CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
+
 			numbersOrderedByClub.setTarget(BLANK);
 
 			return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete,
@@ -326,56 +332,66 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				competitionRecord -> refreshAll(), () -> {
 					var newRecord = COMPETITION.newRecord();
 					newRecord.setMedalPercentage(0);
-					newRecord.setSeriesId(seriesRecord.getId());
+					if (seriesRecord != null) {
+						newRecord.setSeriesId(seriesRecord.getId());
+					}
 					return newRecord;
 				}, this::refreshAll);
 	}
 
 	private void createCategoriesSection() {
-		var dialog = new CategoryDialog(getTranslation("Category"), categoryDAO, categoryEventDAO, eventDAO,
-				organizationProvider.getOrganization().getId());
+		if (organizationProvider.getOrganization() != null) {
+			var dialog = new CategoryDialog(getTranslation("Category"), categoryDAO, categoryEventDAO, eventDAO,
+					organizationProvider.getOrganization().getId());
 
-		categoriesGrid = new Grid<>();
-		categoriesGrid.setId("categories-grid");
-		categoriesGrid.setHeightFull();
+			categoriesGrid = new Grid<>();
+			categoriesGrid.setId("categories-grid");
+			categoriesGrid.setHeightFull();
 
-		categoriesGrid.addColumn(CategoryRecord::getAbbreviation)
-			.setHeader(getTranslation("Abbreviation"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.ABBREVIATION.getName());
-		categoriesGrid.addColumn(CategoryRecord::getName)
-			.setHeader(getTranslation("Name"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.NAME.getName());
-		categoriesGrid.addColumn(CategoryRecord::getYearFrom)
-			.setHeader(getTranslation("Year.From"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.YEAR_FROM.getName());
-		categoriesGrid.addColumn(CategoryRecord::getYearTo)
-			.setHeader(getTranslation("Year.To"))
-			.setSortable(true)
-			.setAutoWidth(true)
-			.setKey(CATEGORY.YEAR_TO.getName());
-		categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
-			var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf", () -> {
-				byte[] pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
-						getLocale());
-				return new ByteArrayInputStream(pdf);
-			}), getTranslation("Sheets"));
-			sheet.setTarget(BLANK);
+			categoriesGrid.addColumn(CategoryRecord::getAbbreviation)
+				.setHeader(getTranslation("Abbreviation"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.ABBREVIATION.getName());
+			categoriesGrid.addColumn(CategoryRecord::getName)
+				.setHeader(getTranslation("Name"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.NAME.getName());
+			categoriesGrid.addColumn(CategoryRecord::getYearFrom)
+				.setHeader(getTranslation("Year.From"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.YEAR_FROM.getName());
+			categoriesGrid.addColumn(CategoryRecord::getYearTo)
+				.setHeader(getTranslation("Year.To"))
+				.setSortable(true)
+				.setAutoWidth(true)
+				.setKey(CATEGORY.YEAR_TO.getName());
+			categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
+				var sheet = new Anchor(event -> {
+					if (seriesRecord != null) {
+						event.setFileName("sheet" + category.getId() + ".pdf");
+						event.getOutputStream()
+							.write(numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
+									getLocale()));
+					}
+				}, getTranslation("Sheets"));
 
-			return new HorizontalLayout(sheet);
-		})).setAutoWidth(true);
+				sheet.setTarget(BLANK);
 
-		addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(),
-				() -> {
-					var newRecord = CATEGORY.newRecord();
-					newRecord.setSeriesId(seriesRecord.getId());
-					return newRecord;
-				}, this::refreshAll);
+				return new HorizontalLayout(sheet);
+			})).setAutoWidth(true);
+
+			addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(),
+					() -> {
+						var newRecord = CATEGORY.newRecord();
+						if (seriesRecord != null) {
+							newRecord.setSeriesId(seriesRecord.getId());
+						}
+						return newRecord;
+					}, this::refreshAll);
+		}
 	}
 
 	private void createAthletesSection() {
@@ -403,18 +419,24 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			.setSortable(true)
 			.setAutoWidth(true)
 			.setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-		athletesGrid
-			.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-					: clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
-			.setHeader(getTranslation("Club"))
-			.setAutoWidth(true);
+		athletesGrid.addColumn(athleteRecord -> {
+			if (athleteRecord.getClubId() != null) {
+				var clubRecord = clubRecordMap.get(athleteRecord.getClubId());
+				if (clubRecord != null) {
+					return clubRecord.getAbbreviation();
+				}
+			}
+			return null;
+		}).setHeader(getTranslation("Club")).setAutoWidth(true);
 
 		var assign = new Button(getTranslation("Assign.Athlete"));
 		assign.setId("assign-athlete");
 		assign.addClickListener(event -> {
-			var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider, organizationRecord.getId(),
-					seriesRecord.getId(), this::onAthleteSelect);
-			dialog.open();
+			if (organizationRecord != null && seriesRecord != null) {
+				var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider,
+						organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
+				dialog.open();
+			}
 		});
 
 		athletesGrid.addComponentColumn(athleteRecord -> {
@@ -434,14 +456,18 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
 		var athleteRecord = athleteSelectedEvent.getAthleteRecord();
-		categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId());
+		if (seriesRecord != null) {
+			categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId());
+		}
 
 		refreshAll();
 	}
 
 	private void removeAthleteFromSeries(UpdatableRecord<?> updatableRecord) {
 		var athleteRecord = (AthleteRecord) updatableRecord;
-		categoryAthleteDAO.deleteCategoryAthlete(athleteRecord, seriesRecord.getId());
+		if (seriesRecord != null) {
+			categoryAthleteDAO.deleteCategoryAthlete(athleteRecord, seriesRecord.getId());
+		}
 		refreshAll();
 	}
 

@@ -18,6 +18,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.*;
 import jakarta.annotation.PostConstruct;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.Serial;
@@ -42,20 +43,28 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
 	private final Div version = new Div();
 
+	@Nullable
 	private Button login;
 
+	@Nullable
 	private Button logout;
 
+	@Nullable
 	private H1 viewTitle;
 
+	@Nullable
 	private RouterLink seriesLink;
 
+	@Nullable
 	private RouterLink eventsLink;
 
+	@Nullable
 	private RouterLink clubsLink;
 
+	@Nullable
 	private RouterLink athletesLink;
 
+	@Nullable
 	private RouterLink register;
 
 	public MainLayout(OrganizationProvider organizationProvider,
@@ -210,7 +219,10 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 	@Override
 	protected void afterNavigation() {
 		super.afterNavigation();
-		viewTitle.setText(getCurrentPageTitle());
+
+		if (viewTitle != null) {
+			viewTitle.setText(getCurrentPageTitle());
+		}
 	}
 
 	private String getCurrentPageTitle() {
@@ -227,36 +239,59 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 		version.setText(applicationVersion);
 	}
 
+	@SuppressWarnings("java:S3776")
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		if (securityContext.isUserLoggedIn()) {
-			register.setVisible(false);
-			login.setVisible(false);
+			if (register != null) {
+				register.setVisible(false);
+			}
+			if (login != null) {
+				login.setVisible(false);
+			}
+			if (logout != null) {
+				logout.setText("Logout (%s)".formatted(securityContext.getUsername()));
+				logout.setVisible(true);
+			}
 
-			logout.setText("Logout (%s)".formatted(securityContext.getUsername()));
-			logout.setVisible(true);
-
-			var organization = organizationProvider.getOrganization();
-			if (organization != null) {
-				seriesLink.setText(organization.getOrganizationKey());
+			if (seriesLink != null) {
+				var organization = organizationProvider.getOrganization();
+				if (organization != null) {
+					seriesLink.setText(organization.getOrganizationKey());
+				}
 				setVisibilityOfLinks(true);
 			}
 		}
 		else {
-			register.setVisible(true);
-			login.setVisible(true);
-			logout.setVisible(false);
-
-			seriesLink.setText("");
+			if (register != null) {
+				register.setVisible(true);
+			}
+			if (login != null) {
+				login.setVisible(true);
+			}
+			if (logout != null) {
+				logout.setVisible(false);
+			}
+			if (seriesLink != null) {
+				seriesLink.setText("");
+			}
 			setVisibilityOfLinks(false);
 		}
 	}
 
 	private void setVisibilityOfLinks(boolean visible) {
-		seriesLink.setVisible(visible);
-		eventsLink.setVisible(visible);
-		clubsLink.setVisible(visible);
-		athletesLink.setVisible(visible);
+		if (seriesLink != null) {
+			seriesLink.setVisible(visible);
+		}
+		if (eventsLink != null) {
+			eventsLink.setVisible(visible);
+		}
+		if (clubsLink != null) {
+			clubsLink.setVisible(visible);
+		}
+		if (athletesLink != null) {
+			athletesLink.setVisible(visible);
+		}
 	}
 
 	public record MenuItemInfo(String text, String iconClass, Class<? extends Component> view) {

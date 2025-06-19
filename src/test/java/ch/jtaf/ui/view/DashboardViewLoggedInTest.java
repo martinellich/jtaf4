@@ -17,7 +17,7 @@ import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 class DashboardViewLoggedInTest extends KaribuTest {
 
 	@BeforeEach
-	public void login() {
+	void login() {
 		login("simon@martinelli.ch", "", List.of(Role.ADMIN));
 	}
 

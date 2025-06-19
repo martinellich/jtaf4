@@ -11,6 +11,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.OrderField;
+import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.HashMap;
@@ -73,14 +74,21 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 			.setSortable(true)
 			.setAutoWidth(true)
 			.setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-		grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-				: clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
-			.setHeader(getTranslation("Club"))
-			.setAutoWidth(true);
+		grid.addColumn(athleteRecord -> {
+			if (athleteRecord.getClubId() != null) {
+				var club = clubRecordMap.get(athleteRecord.getClubId());
+				if (club != null) {
+					return club.getAbbreviation();
+				}
+			}
+			return null;
+		}).setHeader(getTranslation("Club")).setAutoWidth(true);
 
 		addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, athleteRecord -> refreshAll(), () -> {
 			AthleteRecord newRecord = ATHLETE.newRecord();
-			newRecord.setOrganizationId(organizationRecord.getId());
+			if (organizationRecord != null) {
+				newRecord.setOrganizationId(organizationRecord.getId());
+			}
 			return newRecord;
 		}, this::refreshAll);
 	}
@@ -100,8 +108,10 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 	@Override
 	protected void refreshAll() {
 		super.refreshAll();
-		var clubs = clubDAO.findByOrganizationId(organizationRecord.getId());
-		clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+		if (organizationRecord != null) {
+			var clubs = clubDAO.findByOrganizationId(organizationRecord.getId());
+			clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
+		}
 	}
 
 	@Override
@@ -111,7 +121,12 @@ public class AthletesView extends ProtectedGridView<AthleteRecord> {
 
 	@Override
 	protected Condition initialCondition() {
-		return ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId());
+		if (organizationRecord != null) {
+			return ATHLETE.ORGANIZATION_ID.eq(organizationRecord.getId());
+		}
+		else {
+			return DSL.falseCondition();
+		}
 	}
 
 	@Override

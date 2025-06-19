@@ -7,6 +7,7 @@ import ch.jtaf.ui.dialog.EventDialog;
 import com.vaadin.flow.router.Route;
 import org.jooq.Condition;
 import org.jooq.OrderField;
+import org.jooq.impl.DSL;
 
 import java.io.Serial;
 import java.util.List;
@@ -62,7 +63,9 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
 		addActionColumnAndSetSelectionListener(jooqDAO, grid, dialog, eventRecord -> refreshAll(), () -> {
 			var newRecord = EVENT.newRecord();
-			newRecord.setOrganizationId(organizationRecord.getId());
+			if (organizationRecord != null) {
+				newRecord.setOrganizationId(organizationRecord.getId());
+			}
 			return newRecord;
 		}, this::refreshAll);
 	}
@@ -74,7 +77,12 @@ public class EventsView extends ProtectedGridView<EventRecord> {
 
 	@Override
 	protected Condition initialCondition() {
-		return EVENT.ORGANIZATION_ID.eq(organizationRecord.getId());
+		if (organizationRecord != null) {
+			return EVENT.ORGANIZATION_ID.eq(organizationRecord.getId());
+		}
+		else {
+			return DSL.falseCondition();
+		}
 	}
 
 	@Override

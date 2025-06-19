@@ -24,14 +24,15 @@ public class CompetitionRankingReport extends RankingReport {
 	public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale) {
 		super(locale);
 		this.ranking = ranking;
+
+		float border = cmToPixel(1.5f);
+		this.document = new Document(PageSize.A4, border, border, border, border);
 	}
 
 	public byte[] create() {
 		try {
 			byte[] ba;
 			try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
-				float border = cmToPixel(1.5f);
-				document = new Document(PageSize.A4, border, border, border, border);
 				var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 				pdfWriter.setPageEvent(new HeaderFooter(messages.getString("Competition.Ranking"), ranking.name(),
 						DATE_TIME_FORMATTER.format(ranking.competitionDate())));
@@ -138,19 +139,17 @@ public class CompetitionRankingReport extends RankingReport {
 			addCellAlignRight(table, String.valueOf(athlete.totalPoints()));
 		}
 
-		if (athlete.results() != null) {
-			var sb = new StringBuilder();
-			for (CompetitionRankingData.Category.Athlete.Result result : athlete.results()) {
-				sb.append(result.eventAbbreviation());
-				sb.append(": ");
-				sb.append(result.result());
-				sb.append(" (");
-				sb.append(result.points());
-				sb.append(") ");
-			}
-			addCell(table, "");
-			addResultsCell(table, sb.toString());
+		var sb = new StringBuilder();
+		for (CompetitionRankingData.Category.Athlete.Result result : athlete.results()) {
+			sb.append(result.eventAbbreviation());
+			sb.append(": ");
+			sb.append(result.result());
+			sb.append(" (");
+			sb.append(result.points());
+			sb.append(") ");
 		}
+		addCell(table, "");
+		addResultsCell(table, sb.toString());
 	}
 
 }

@@ -23,7 +23,7 @@ public record CompetitionRankingData(String name, LocalDate competitionDate, boo
 				List<Result> results) {
 
 			public int totalPoints() {
-				if (results == null || dnf) {
+				if (dnf) {
 					return 0;
 				}
 				else {

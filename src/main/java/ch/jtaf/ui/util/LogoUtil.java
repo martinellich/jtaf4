@@ -2,7 +2,6 @@ package ch.jtaf.ui.util;
 
 import ch.jtaf.db.tables.records.SeriesRecord;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.server.StreamResource;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -23,7 +22,10 @@ public class LogoUtil {
 				double height = image.getHeight(null);
 				double ratio = width / height;
 
-				logo.setSrc(new StreamResource("logo", () -> new ByteArrayInputStream(series.getLogo())));
+				logo.setSrc(event -> {
+					event.setFileName("logo");
+					event.getOutputStream().write(series.getLogo());
+				});
 				logo.setHeight("60px");
 				logo.setWidth(60 * ratio + "px");
 			}

@@ -8,6 +8,7 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasDynamicTitle;
 import jakarta.annotation.security.RolesAllowed;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 
@@ -19,6 +20,7 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
 
 	final transient OrganizationProvider organizationProvider;
 
+	@Nullable
 	OrganizationRecord organizationRecord;
 
 	ProtectedView(OrganizationProvider organizationProvider) {

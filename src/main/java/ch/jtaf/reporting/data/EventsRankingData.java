@@ -1,6 +1,7 @@
 package ch.jtaf.reporting.data;
 
 import ch.jtaf.domain.EventType;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,17 +26,18 @@ public record EventsRankingData(String name, LocalDate competitionDate, List<Eve
 			return results;
 		}
 
-		public record Result(String firstName, String lastName, int yearOfBirth, String category, String club,
+		public record Result(String firstName, String lastName, int yearOfBirth, String category, @Nullable String club,
 				String result) {
 
 			private static final Logger LOGGER = LoggerFactory.getLogger(Result.class);
 
 			double resultAsDouble() {
 				try {
-					if (result == null || result.isEmpty()) {
+					if (result.isEmpty()) {
 						return 0.0d;
 					}
 					else {
+						@SuppressWarnings("StringSplitter")
 						String[] parts = result.split("\\.");
 						if (parts.length == 3) {
 							return (Double.parseDouble(parts[0]) * 60) + Double.parseDouble(parts[1] + "." + parts[2]);

@@ -7,6 +7,7 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +30,13 @@ public class SheetsReport extends AbstractReport {
 
 	private static final float FONT_SIZE_TEXT = 16f;
 
+	@Nullable
 	private Document document;
 
+	@Nullable
 	private PdfWriter pdfWriter;
 
+	@Nullable
 	private final NumbersAndSheetsCompetition competition;
 
 	private final List<NumbersAndSheetsAthlete> athletes;
@@ -95,16 +99,16 @@ public class SheetsReport extends AbstractReport {
 	}
 
 	private void createLogo() throws DocumentException {
-		if (logo != null) {
-			try {
-				var image = Image.getInstance(logo);
-				image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));
-				image.scaleToFit(120, 60);
+		try {
+			var image = Image.getInstance(logo);
+			image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));
+			image.scaleToFit(120, 60);
+			if (document != null) {
 				document.add(image);
 			}
-			catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
+		}
+		catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -114,9 +118,11 @@ public class SheetsReport extends AbstractReport {
 		addCategoryAbbreviationCell(table, athlete.categoryAbbreviation());
 		addCategoryNameCell(table, athlete.categoryName());
 
-		var page = document.getPageSize();
-		table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
-		table.writeSelectedRows(0, 2, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
+		if (document != null && pdfWriter != null) {
+			var page = document.getPageSize();
+			table.setTotalWidth(page.getWidth() - document.leftMargin() - document.rightMargin());
+			table.writeSelectedRows(0, 2, document.leftMargin(), cmToPixel(20.5f), pdfWriter.getDirectContent());
+		}
 	}
 
 	private void createAthleteInfo(NumbersAndSheetsAthlete athlete, int number) throws DocumentException {
@@ -162,7 +168,9 @@ public class SheetsReport extends AbstractReport {
 			addInfoCell(table, athlete.club());
 		}
 
-		document.add(table);
+		if (document != null) {
+			document.add(table);
+		}
 	}
 
 	private void createCompetitionRow() throws DocumentException {
@@ -174,7 +182,9 @@ public class SheetsReport extends AbstractReport {
 		addCompetitionCell(table, competition == null ? ""
 				: "%s %s".formatted(competition.name(), DATE_TIME_FORMATTER.format(competition.competitionDate())));
 
-		document.add(table);
+		if (document != null) {
+			document.add(table);
+		}
 	}
 
 	private void createEventTable(NumbersAndSheetsAthlete athlete) throws DocumentException {
@@ -195,7 +205,9 @@ public class SheetsReport extends AbstractReport {
 			}
 		}
 
-		document.add(table);
+		if (document != null) {
+			document.add(table);
+		}
 	}
 
 	protected void addCategoryAbbreviationCell(PdfPTable table, String text) {

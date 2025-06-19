@@ -1,6 +1,7 @@
 package ch.jtaf.ui.translation;
 
 import com.vaadin.flow.i18n.I18NProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,8 +28,8 @@ public class TranslationProvider implements I18NProvider {
 
 	@Override
 	public String getTranslation(String key, Locale locale, Object... params) {
-		if (key == null) {
-			LOGGER.warn("Got lang request for key with null value!");
+		if (StringUtils.isBlank(key)) {
+			LOGGER.warn("Got lang request for key with no value!");
 			return "";
 		}
 		var bundle = ResourceBundle.getBundle("messages", locale);

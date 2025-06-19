@@ -109,10 +109,15 @@ public class SearchAthleteDialog extends Dialog {
 			.setSortable(true)
 			.setAutoWidth(true)
 			.setKey(ATHLETE.YEAR_OF_BIRTH.getName());
-		grid.addColumn(athleteRecord -> athleteRecord.getClubId() == null ? null
-				: clubRecordMap.get(athleteRecord.getClubId()).getAbbreviation())
-			.setHeader(getTranslation("Club"))
-			.setAutoWidth(true);
+		grid.addColumn(athleteRecord -> {
+			if (athleteRecord.getClubId() != null) {
+				var clubRecord = clubRecordMap.get(athleteRecord.getClubId());
+				if (clubRecord != null) {
+					return clubRecord.getAbbreviation();
+				}
+			}
+			return null;
+		}).setHeader(getTranslation("Club")).setAutoWidth(true);
 
 		addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(),
 				() -> {
@@ -155,6 +160,7 @@ public class SearchAthleteDialog extends Dialog {
 		isFullScreen = !isFullScreen;
 	}
 
+	@SuppressWarnings("StringCaseLocaleUsage")
 	private Condition createCondition(Query<?, ?> query) {
 		var optionalFilter = query.getFilter();
 		if (optionalFilter.isPresent()) {

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 class ResultCalculatorTest {
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private JavaMailSender javaMailSender;
 

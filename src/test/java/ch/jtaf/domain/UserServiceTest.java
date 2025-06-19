@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class UserServiceTest {
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private JavaMailSender javaMailSender;
 
@@ -42,8 +43,8 @@ class UserServiceTest {
 
 	@Test
 	void user_exist() {
-		assertThatExceptionOfType(UserAlreadyExistException.class)
-			.isThrownBy(() -> userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", null));
+		assertThatExceptionOfType(UserAlreadyExistException.class).isThrownBy(
+				() -> userService.createUser("Simon", "Martinelli", "simon@martinelli.ch", "pass", Locale.GERMAN));
 	}
 
 }

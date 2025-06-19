@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class CompetitionRankingServiceTest {
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private JavaMailSender javaMailSender;
 
