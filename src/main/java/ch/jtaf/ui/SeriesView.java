@@ -21,7 +21,6 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -29,12 +28,10 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.streams.UploadHandler;
 import org.jooq.UpdatableRecord;
 import org.jspecify.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.Serial;
 import java.util.HashMap;
 import java.util.Map;
@@ -155,8 +152,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		name.setRequiredIndicatorVisible(true);
 		formLayout.add(name);
 
-		var buffer = new MultiFileMemoryBuffer();
-		var upload = new Upload(buffer);
+		var inMemoryHandler = UploadHandler.inMemory((metadata, data) -> {
+			SeriesRecord recordToSave = binder.getBean();
+			recordToSave.setLogo(data);
+			seriesDAO.save(recordToSave);
+		});
+		var upload = new Upload(inMemoryHandler);
 		upload.setId("logo-upload");
 		upload.setMaxFiles(1);
 
@@ -166,18 +167,6 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 		upload.setDropLabel(new Span(getTranslation("Logo.drop.here")));
 
-		upload.addSucceededListener(event -> {
-			try {
-				var fileName = event.getFileName();
-				var inputStream = buffer.getInputStream(fileName);
-				SeriesRecord recordToSave = binder.getBean();
-				recordToSave.setLogo(inputStream.readAllBytes());
-				seriesDAO.save(recordToSave);
-			}
-			catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		});
 		formLayout.add(upload);
 
 		var checkboxes = new HorizontalLayout();
@@ -380,14 +369,13 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				.setAutoWidth(true)
 				.setKey(CATEGORY.YEAR_TO.getName());
 			categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
-				var sheet = new Anchor(new StreamResource("sheet" + category.getId() + ".pdf", () -> {
-					byte[] pdf = new byte[0];
-					if (seriesRecord != null) {
-						pdf = numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
-								getLocale());
-					}
-					return new ByteArrayInputStream(pdf);
-				}), getTranslation("Sheets"));
+				var sheet = new Anchor(event -> {
+					event.setFileName("sheet" + category.getId() + ".pdf");
+					event.getOutputStream()
+						.write(numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
+								getLocale()));
+				}, getTranslation("Sheets"));
+
 				sheet.setTarget(BLANK);
 
 				return new HorizontalLayout(sheet);
