@@ -370,10 +370,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				.setKey(CATEGORY.YEAR_TO.getName());
 			categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
 				var sheet = new Anchor(event -> {
-					event.setFileName("sheet" + category.getId() + ".pdf");
-					event.getOutputStream()
-						.write(numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
-								getLocale()));
+					if (seriesRecord != null) {
+						event.setFileName("sheet" + category.getId() + ".pdf");
+						event.getOutputStream()
+							.write(numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
+									getLocale()));
+					}
 				}, getTranslation("Sheets"));
 
 				sheet.setTarget(BLANK);
