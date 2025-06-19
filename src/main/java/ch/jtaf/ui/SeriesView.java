@@ -301,37 +301,38 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			.setAutoWidth(true)
 			.setKey(COMPETITION.COMPETITION_DATE.getName());
 		competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
-			var sheetsOrderedByAthlete = new Anchor(
-					new StreamResource("sheets_orderby_athlete" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
-								getLocale(), CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Sheets"));
+			var sheetsOrderedByAthlete = new Anchor(event -> {
+				event.setFileName("sheets_orderby_athlete" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+							getLocale(), CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
 			sheetsOrderedByAthlete.setTarget(BLANK);
 
-			var sheetsOrderedByClub = new Anchor(
-					new StreamResource("sheets_orderby_club" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
-								getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
-								ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Ordered.by.club"));
+			var sheetsOrderedByClub = new Anchor(event -> {
+				event.setFileName("sheets_orderby_club" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
+							getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
+							ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
 			sheetsOrderedByClub.setTarget(BLANK);
 
-			var numbersOrderedByAthlete = new Anchor(
-					new StreamResource("numbers_orderby_athlete" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
-								CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Numbers"));
+			var numbersOrderedByAthlete = new Anchor(event -> {
+				event.setFileName("numbers_orderby_athlete" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
+							CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
 			numbersOrderedByAthlete.setTarget(BLANK);
 
-			var numbersOrderedByClub = new Anchor(
-					new StreamResource("numbers_orderby_club" + competition.getId() + ".pdf", () -> {
-						byte[] pdf = numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
-								CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME);
-						return new ByteArrayInputStream(pdf);
-					}), getTranslation("Ordered.by.club"));
+			var numbersOrderedByClub = new Anchor(event -> {
+				event.setFileName("numbers_orderby_club" + competition.getId() + ".pdf");
+				event.getOutputStream()
+					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
+							CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
+			}, getTranslation("Sheets"));
+
 			numbersOrderedByClub.setTarget(BLANK);
 
 			return new HorizontalLayout(sheetsOrderedByAthlete, sheetsOrderedByClub, numbersOrderedByAthlete,
