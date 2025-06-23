@@ -33,8 +33,7 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
 
 	final FormLayout formLayout;
 
-	@Nullable
-	private transient Consumer<R> afterSave;
+	@Nullable private transient Consumer<R> afterSave;
 
 	private boolean initialized;
 

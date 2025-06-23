@@ -30,14 +30,11 @@ public class SheetsReport extends AbstractReport {
 
 	private static final float FONT_SIZE_TEXT = 16f;
 
-	@Nullable
-	private Document document;
+	@Nullable private Document document;
 
-	@Nullable
-	private PdfWriter pdfWriter;
+	@Nullable private PdfWriter pdfWriter;
 
-	@Nullable
-	private final NumbersAndSheetsCompetition competition;
+	@Nullable private final NumbersAndSheetsCompetition competition;
 
 	private final List<NumbersAndSheetsAthlete> athletes;
 

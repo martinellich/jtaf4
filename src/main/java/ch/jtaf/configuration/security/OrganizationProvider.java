@@ -27,8 +27,7 @@ public class OrganizationProvider {
 
 	private final SecurityContext securityContext;
 
-	@Nullable
-	private OrganizationRecord organization;
+	@Nullable private OrganizationRecord organization;
 
 	public OrganizationProvider(DSLContext dslContext, SecurityContext securityContext) {
 		this.dslContext = dslContext;
