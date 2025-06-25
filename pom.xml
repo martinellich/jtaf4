@@ -64,7 +64,7 @@
         <spring-javaformat-maven-plugin.version>0.0.47</spring-javaformat-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.13</jacoco.version>
-        <playwright.version>1.52.0</playwright.version>
+        <playwright.version>1.53.0</playwright.version>
         <mopo.version>0.0.3</mopo.version>
 
         <karibu-testing.version>2.3.0</karibu-testing.version>
