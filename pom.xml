@@ -67,7 +67,7 @@
         <playwright.version>1.53.0</playwright.version>
         <mopo.version>0.0.3</mopo.version>
 
-        <karibu-testing.version>2.3.0</karibu-testing.version>
+        <karibu-testing.version>2.4.1</karibu-testing.version>
         <archunit.version>1.4.1</archunit.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
