@@ -16,7 +16,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -228,7 +227,6 @@ class SeriesViewTest extends KaribuTest {
 		assertThat(GridKt._size(athletesGrid)).isEqualTo(108);
 	}
 
-	@Disabled("UploadHandler is not supported by Karibu Testing yet")
 	@Test
 	void logo_upload() {
 		try {

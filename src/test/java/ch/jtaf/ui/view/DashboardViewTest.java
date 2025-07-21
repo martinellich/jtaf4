@@ -38,26 +38,24 @@ class DashboardViewTest extends KaribuTest {
 		_assert(HorizontalLayout.class, 4, spec -> spec.withClasses("series-layout"));
 	}
 
-	@Disabled("Karibu Testing doesn't support DownloadHandler yet")
 	@Test
 	void series_ranking() {
 		assertThatNoException()
 			.isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("series-ranking-1"))));
 	}
 
-	@Disabled("Karibu Testing doesn't support DownloadHandler yet")
 	@Test
 	void club_ranking() {
 		assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("club-ranking-1"))));
 	}
 
-	@Disabled("Karibu Testing doesn't support DownloadHandler yet")
+	@Test
 	void competition_ranking() {
 		assertThatNoException()
 			.isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("competition-ranking-1-1"))));
 	}
 
-	@Disabled("Karibu Testing doesn't support DownloadHandler yet")
+	@Test
 	void diploma() {
 		assertThatNoException().isThrownBy(() -> _download(_get(Anchor.class, spec -> spec.withId("diploma-1-1"))));
 	}
