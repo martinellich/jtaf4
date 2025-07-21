@@ -1,5 +1,6 @@
 package ch.jtaf.ui.view;
 
+import ch.jtaf.TestcontainersConfiguration;
 import ch.jtaf.ui.PlaywrightIT;
 import ch.jtaf.ui.po.LoginPO;
 import com.microsoft.playwright.Locator;
@@ -9,11 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrganizationsViewIT extends PlaywrightIT {
 

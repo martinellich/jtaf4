@@ -1,9 +1,11 @@
 package ch.jtaf.domain;
 
+import ch.jtaf.TestcontainersConfiguration;
 import ch.jtaf.db.tables.records.SecurityUserRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest
 class UserServiceTest {
 
