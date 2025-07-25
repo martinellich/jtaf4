@@ -64,7 +64,7 @@
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.13</jacoco.version>
         <playwright.version>1.54.0</playwright.version>
-        <mopo.version>0.0.3</mopo.version>
+        <mopo.version>0.0.5</mopo.version>
 
         <karibu-testing.version>2.4.2</karibu-testing.version>
         <archunit.version>1.4.1</archunit.version>
