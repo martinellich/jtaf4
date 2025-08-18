@@ -3,11 +3,11 @@ package ch.jtaf.reporting.report;
 import ch.jtaf.domain.EventType;
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
 import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
 import org.jspecify.annotations.Nullable;
+import org.openpdf.text.*;
+import org.openpdf.text.pdf.PdfPCell;
+import org.openpdf.text.pdf.PdfPTable;
+import org.openpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lowagie.text.Element.ALIGN_RIGHT;
-import static com.lowagie.text.PageSize.A5;
+import static org.openpdf.text.Element.ALIGN_RIGHT;
+import static org.openpdf.text.PageSize.A5;
 
 public class SheetsReport extends AbstractReport {
 

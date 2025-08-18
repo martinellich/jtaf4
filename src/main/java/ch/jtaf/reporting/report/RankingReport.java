@@ -1,14 +1,14 @@
 package ch.jtaf.reporting.report;
 
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
+import org.openpdf.text.FontFactory;
+import org.openpdf.text.Phrase;
+import org.openpdf.text.pdf.PdfPCell;
+import org.openpdf.text.pdf.PdfPTable;
 
 import java.util.Locale;
 
-import static com.lowagie.text.FontFactory.HELVETICA;
-import static com.lowagie.text.FontFactory.HELVETICA_BOLD;
+import static org.openpdf.text.FontFactory.HELVETICA;
+import static org.openpdf.text.FontFactory.HELVETICA_BOLD;
 
 public class RankingReport extends AbstractReport {
 
