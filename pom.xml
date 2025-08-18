@@ -218,6 +218,7 @@
             <groupId>in.virit</groupId>
             <artifactId>mopo</artifactId>
             <version>${mopo.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
