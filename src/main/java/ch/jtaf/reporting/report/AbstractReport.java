@@ -1,13 +1,13 @@
 package ch.jtaf.reporting.report;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfPageEventHelper;
-import com.lowagie.text.pdf.PdfWriter;
+import org.openpdf.text.Document;
+import org.openpdf.text.DocumentException;
+import org.openpdf.text.FontFactory;
+import org.openpdf.text.Phrase;
+import org.openpdf.text.pdf.PdfPCell;
+import org.openpdf.text.pdf.PdfPTable;
+import org.openpdf.text.pdf.PdfPageEventHelper;
+import org.openpdf.text.pdf.PdfWriter;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
@@ -15,8 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static com.lowagie.text.Element.*;
-import static com.lowagie.text.FontFactory.HELVETICA;
+import static org.openpdf.text.Element.*;
+import static org.openpdf.text.FontFactory.HELVETICA;
 
 public abstract class AbstractReport {
 

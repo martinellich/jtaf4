@@ -1,5 +1,6 @@
 package ch.jtaf.ui;
 
+import ch.jtaf.TestcontainersConfiguration;
 import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.SeriesRecord;
 import com.github.mvysny.fakeservlet.FakeRequest;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,6 +37,7 @@ import java.util.Locale;
 import static com.github.mvysny.kaributesting.v10.LocatorJ._get;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest
 public abstract class KaribuTest {
 

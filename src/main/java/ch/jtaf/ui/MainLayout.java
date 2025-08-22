@@ -43,29 +43,21 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 
 	private final Div version = new Div();
 
-	@Nullable
-	private Button login;
+	@Nullable private Button login;
 
-	@Nullable
-	private Button logout;
+	@Nullable private Button logout;
 
-	@Nullable
-	private H1 viewTitle;
+	@Nullable private H1 viewTitle;
 
-	@Nullable
-	private RouterLink seriesLink;
+	@Nullable private RouterLink seriesLink;
 
-	@Nullable
-	private RouterLink eventsLink;
+	@Nullable private RouterLink eventsLink;
 
-	@Nullable
-	private RouterLink clubsLink;
+	@Nullable private RouterLink clubsLink;
 
-	@Nullable
-	private RouterLink athletesLink;
+	@Nullable private RouterLink athletesLink;
 
-	@Nullable
-	private RouterLink register;
+	@Nullable private RouterLink register;
 
 	public MainLayout(OrganizationProvider organizationProvider,
 			@Value("${application.version}") String applicationVersion, SecurityContext securityContext) {

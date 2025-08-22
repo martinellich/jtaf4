@@ -20,8 +20,7 @@ public abstract class ProtectedView extends VerticalLayout implements BeforeEnte
 
 	final transient OrganizationProvider organizationProvider;
 
-	@Nullable
-	OrganizationRecord organizationRecord;
+	@Nullable OrganizationRecord organizationRecord;
 
 	ProtectedView(OrganizationProvider organizationProvider) {
 		this.organizationProvider = organizationProvider;

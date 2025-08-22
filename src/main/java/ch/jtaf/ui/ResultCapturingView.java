@@ -61,8 +61,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> dataProvider;
 
-	@Nullable
-	private TextField resultTextField;
+	@Nullable private TextField resultTextField;
 
 	private long competitionId;
 

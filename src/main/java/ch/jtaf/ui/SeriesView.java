@@ -70,11 +70,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient NumberAndSheetsService numberAndSheetsService;
 
-	@Nullable
-	private Button copyCategories;
+	@Nullable private Button copyCategories;
 
-	@Nullable
-	private SeriesRecord seriesRecord;
+	@Nullable private SeriesRecord seriesRecord;
 
 	private Grid<CompetitionRecord> competitionsGrid;
 

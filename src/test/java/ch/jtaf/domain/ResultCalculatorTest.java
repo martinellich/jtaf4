@@ -1,11 +1,13 @@
 package ch.jtaf.domain;
 
+import ch.jtaf.TestcontainersConfiguration;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -13,6 +15,7 @@ import static ch.jtaf.db.tables.Event.EVENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest
 class ResultCalculatorTest {
 

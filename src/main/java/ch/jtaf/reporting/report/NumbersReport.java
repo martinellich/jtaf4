@@ -1,13 +1,13 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import org.openpdf.text.Document;
+import org.openpdf.text.DocumentException;
+import org.openpdf.text.FontFactory;
+import org.openpdf.text.Phrase;
+import org.openpdf.text.pdf.PdfPCell;
+import org.openpdf.text.pdf.PdfPTable;
+import org.openpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +16,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lowagie.text.Element.ALIGN_CENTER;
-import static com.lowagie.text.Element.ALIGN_MIDDLE;
-import static com.lowagie.text.FontFactory.HELVETICA;
-import static com.lowagie.text.PageSize.A4;
+import static org.openpdf.text.Element.ALIGN_CENTER;
+import static org.openpdf.text.Element.ALIGN_MIDDLE;
+import static org.openpdf.text.FontFactory.HELVETICA;
+import static org.openpdf.text.PageSize.A4;
 
 public class NumbersReport extends AbstractReport {
 

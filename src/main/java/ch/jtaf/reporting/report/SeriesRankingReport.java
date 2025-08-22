@@ -1,10 +1,10 @@
 package ch.jtaf.reporting.report;
 
 import ch.jtaf.reporting.data.SeriesRankingData;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import org.openpdf.text.Document;
+import org.openpdf.text.DocumentException;
+import org.openpdf.text.pdf.PdfPTable;
+import org.openpdf.text.pdf.PdfWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-import static com.lowagie.text.PageSize.A4;
+import static org.openpdf.text.PageSize.A4;
 
 public class SeriesRankingReport extends RankingReport {
 
