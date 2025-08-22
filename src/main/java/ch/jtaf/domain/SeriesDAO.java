@@ -80,6 +80,7 @@ public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
     public List<SeriesRecord> findAllOrderByCompetitionDate() {
         return dslContext
             .selectFrom(SERIES)
+                .where(SERIES.HIDDEN.isFalse())
             .orderBy(
                 field(
                     select(DSL.max(COMPETITION.COMPETITION_DATE))
