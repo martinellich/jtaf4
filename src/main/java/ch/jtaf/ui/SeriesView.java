@@ -302,7 +302,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
 							getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
 							ATHLETE.FIRST_NAME));
-			}, getTranslation("Sheets"));
+			}, getTranslation("Ordered.by.club"));
 			sheetsOrderedByClub.setTarget(BLANK);
 
 			var numbersOrderedByAthlete = new Anchor(event -> {
@@ -310,7 +310,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				event.getOutputStream()
 					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
 							CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
-			}, getTranslation("Sheets"));
+			}, getTranslation("Numbers"));
 			numbersOrderedByAthlete.setTarget(BLANK);
 
 			var numbersOrderedByClub = new Anchor(event -> {
@@ -318,7 +318,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				event.getOutputStream()
 					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
 							CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
-			}, getTranslation("Sheets"));
+			}, getTranslation("Ordered.by.club"));
 
 			numbersOrderedByClub.setTarget(BLANK);
 
