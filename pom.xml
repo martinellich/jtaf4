@@ -427,6 +427,19 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.jelastic</groupId>
+                <artifactId>jelastic-maven-plugin</artifactId>
+                <version>1.9.5</version>
+                <configuration>
+                    <email>${jelastic.username}</email>
+                    <password>${jelastic.password}</password>
+                    <context>ROOT</context>
+                    <environment>jtaf4</environment>
+                    <api_hoster>app.hidora.com</api_hoster>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

@@ -1,41 +1,42 @@
 name: Release
 
 on:
-    push:
-        tags:
-            - "*.*.*"
+  push:
+    tags:
+      - "*.*.*"
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        permissions:
-            contents: 'read'
-            id-token: 'write'
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
-        steps:
-            -   uses: actions/checkout@v5
+    steps:
+      - uses: actions/checkout@v5
 
-            -   name: Set up JDK 21
-                uses: actions/setup-java@v5
-                with:
-                    java-version: '21'
-                    distribution: 'adopt'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'adopt'
 
-            -   name: Cache local Maven repository
-                uses: actions/cache@v4
-                with:
-                    path: ~/.m2/repository
-                    key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-                    restore-keys: |
-                        ${{ runner.os }}-maven-
+      - name: Maven settings.xml
+        uses: s4u/maven-settings-action@v4.0.0
+        with:
+          properties: '[{"jelastic.username": "${{ secrets.JELASTIC_USERNAME }}"}, {"jelastic.password": "${{ secrets.JELASTIC_TOKEN }}" }]'
 
-            -   name: Maven Build
-                run: ./mvnw -B clean package -Pproduction
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-            -   uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Maven Build
+        run: ./mvnw -B clean package -Pproduction
 
-            -   name: Deploy to Fly.io
-                run: flyctl deploy --remote-only
-                env:
-                    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Jelastic Deploy
+        run: ./mvnw -B jelastic:deploy
