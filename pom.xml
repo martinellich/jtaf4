@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.10.7</version>
+    <version>4.10.8</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -51,7 +51,7 @@
     <properties>
         <java.version>21</java.version>
 
-        <vaadin.version>24.8.7</vaadin.version>
+        <vaadin.version>24.8.8</vaadin.version>
         <openpdf.version>3.0.0</openpdf.version>
         <jooq-spring.version>0.4.0</jooq-spring.version>
         <jooq-utilities.version>1.1.2</jooq-utilities.version>
@@ -379,7 +379,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.4</version>
                 <dependencies>
                     <dependency>
                         <groupId>me.fabriciorby</groupId>
@@ -427,6 +427,19 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.jelastic</groupId>
+                <artifactId>jelastic-maven-plugin</artifactId>
+                <version>1.9.5</version>
+                <configuration>
+                    <email>${jelastic.username}</email>
+                    <password>${jelastic.password}</password>
+                    <context>ROOT</context>
+                    <environment>jtaf4</environment>
+                    <api_hoster>app.hidora.com</api_hoster>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
