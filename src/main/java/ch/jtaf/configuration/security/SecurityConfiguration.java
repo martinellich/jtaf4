@@ -47,10 +47,10 @@ public class SecurityConfiguration {
 
 		http.with(VaadinSecurityConfigurer.vaadin(), configurer -> configurer.loginView(LoginView.class, LOGOUT_URL));
 
-            http.with(new VaadinStatelessSecurityConfigurer<>(),
-                    stateless -> stateless.issuer("ch.jtaf")
-                        .withSecretKey()
-                        .secretKey(new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256)));
+		http.with(new VaadinStatelessSecurityConfigurer<>(),
+				stateless -> stateless.issuer("ch.jtaf")
+					.withSecretKey()
+					.secretKey(new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256)));
 
 		return http.build();
 	}
