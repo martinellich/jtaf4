@@ -19,7 +19,7 @@ public class CompetitionRankingReport extends RankingReport {
 
 	private final CompetitionRankingData ranking;
 
-	private Document document;
+	private final Document document;
 
 	public CompetitionRankingReport(CompetitionRankingData ranking, Locale locale) {
 		super(locale);
