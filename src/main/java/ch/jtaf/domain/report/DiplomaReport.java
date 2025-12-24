@@ -1,6 +1,6 @@
-package ch.jtaf.reporting.report;
+package ch.jtaf.domain.report;
 
-import ch.jtaf.reporting.data.CompetitionRankingData;
+import ch.jtaf.domain.data.CompetitionRankingData;
 import org.openpdf.text.*;
 import org.openpdf.text.pdf.PdfPCell;
 import org.openpdf.text.pdf.PdfPTable;

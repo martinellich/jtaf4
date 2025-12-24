@@ -1,6 +1,6 @@
-package ch.jtaf.reporting.report;
+package ch.jtaf.domain.report;
 
-import ch.jtaf.reporting.data.CompetitionRankingData;
+import ch.jtaf.domain.data.CompetitionRankingData;
 import org.openpdf.text.Document;
 import org.openpdf.text.DocumentException;
 import org.openpdf.text.PageSize;

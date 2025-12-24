@@ -1,6 +1,5 @@
 package ch.jtaf.configuration.security;
 
-import ch.jtaf.ui.LoginView;
 import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 import com.vaadin.flow.spring.security.stateless.VaadinStatelessSecurityConfigurer;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,9 @@ import java.util.Base64;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	public static final String LOGOUT_URL = "/";
+	private static final String LOGIN_URL = "/login";
+
+	private static final String LOGOUT_URL = "/";
 
 	private final String authSecret;
 
@@ -42,7 +43,7 @@ public class SecurityConfiguration {
 			c.requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll();
 		});
 
-		http.with(VaadinSecurityConfigurer.vaadin(), configurer -> configurer.loginView(LoginView.class, LOGOUT_URL));
+		http.with(VaadinSecurityConfigurer.vaadin(), configurer -> configurer.loginView(LOGIN_URL, LOGOUT_URL));
 
 		http.with(new VaadinStatelessSecurityConfigurer<>(),
 				stateless -> stateless.issuer("ch.jtaf")

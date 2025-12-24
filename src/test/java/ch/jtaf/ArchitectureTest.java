@@ -11,13 +11,11 @@ public class ArchitectureTest {
 
 	private static final String UI = "UI";
 
-	private static final String SERVICE = "Service";
-
 	private static final String SECURITY = "Security";
 
 	private static final String REPORTING = "Reporting";
 
-	private static final String MODEL = "Model";
+	private static final String DOMAIN = "Domain";
 
 	private static final String UTIL = "Util";
 
@@ -31,14 +29,12 @@ public class ArchitectureTest {
 
 			.layer(UI)
 			.definedBy("..ui..")
-			.layer(SERVICE)
-			.definedBy("..service..")
 			.layer(SECURITY)
 			.definedBy("..security..")
 			.layer(REPORTING)
 			.definedBy("..reporting..")
-			.layer(MODEL)
-			.definedBy("..model..")
+			.layer(DOMAIN)
+			.definedBy("..domain..")
 			.layer(UTIL)
 			.definedBy("..util..")
 			.layer(DB)
@@ -46,13 +42,11 @@ public class ArchitectureTest {
 
 			.whereLayer(UI)
 			.mayNotBeAccessedByAnyLayer()
-			.whereLayer(SERVICE)
-			.mayOnlyBeAccessedByLayers(UI)
 			.whereLayer(REPORTING)
-			.mayOnlyBeAccessedByLayers(SERVICE)
+			.mayOnlyBeAccessedByLayers(DOMAIN)
 			.whereLayer(DB)
-			.mayOnlyBeAccessedByLayers(UI, SERVICE, SECURITY, REPORTING, UTIL)
-			.whereLayer(MODEL)
+			.mayOnlyBeAccessedByLayers(UI, DOMAIN, SECURITY, REPORTING, UTIL)
+			.whereLayer(DOMAIN)
 			.mayOnlyBeAccessedByLayers(UI, REPORTING)
 
 			.check(classes);

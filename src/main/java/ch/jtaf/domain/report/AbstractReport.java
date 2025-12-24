@@ -1,4 +1,4 @@
-package ch.jtaf.reporting.report;
+package ch.jtaf.domain.report;
 
 import org.openpdf.text.Document;
 import org.openpdf.text.DocumentException;

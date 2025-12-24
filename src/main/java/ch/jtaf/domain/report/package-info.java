@@ -1,4 +1,4 @@
 @NullMarked
-package ch.jtaf.reporting.data;
+package ch.jtaf.domain.report;
 
 import org.jspecify.annotations.NullMarked;

@@ -1,6 +1,6 @@
-package ch.jtaf.reporting.report;
+package ch.jtaf.domain.report;
 
-import ch.jtaf.reporting.data.EventsRankingData;
+import ch.jtaf.domain.data.EventsRankingData;
 import org.openpdf.text.Document;
 import org.openpdf.text.DocumentException;
 import org.openpdf.text.pdf.PdfPTable;

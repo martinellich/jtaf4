@@ -1,4 +1,4 @@
-package ch.jtaf.reporting.data;
+package ch.jtaf.domain.data;
 
 import ch.jtaf.domain.EventType;
 import org.jspecify.annotations.Nullable;

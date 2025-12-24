@@ -1,8 +1,8 @@
-package ch.jtaf.reporting.report;
+package ch.jtaf.domain.report;
 
 import ch.jtaf.domain.EventType;
-import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
-import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
+import ch.jtaf.domain.data.NumbersAndSheetsAthlete;
+import ch.jtaf.domain.data.NumbersAndSheetsCompetition;
 import org.jspecify.annotations.Nullable;
 import org.openpdf.text.*;
 import org.openpdf.text.pdf.PdfPCell;
