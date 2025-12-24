@@ -33,12 +33,17 @@ public final class SecurityContext {
 	 * signed in
 	 */
 	public String getUsername() {
-		var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return switch (principal) {
-			case UserDetails userDetails -> userDetails.getUsername();
-			case Jwt jwt -> jwt.getSubject();
-			case null, default -> ""; // Anonymous or no authentication.
-		};
+		var authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) {
+			return "";
+		}
+		else {
+			return switch (authentication.getPrincipal()) {
+				case UserDetails userDetails -> userDetails.getUsername();
+				case Jwt jwt -> jwt.getSubject();
+				case null, default -> ""; // Anonymous or no authentication.
+			};
+		}
 	}
 
 	/**

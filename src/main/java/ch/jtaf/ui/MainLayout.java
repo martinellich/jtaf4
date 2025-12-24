@@ -28,7 +28,7 @@ import java.util.Locale;
 
 @Layout
 @AnonymousAllowed
-public class MainLayout extends AppLayout implements BeforeEnterObserver {
+public class MainLayout extends AppLayout implements AfterNavigationObserver, BeforeEnterObserver {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -209,9 +209,7 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver {
 	}
 
 	@Override
-	protected void afterNavigation() {
-		super.afterNavigation();
-
+	public void afterNavigation(AfterNavigationEvent event) {
 		if (viewTitle != null) {
 			viewTitle.setText(getCurrentPageTitle());
 		}

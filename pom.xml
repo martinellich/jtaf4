@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>4.0.1</version>
     </parent>
 
     <groupId>ch.jtaf</groupId>
@@ -51,10 +51,13 @@
     <properties>
         <java.version>21</java.version>
 
-        <vaadin.version>24.9.7</vaadin.version>
+        <vaadin.version>25.0.2</vaadin.version>
         <openpdf.version>3.0.0</openpdf.version>
         <jooq-spring.version>0.4.0</jooq-spring.version>
         <jooq-utilities.version>1.1.2</jooq-utilities.version>
+
+        <flyway-maven-plugin.version>11.19.1</flyway-maven-plugin.version>
+        <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
 
         <jspecify.version>1.0.0</jspecify.version>
         <errorprone.version>2.45.0</errorprone.version>
@@ -66,7 +69,7 @@
         <playwright.version>1.57.0</playwright.version>
         <mopo.version>0.0.6</mopo.version>
 
-        <karibu-testing.version>2.5.0</karibu-testing.version>
+        <karibu-testing.version>2.6.1</karibu-testing.version>
         <archunit.version>1.4.1</archunit.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
@@ -159,6 +162,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-dev</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>
             <scope>runtime</scope>
@@ -179,6 +187,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -192,12 +201,12 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -231,21 +240,74 @@
 
     <build>
         <plugins>
+            <!-- jOOQ Code Generation -->
             <plugin>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-jooq-codegen-maven-plugin</artifactId>
-                <version>${testcontainers-jooq-codegen-maven-plugin.version}</version>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>${groovy-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <!-- Start the Testcontainer in the generate-sources phase -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                db = new org.testcontainers.postgresql.PostgreSQLContainer(project.properties.getProperty('db.image'))
+                                        .withUsername(project.properties.getProperty('db.username'))
+                                        .withPassword(project.properties.getProperty('db.password'))
+                                db.start()
+                                // After you've started the container, collect its generated
+                                // JDBC URL (which contains a random port)
+                                project.properties.setProperty('db.url', db.getJdbcUrl())
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>org.jooq</groupId>
-                        <artifactId>jooq-codegen</artifactId>
-                        <version>${jooq.version}</version>
+                        <groupId>org.testcontainers</groupId>
+                        <artifactId>testcontainers</artifactId>
+                        <version>${testcontainers.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.testcontainers</groupId>
-                        <artifactId>postgresql</artifactId>
+                        <artifactId>testcontainers-postgresql</artifactId>
                         <version>${testcontainers.version}</version>
                     </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <!-- Run the migration in the same phase, before jOOQ's code generation -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>migrate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- This URL has been set by groovy, above -->
+                            <url>${db.url}</url>
+                            <user>${db.username}</user>
+                            <password>${db.password}</password>
+                            <locations>
+                                <location>
+                                    filesystem:src/main/resources/db/migration
+                                </location>
+                            </locations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+                <dependencies>
                     <dependency>
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
@@ -259,56 +321,31 @@
                 </dependencies>
                 <executions>
                     <execution>
-                        <id>generate-jooq-sources</id>
+                        <id>java-generator</id>
+                        <!-- Same phase as above, but the previous plugins have already executed, now generate the jOOQ code-->
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
                         <configuration>
-                            <database>
-                                <type>POSTGRES</type>
-                                <containerImage>${db.image}</containerImage>
-                                <username>${db.username}</username>
+                            <jdbc>
+                                <driver>org.postgresql.Driver</driver>
+                                <!-- Again, this URL has been set by groovy, above -->
+                                <url>${db.url}</url>
+                                <user>${db.username}</user>
                                 <password>${db.password}</password>
-                                <databaseName>jtaf4</databaseName>
-                            </database>
-                            <flyway>
-                                <locations>filesystem:src/main/resources/db/migration</locations>
-                            </flyway>
-                            <jooq>
-                                <generator>
-                                    <database>
-                                        <inputSchema>public</inputSchema>
-                                        <excludes>flyway_schema_history</excludes>
-                                    </database>
-                                    <name>ch.martinelli.oss.jooq.EqualsAndHashCodeJavaGenerator</name>
-                                    <target>
-                                        <packageName>ch.jtaf.db</packageName>
-                                    </target>
-                                </generator>
-                            </jooq>
+                            </jdbc>
+                            <generator>
+                                <database>
+                                    <inputSchema>public</inputSchema>
+                                    <excludes>flyway_schema_history</excludes>
+                                </database>
+                                <name>ch.martinelli.oss.jooq.EqualsAndHashCodeJavaGenerator</name>
+                                <target>
+                                    <packageName>ch.jtaf.db</packageName>
+                                </target>
+                            </generator>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- Take care of synchronizing java dependencies and imports in package.json and main.js files. It also creates webpack.config.js if not exists yet. -->
-            <plugin>
-                <groupId>com.vaadin</groupId>
-                <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.version}</version>
-                <executions>
-                    <execution>
-                        <id>prepare-frontend</id>
-                        <goals>
-                            <goal>prepare-frontend</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>clean-frontend</id>
-                        <goals>
-                            <goal>clean-frontend</goal>
-                        </goals>
-                        <phase>pre-clean</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -515,50 +552,6 @@
                         <configuration>
                             <trimStackTrace>false</trimStackTrace>
                             <enableAssertions>true</enableAssertions>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!-- Production mode is activated using -Pproduction -->
-            <id>production</id>
-            <dependencies>
-                <!-- Exclude development dependencies from production -->
-                <dependency>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>vaadin-core</artifactId>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.vaadin</groupId>
-                            <artifactId>vaadin-dev</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.vaadin</groupId>
-                        <artifactId>vaadin-maven-plugin</artifactId>
-                        <version>${vaadin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>build-frontend</goal>
-                                </goals>
-                                <phase>compile</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <buildArgs>
-                                <arg>--initialize-at-build-time=org.slf4j.helpers</arg>
-                            </buildArgs>
                         </configuration>
                     </plugin>
                 </plugins>
