@@ -34,3 +34,4 @@ error-screenshots/
 
 /src/main/frontend/generated/*
 /src/main/frontend/index.html
+/src/main/resources/rebel.xml
