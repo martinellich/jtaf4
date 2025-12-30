@@ -363,6 +363,18 @@
                     <maxAttempts>240</maxAttempts>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-frontend</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- ITs in its own directory -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
