@@ -53,7 +53,7 @@
 
         <vaadin.version>25.0.5</vaadin.version>
         <openpdf.version>3.0.0</openpdf.version>
-        <jooq-spring.version>0.4.0</jooq-spring.version>
+        <jooq-spring.version>1.1.1</jooq-spring.version>
         <jooq-utilities.version>1.1.2</jooq-utilities.version>
 
         <flyway-maven-plugin.version>12.0.2</flyway-maven-plugin.version>
