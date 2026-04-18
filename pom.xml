@@ -60,7 +60,7 @@
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
 
         <jspecify.version>1.0.0</jspecify.version>
-        <errorprone.version>2.48.0</errorprone.version>
+        <errorprone.version>2.49.0</errorprone.version>
         <nullaway.version>0.13.1</nullaway.version>
         <spring-javaformat-maven-plugin.version>0.0.47</spring-javaformat-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
