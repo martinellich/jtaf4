@@ -78,7 +78,7 @@
         <db.username>jtaf4</db.username>
         <db.password>jtaf420</db.password>
 
-        <sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>5.6.0.6792</sonar-maven-plugin.version>
         <sonar.organization>martinellich</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>src/main/java/ch/jtaf/Jtaf4Application.java</sonar.exclusions>
