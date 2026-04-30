@@ -56,7 +56,7 @@
         <jooq-spring.version>1.1.1</jooq-spring.version>
         <jooq-utilities.version>1.1.4</jooq-utilities.version>
 
-        <flyway-maven-plugin.version>12.3.0</flyway-maven-plugin.version>
+        <flyway-maven-plugin.version>12.4.0</flyway-maven-plugin.version>
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
 
         <jspecify.version>1.0.0</jspecify.version>
