@@ -68,7 +68,7 @@
         <playwright.version>1.59.0</playwright.version>
         <mopo.version>0.0.6</mopo.version>
 
-        <karibu-testing.version>2.7.0</karibu-testing.version>
+        <browserless-test.version>1.0.0</browserless-test.version>
         <archunit.version>1.4.2</archunit.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
@@ -90,6 +90,13 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-bom</artifactId>
                 <version>${vaadin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>browserless-test-bom</artifactId>
+                <version>${browserless-test.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -215,9 +222,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.mvysny.kaributesting</groupId>
-            <artifactId>karibu-testing-v10-spring</artifactId>
-            <version>${karibu-testing.version}</version>
+            <groupId>com.vaadin</groupId>
+            <artifactId>browserless-test-junit6</artifactId>
             <scope>test</scope>
         </dependency>
 
