@@ -33,9 +33,9 @@ class UC004SignOutTest extends AbstractViewTest {
 		try {
 			logout.click();
 		}
-		catch (Exception ignored) {
-			// VaadinServletRequest is unavailable in the unit-test environment;
-			// the logout flow itself runs through Spring Security in production.
+		catch (Exception _) {
+			// VaadinServletRequest is unavailable in unit tests, while the
+			// production logout flow runs through Spring Security.
 		}
 	}
 

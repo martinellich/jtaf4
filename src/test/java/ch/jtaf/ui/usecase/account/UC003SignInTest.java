@@ -30,7 +30,7 @@ class UC003SignInTest extends AbstractViewTest {
 		try {
 			test(loginOverlay).login("not.existing@user.com", "pass");
 		}
-		catch (IllegalStateException e) {
+		catch (IllegalStateException _) {
 			// From GoogleAnalyticsTracker. Ignore
 		}
 

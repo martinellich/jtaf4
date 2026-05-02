@@ -49,7 +49,7 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 				Notification.show(getTranslation("Email.sent"), 5000, Notification.Position.TOP_END);
 				UI.getCurrent().navigate(DashboardView.class);
 			}
-			catch (UserAlreadyExistException ex) {
+			catch (UserAlreadyExistException _) {
 				Notification.show(getTranslation("User.already.exist"), 5000, Notification.Position.TOP_END);
 			}
 		});

@@ -29,7 +29,7 @@ public class LogoUtil {
 				logo.setHeight("60px");
 				logo.setWidth(60 * ratio + "px");
 			}
-			catch (IOException ignore) {
+			catch (IOException _) {
 				// Ignore
 			}
 		}

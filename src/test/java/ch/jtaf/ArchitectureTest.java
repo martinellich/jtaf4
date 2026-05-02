@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
-public class ArchitectureTest {
+class ArchitectureTest {
 
 	private static final String UI = "UI";
 
@@ -22,7 +22,7 @@ public class ArchitectureTest {
 	private final JavaClasses classes = new ClassFileImporter().importPackages("ch.jtaf");
 
 	@Test
-	public void check_layered_architecture() {
+	void check_layered_architecture() {
 		layeredArchitecture().consideringAllDependencies()
 
 			.layer(UI)
@@ -47,7 +47,7 @@ public class ArchitectureTest {
 	}
 
 	@Test
-	public void check_cycles() {
+	void check_cycles() {
 		slices().matching("ch.jtaf.(*)..").should().beFreeOfCycles().check(classes);
 	}
 

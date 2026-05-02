@@ -45,7 +45,7 @@ class UC090ViewDashboardTest extends AbstractViewTest {
 		try {
 			$(Button.class).id("logout").click();
 		}
-		catch (Exception ignored) {
+		catch (Exception _) {
 			// https://github.com/mvysny/karibu-testing/issues/148
 		}
 	}

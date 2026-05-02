@@ -37,7 +37,7 @@ public class SecurityConfiguration {
 	}
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http) {
 		http.authorizeHttpRequests(c -> {
 			c.requestMatchers("/fonts/*.*", "/icons/*.png", "/line-awesome/*").permitAll();
 			c.requestMatchers(EndpointRequest.to(HealthEndpoint.class)).permitAll();

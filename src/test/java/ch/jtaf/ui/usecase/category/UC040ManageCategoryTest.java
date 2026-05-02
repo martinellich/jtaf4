@@ -46,16 +46,34 @@ class UC040ManageCategoryTest extends AbstractViewTest {
 
 	@Test
 	void add_category_and_assign_event() {
+		Grid<CategoryRecord> categoriesGrid = openCategoriesTab();
+		assertCategoriesGrid(categoriesGrid, 12, "A");
+
+		addCategory();
+		assertCategoriesGrid(categoriesGrid, 13, "1");
+
+		Grid<?> categoryEventsGrid = openAssignEventDialog(categoriesGrid);
+		assertEventsGridFiltering();
+
+		assignFirstEvent();
+		assertGridSize(categoryEventsGrid, 1);
+
+		removeFirstRow(categoryEventsGrid, "remove-event-from-category-confirm-dialog");
+		assertGridSize(categoryEventsGrid, 0);
+
+		removeFirstRow(categoriesGrid, "delete-confirm-dialog");
+		assertGridSize(categoriesGrid, 12);
+	}
+
+	private Grid<CategoryRecord> openCategoriesTab() {
 		Tabs tabs = $(Tabs.class).single();
 		Tab categories = $(Tab.class).withText("Categories").single();
 		tabs.setSelectedTab(categories);
+		return $(Grid.class).id("categories-grid");
+	}
 
-		// Check content of categories grid
+	private void addCategory() {
 		Grid<CategoryRecord> categoriesGrid = $(Grid.class).id("categories-grid");
-		assertThat(test(categoriesGrid).size()).isEqualTo(12);
-		assertThat(test(categoriesGrid).getRow(0).getAbbreviation()).isEqualTo("A");
-
-		// Add category
 		gridHeaderButton(categoriesGrid, "edit-column").click();
 		assertThat($(CategoryDialog.class).all()).hasSize(1);
 
@@ -65,72 +83,61 @@ class UC040ManageCategoryTest extends AbstractViewTest {
 		test($(TextField.class).withCaption("Year from").single()).setValue("1999");
 		test($(TextField.class).withCaption("Year to").single()).setValue("2000");
 		$(Button.class).id("edit-save").click();
+	}
 
-		// Check if category was added
-		assertThat(test(categoriesGrid).size()).isEqualTo(13);
-		assertThat(test(categoriesGrid).getRow(0).getAbbreviation()).isEqualTo("1");
-
-		// Select category and assign event
+	private Grid<?> openAssignEventDialog(Grid<CategoryRecord> categoriesGrid) {
 		test(categoriesGrid).clickRow(0);
 
 		Grid<?> categoryEventsGrid = $(Grid.class).id("category-events-grid");
 		gridHeaderButton(categoryEventsGrid, "edit-column").click();
 
-		// Test maximize and restore
 		Button toggle = $(Button.class).id("search-event-dialog-toggle");
 		toggle.click();
 		toggle.click();
 
+		return categoryEventsGrid;
+	}
+
+	private void assertEventsGridFiltering() {
 		Grid<EventRecord> eventsGrid = $(Grid.class).id("events-grid");
-		assertThat(test(eventsGrid).size()).isEqualTo(9);
+		assertGridSize(eventsGrid, 9);
 
-		// Filter with text
 		test($(TextField.class).id("event-filter")).setValue("w");
-		assertThat(test(eventsGrid).size()).isEqualTo(1);
+		assertGridSize(eventsGrid, 1);
 
-		// Filter with number
 		test($(TextField.class).id("event-filter")).setValue("2");
-		assertThat(test(eventsGrid).size()).isZero();
+		assertGridSize(eventsGrid, 0);
 
-		// Remove filter
 		test($(TextField.class).id("event-filter")).setValue("");
-		assertThat(test(eventsGrid).size()).isEqualTo(9);
+		assertGridSize(eventsGrid, 9);
+	}
 
+	private void assignFirstEvent() {
+		Grid<EventRecord> eventsGrid = $(Grid.class).id("events-grid");
 		((Button) test(eventsGrid).getCellComponent(0, "assign-column")).click();
-
 		$(SearchEventDialog.class).id("search-event-dialog").close();
+	}
 
-		// Remove event from category
-		assertThat(test(categoryEventsGrid).size()).isEqualTo(1);
-
-		test(categoryEventsGrid).getCellComponent(0, "edit-column")
+	private void removeFirstRow(Grid<?> grid, String confirmDialogId) {
+		test(grid).getCellComponent(0, "edit-column")
 			.getChildren()
 			.filter(Button.class::isInstance)
 			.findFirst()
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).id("remove-event-from-category-confirm-dialog");
+		ConfirmDialog confirmDialog = $(ConfirmDialog.class).id(confirmDialogId);
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("remove-event-from-category-confirm-dialog-confirm").click();
+		$(Button.class).id(confirmDialogId + "-confirm").click();
+	}
 
-		// Check if event was removed
-		assertThat(test(categoryEventsGrid).size()).isZero();
+	private void assertCategoriesGrid(Grid<CategoryRecord> grid, int expectedSize, String firstAbbreviation) {
+		assertThat(test(grid).size()).isEqualTo(expectedSize);
+		assertThat(test(grid).getRow(0).getAbbreviation()).isEqualTo(firstAbbreviation);
+	}
 
-		// Remove category
-		test(categoriesGrid).getCellComponent(0, "edit-column")
-			.getChildren()
-			.filter(Button.class::isInstance)
-			.findFirst()
-			.map(Button.class::cast)
-			.ifPresent(Button::click);
-
-		confirmDialog = $(ConfirmDialog.class).id("delete-confirm-dialog");
-		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-confirm").click();
-
-		// Check if category was removed
-		assertThat(test(categoriesGrid).size()).isEqualTo(12);
+	private void assertGridSize(Grid<?> grid, int expectedSize) {
+		assertThat(test(grid).size()).isEqualTo(expectedSize);
 	}
 
 }
