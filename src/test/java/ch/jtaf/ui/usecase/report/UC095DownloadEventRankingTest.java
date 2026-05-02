@@ -5,7 +5,7 @@ import ch.jtaf.ui.AbstractViewTest;
 import ch.jtaf.ui.DashboardView;
 import com.vaadin.flow.component.html.Anchor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -26,7 +26,7 @@ class UC095DownloadEventRankingTest extends AbstractViewTest {
 		navigate(DashboardView.class);
 	}
 
-	@Disabled("Karibu Testing doesn't support DownloadHandler yet")
+	@Test
 	void event_ranking() {
 		assertThatNoException()
 			.isThrownBy(() -> test($(Anchor.class).id("event-ranking-1-1")).download(new ByteArrayOutputStream()));
