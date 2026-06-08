@@ -64,7 +64,7 @@
         <nullaway.version>0.13.4</nullaway.version>
         <spring-javaformat-maven-plugin.version>0.0.47</spring-javaformat-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
-        <jacoco.version>0.8.14</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <playwright.version>1.60.0</playwright.version>
         <mopo.version>0.0.6</mopo.version>
 
