@@ -68,7 +68,7 @@
         <playwright.version>1.61.0</playwright.version>
         <mopo.version>0.0.6</mopo.version>
 
-        <browserless-test.version>1.1.0</browserless-test.version>
+        <browserless-test.version>1.1.1</browserless-test.version>
         <archunit.version>1.4.2</archunit.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
