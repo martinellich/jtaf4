@@ -32,11 +32,11 @@ class UC022EditSeriesTest extends AbstractViewTest {
 
 	@Test
 	void edit_series() {
-		TextField name = $(TextField.class).single();
+		TextField name = find(TextField.class).single();
 		assertThat(name.getValue()).isEqualTo("CIS 2019");
 
-		Checkbox hidden = $(Checkbox.class).withCaption("Hidden").single();
-		Checkbox locked = $(Checkbox.class).withCaption("Locked").single();
+		Checkbox hidden = find(Checkbox.class).withCaption("Hidden").single();
+		Checkbox locked = find(Checkbox.class).withCaption("Locked").single();
 		assertThat(hidden.getValue()).isFalse();
 		assertThat(locked.getValue()).isFalse();
 
@@ -46,18 +46,18 @@ class UC022EditSeriesTest extends AbstractViewTest {
 		assertThat(hidden.getValue()).isTrue();
 		assertThat(locked.getValue()).isTrue();
 
-		$(Button.class).id("save-series").click();
+		find(Button.class).id("save-series").click();
 
-		Notification savedNotification = $(Notification.class).single();
+		Notification savedNotification = find(Notification.class).single();
 		assertThat(test(savedNotification).getText()).isEqualTo("Series saved");
 		savedNotification.close();
 
 		// Restore original values
-		test($(TextField.class).single()).setValue("CIS 2019");
-		test($(Checkbox.class).withCaption("Hidden").single()).click();
-		test($(Checkbox.class).withCaption("Locked").single()).click();
-		$(Button.class).id("save-series").click();
-		$(Notification.class).single().close();
+		test(find(TextField.class).single()).setValue("CIS 2019");
+		test(find(Checkbox.class).withCaption("Hidden").single()).click();
+		test(find(Checkbox.class).withCaption("Locked").single()).click();
+		find(Button.class).id("save-series").click();
+		find(Notification.class).single().close();
 	}
 
 }

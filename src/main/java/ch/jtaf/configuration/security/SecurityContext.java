@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.Objects;
+
 /**
  * Takes care of all such static operations that have to do with security and querying
  * rights from different beans of the UI.
@@ -39,8 +41,8 @@ public final class SecurityContext {
 		}
 		else {
 			return switch (authentication.getPrincipal()) {
-				case UserDetails userDetails -> userDetails.getUsername();
-				case Jwt jwt -> jwt.getSubject();
+				case UserDetails userDetails -> Objects.requireNonNullElse(userDetails.getUsername(), "");
+				case Jwt jwt -> Objects.requireNonNullElse(jwt.getSubject(), "");
 				case null, default -> ""; // Anonymous or no authentication.
 			};
 		}

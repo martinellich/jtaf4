@@ -37,7 +37,7 @@ class UC013SelectActiveOrganizationTest extends AbstractViewTest {
 		navigate(OrganizationsView.class);
 
 		// Check if series from Cookie was loaded
-		RouterLink routerLink = $(RouterLink.class).id("series-list-link");
+		RouterLink routerLink = find(RouterLink.class).id("series-list-link");
 		assertThat(routerLink.getText()).isEqualTo("CIS");
 	}
 

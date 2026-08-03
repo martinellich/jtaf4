@@ -25,7 +25,7 @@ class UC003SignInTest extends AbstractViewTest {
 
 		navigate(LoginView.class);
 
-		LoginOverlay loginOverlay = $(LoginOverlay.class).single();
+		LoginOverlay loginOverlay = find(LoginOverlay.class).single();
 
 		try {
 			test(loginOverlay).login("not.existing@user.com", "pass");
@@ -34,7 +34,7 @@ class UC003SignInTest extends AbstractViewTest {
 			// From GoogleAnalyticsTracker. Ignore
 		}
 
-		assertThat($(LoginOverlay.class).single().getElement().getOuterHTML())
+		assertThat(find(LoginOverlay.class).single().getElement().getOuterHTML())
 			.isEqualTo("<vaadin-login-overlay></vaadin-login-overlay>");
 	}
 
@@ -44,7 +44,7 @@ class UC003SignInTest extends AbstractViewTest {
 
 		UI.getCurrent().navigate(LoginView.class);
 
-		H1 h1 = $(H1.class).id("view-title");
+		H1 h1 = find(H1.class).id("view-title");
 		assertThat(h1.getText()).isEqualTo("Dashboard");
 	}
 

@@ -29,7 +29,7 @@ class UC094DownloadDiplomasTest extends AbstractViewTest {
 	@Test
 	void diploma() {
 		assertThatNoException()
-			.isThrownBy(() -> test($(Anchor.class).id("diploma-1-1")).download(new ByteArrayOutputStream()));
+			.isThrownBy(() -> test(find(Anchor.class).id("diploma-1-1")).download(new ByteArrayOutputStream()));
 	}
 
 }

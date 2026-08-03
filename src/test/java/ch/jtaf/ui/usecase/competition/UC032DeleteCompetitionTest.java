@@ -32,21 +32,21 @@ class UC032DeleteCompetitionTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		assertThat($(TextField.class).single().getValue()).isEqualTo("CIS 2019");
+		assertThat(find(TextField.class).single().getValue()).isEqualTo("CIS 2019");
 	}
 
 	@Test
 	void delete_competition() {
 		// Add a competition that has no results (BR-029 prevents deleting seeded ones).
-		Grid<CompetitionRecord> competitionsGrid = $(Grid.class).id("competitions-grid");
+		Grid<CompetitionRecord> competitionsGrid = find(Grid.class).id("competitions-grid");
 		assertThat(test(competitionsGrid).size()).isEqualTo(2);
 
 		gridHeaderButton(competitionsGrid, "edit-column").click();
-		assertThat($(CompetitionDialog.class).all()).hasSize(1);
+		assertThat(find(CompetitionDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Name").withValue("").single()).setValue("Disposable");
-		test($(DatePicker.class).withCaption("Date").single()).setValue(LocalDate.now());
-		$(Button.class).id("edit-save").click();
+		test(find(TextField.class).withCaption("Name").withValue("").single()).setValue("Disposable");
+		test(find(DatePicker.class).withCaption("Date").single()).setValue(LocalDate.now());
+		find(Button.class).id("edit-save").click();
 
 		assertThat(test(competitionsGrid).size()).isEqualTo(3);
 		int deleteRow = 2;
@@ -54,17 +54,17 @@ class UC032DeleteCompetitionTest extends AbstractViewTest {
 
 		// User cancels — dialog closes and the competition stays.
 		clickDeleteOnRow(competitionsGrid, deleteRow);
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-cancel").click();
+		find(Button.class).id("delete-confirm-dialog-cancel").click();
 
-		assertThat($(ConfirmDialog.class).all()).isEmpty();
+		assertThat(find(ConfirmDialog.class).all()).isEmpty();
 		assertThat(test(competitionsGrid).size()).isEqualTo(3);
 
 		// User confirms — competition row is removed.
 		clickDeleteOnRow(competitionsGrid, deleteRow);
-		assertThat($(ConfirmDialog.class).single().isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-confirm").click();
+		assertThat(find(ConfirmDialog.class).single().isOpened()).isTrue();
+		find(Button.class).id("delete-confirm-dialog-confirm").click();
 
 		assertThat(test(competitionsGrid).size()).isEqualTo(2);
 	}

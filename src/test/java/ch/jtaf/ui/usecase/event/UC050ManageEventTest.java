@@ -34,22 +34,22 @@ class UC050ManageEventTest extends AbstractViewTest {
 	@Test
 	void add_event() {
 		// Check content of events grid
-		Grid<EventRecord> eventsGrid = $(Grid.class).id("events-grid");
+		Grid<EventRecord> eventsGrid = find(Grid.class).id("events-grid");
 		assertThat(test(eventsGrid).size()).isEqualTo(17);
 		assertThat(test(eventsGrid).getRow(0).getName()).isEqualTo("60 m");
 
 		// Add event
 		gridHeaderButton(eventsGrid, "edit-column").click();
-		assertThat($(EventDialog.class).all()).hasSize(1);
+		assertThat(find(EventDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Abbreviation").single()).setValue("10");
-		test($(TextField.class).withCaption("Name").single()).setValue("Test");
-		test($(Select.class).withCaption("Gender").single()).selectItem("F");
-		test($(Select.class).withCaption("Event Type").single()).selectItem("RUN");
-		test($(TextField.class).withCaption("A").single()).setValue("1");
-		test($(TextField.class).withCaption("B").single()).setValue("1");
-		test($(TextField.class).withCaption("C").single()).setValue("1");
-		$(Button.class).withText("Save").single().click();
+		test(find(TextField.class).withCaption("Abbreviation").single()).setValue("10");
+		test(find(TextField.class).withCaption("Name").single()).setValue("Test");
+		test(find(Select.class).withCaption("Gender").single()).selectItem("F");
+		test(find(Select.class).withCaption("Event Type").single()).selectItem("RUN");
+		test(find(TextField.class).withCaption("A").single()).setValue("1");
+		test(find(TextField.class).withCaption("B").single()).setValue("1");
+		test(find(TextField.class).withCaption("C").single()).setValue("1");
+		find(Button.class).withText("Save").single().click();
 
 		// Check if event was added
 		assertThat(test(eventsGrid).size()).isEqualTo(18);
@@ -63,9 +63,9 @@ class UC050ManageEventTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-confirm").click();
+		find(Button.class).id("delete-confirm-dialog-confirm").click();
 
 		// Check if event was removed
 		assertThat(test(eventsGrid).size()).isEqualTo(17);

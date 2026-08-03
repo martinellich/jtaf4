@@ -32,24 +32,24 @@ class UC073RemoveAthleteFromSeriesTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		assertThat($(TextField.class).single().getValue()).isEqualTo("CIS 2019");
+		assertThat(find(TextField.class).single().getValue()).isEqualTo("CIS 2019");
 	}
 
 	@Test
 	void remove_athlete_from_series() {
-		Tabs tabs = $(Tabs.class).single();
-		tabs.setSelectedTab($(Tab.class).withText("Athletes").single());
+		Tabs tabs = find(Tabs.class).single();
+		tabs.setSelectedTab(find(Tab.class).withText("Athletes").single());
 
-		Grid<AthleteRecord> athletesGrid = $(Grid.class).id("athletes-grid");
+		Grid<AthleteRecord> athletesGrid = find(Grid.class).id("athletes-grid");
 		int baseline = test(athletesGrid).size();
 
 		// Assign an unassigned athlete so the test can remove it without altering seeded
 		// state.
 		gridHeaderButton(athletesGrid, "remove-column").click();
-		assertThat($(SearchAthleteDialog.class).all()).hasSize(1);
+		assertThat(find(SearchAthleteDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Filter").withValue("").single()).setValue("z");
-		Grid<AthleteRecord> searchAthletesGrid = $(Grid.class).id("search-athletes-grid");
+		test(find(TextField.class).withCaption("Filter").withValue("").single()).setValue("z");
+		Grid<AthleteRecord> searchAthletesGrid = find(Grid.class).id("search-athletes-grid");
 		assertThat(test(searchAthletesGrid).size()).isEqualTo(1);
 		assertThat(test(searchAthletesGrid).getRow(0).getLastName()).isEqualTo("Zimmermann");
 
@@ -66,18 +66,18 @@ class UC073RemoveAthleteFromSeriesTest extends AbstractViewTest {
 
 		// A1: user cancels — the athlete stays in the series.
 		clickRemoveOnRow(athletesGrid, newRow);
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("athlete-delete-confirm-dialog-cancel").click();
+		find(Button.class).id("athlete-delete-confirm-dialog-cancel").click();
 
-		assertThat($(ConfirmDialog.class).all()).isEmpty();
+		assertThat(find(ConfirmDialog.class).all()).isEmpty();
 		assertThat(test(athletesGrid).size()).isEqualTo(baseline + 1);
 		assertThat(test(athletesGrid).getRow(newRow).getId()).isEqualTo(newAthleteId);
 
 		// Main flow: user confirms — the CATEGORY_ATHLETE rows are deleted.
 		clickRemoveOnRow(athletesGrid, newRow);
-		assertThat($(ConfirmDialog.class).single().isOpened()).isTrue();
-		$(Button.class).id("athlete-delete-confirm-dialog-confirm").click();
+		assertThat(find(ConfirmDialog.class).single().isOpened()).isTrue();
+		find(Button.class).id("athlete-delete-confirm-dialog-confirm").click();
 
 		assertThat(test(athletesGrid).size()).isEqualTo(baseline);
 		for (int i = 0; i < baseline; i++) {

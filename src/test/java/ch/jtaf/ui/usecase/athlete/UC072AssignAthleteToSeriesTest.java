@@ -36,34 +36,34 @@ class UC072AssignAthleteToSeriesTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		TextField name = $(TextField.class).single();
+		TextField name = find(TextField.class).single();
 		assertThat(name.getValue()).isEqualTo("CIS 2019");
 	}
 
 	@Test
 	void assign_athelete() {
-		Tabs tabs = $(Tabs.class).single();
-		Tab athletes = $(Tab.class).withText("Athletes").single();
+		Tabs tabs = find(Tabs.class).single();
+		Tab athletes = find(Tab.class).withText("Athletes").single();
 		tabs.setSelectedTab(athletes);
 
 		// Check content of athletes grid
-		Grid<AthleteRecord> athletesGrid = $(Grid.class).id("athletes-grid");
+		Grid<AthleteRecord> athletesGrid = find(Grid.class).id("athletes-grid");
 		assertThat(test(athletesGrid).size()).isEqualTo(108);
 		assertThat(test(athletesGrid).getRow(0).getLastName()).isEqualTo("Berger");
 
 		// Assign athlete
 		gridHeaderButton(athletesGrid, "remove-column").click();
 
-		assertThat($(SearchAthleteDialog.class).all()).hasSize(1);
+		assertThat(find(SearchAthleteDialog.class).all()).hasSize(1);
 
 		// Test maximize and restore
-		Button toggle = $(Button.class).id("toggle");
+		Button toggle = find(Button.class).id("toggle");
 		toggle.click();
 		toggle.click();
 
-		test($(TextField.class).withCaption("Filter").withValue("").single()).setValue("z");
+		test(find(TextField.class).withCaption("Filter").withValue("").single()).setValue("z");
 
-		Grid<AthleteRecord> searchAthletesGrid = $(Grid.class).id("search-athletes-grid");
+		Grid<AthleteRecord> searchAthletesGrid = find(Grid.class).id("search-athletes-grid");
 		assertThat(test(searchAthletesGrid).size()).isEqualTo(1);
 
 		assertThat(test(searchAthletesGrid).getRow(0).getLastName()).isEqualTo("Zimmermann");
@@ -87,9 +87,9 @@ class UC072AssignAthleteToSeriesTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("athlete-delete-confirm-dialog-confirm").click();
+		find(Button.class).id("athlete-delete-confirm-dialog-confirm").click();
 
 		// Check if athlete was removed
 		assertThat(test(athletesGrid).size()).isEqualTo(108);

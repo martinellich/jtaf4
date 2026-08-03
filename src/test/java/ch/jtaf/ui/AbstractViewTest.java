@@ -80,10 +80,10 @@ public abstract class AbstractViewTest extends SpringBrowserlessTest {
 	protected Grid<SeriesRecord> navigateToSeriesList() {
 		navigate(OrganizationsView.class);
 
-		H1 h1 = $(H1.class).id("view-title");
+		H1 h1 = find(H1.class).id("view-title");
 		assertThat(h1.getText()).isEqualTo("Organizations");
 
-		Grid<OrganizationRecord> organizationsGrid = $(Grid.class).id("organizations-grid");
+		Grid<OrganizationRecord> organizationsGrid = find(Grid.class).id("organizations-grid");
 		assertThat(test(organizationsGrid).size()).isEqualTo(2);
 
 		test(organizationsGrid).getCellComponent(0, "edit-column")
@@ -93,10 +93,10 @@ public abstract class AbstractViewTest extends SpringBrowserlessTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		h1 = $(H1.class).id("view-title");
+		h1 = find(H1.class).id("view-title");
 		assertThat(h1.getText()).isEqualTo("Series");
 
-		Grid<SeriesRecord> seriesGrid = $(Grid.class).id("series-grid");
+		Grid<SeriesRecord> seriesGrid = find(Grid.class).id("series-grid");
 		assertThat(test(seriesGrid).size()).isEqualTo(2);
 
 		SeriesRecord seriesRecord = test(seriesGrid).getRow(0);

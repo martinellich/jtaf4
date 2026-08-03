@@ -29,21 +29,21 @@ class UC090ViewDashboardTest extends AbstractViewTest {
 
 	@Test
 	void title_is_dashboard() {
-		H1 h1 = $(H1.class).id("view-title");
+		H1 h1 = find(H1.class).id("view-title");
 		assertThat(h1.getText()).isEqualTo("Dashboard");
 	}
 
 	@Test
 	void series_are_displayed() {
-		assertThat($(HorizontalLayout.class).withClassName("series-layout").all()).hasSize(4);
+		assertThat(find(HorizontalLayout.class).withClassName("series-layout").all()).hasSize(4);
 	}
 
 	@Test
 	void enter_results_is_enabled() {
-		assertThat($(Button.class).withText("Enter Results").all()).hasSize(6);
+		assertThat(find(Button.class).withText("Enter Results").all()).hasSize(6);
 
 		try {
-			$(Button.class).id("logout").click();
+			find(Button.class).id("logout").click();
 		}
 		catch (Exception _) {
 			// https://github.com/mvysny/karibu-testing/issues/148

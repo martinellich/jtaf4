@@ -30,25 +30,25 @@ class UC011EditOrganizationTest extends AbstractViewTest {
 
 	@Test
 	void edit_organization() {
-		Grid<OrganizationRecord> organizationGrid = $(Grid.class).id("organizations-grid");
+		Grid<OrganizationRecord> organizationGrid = find(Grid.class).id("organizations-grid");
 		String originalName = test(organizationGrid).getRow(0).getName();
 
 		test(organizationGrid).clickRow(0);
 
-		assertThat($(OrganizationDialog.class).all()).hasSize(1);
+		assertThat(find(OrganizationDialog.class).all()).hasSize(1);
 
-		TextField name = $(TextField.class).id("name");
+		TextField name = find(TextField.class).id("name");
 		assertThat(name.getValue()).isEqualTo(originalName);
 
 		test(name).setValue(originalName + " Renamed");
-		$(Button.class).withText("Save").single().click();
+		find(Button.class).withText("Save").single().click();
 
 		assertThat(test(organizationGrid).getRow(0).getName()).isEqualTo(originalName + " Renamed");
 
 		// Restore original value
 		test(organizationGrid).clickRow(0);
-		test($(TextField.class).id("name")).setValue(originalName);
-		$(Button.class).withText("Save").single().click();
+		test(find(TextField.class).id("name")).setValue(originalName);
+		find(Button.class).withText("Save").single().click();
 
 		assertThat(test(organizationGrid).getRow(0).getName()).isEqualTo(originalName);
 	}

@@ -29,7 +29,7 @@ class UC091DownloadSeriesRankingTest extends AbstractViewTest {
 	@Test
 	void series_ranking() {
 		assertThatNoException()
-			.isThrownBy(() -> test($(Anchor.class).id("series-ranking-1")).download(new ByteArrayOutputStream()));
+			.isThrownBy(() -> test(find(Anchor.class).id("series-ranking-1")).download(new ByteArrayOutputStream()));
 	}
 
 }

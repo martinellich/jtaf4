@@ -26,7 +26,7 @@ class UC004SignOutTest extends AbstractViewTest {
 
 	@Test
 	void logout_button_visible_when_signed_in() {
-		Button logout = $(Button.class).id("logout");
+		Button logout = find(Button.class).id("logout");
 		assertThat(logout.isVisible()).isTrue();
 		assertThat(logout.getText()).contains("simon@martinelli.ch");
 

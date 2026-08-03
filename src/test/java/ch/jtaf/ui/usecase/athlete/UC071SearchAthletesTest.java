@@ -32,15 +32,15 @@ class UC071SearchAthletesTest extends AbstractViewTest {
 	@Test
 	void filter_and_sort() {
 		// Check number of athletes before filtering
-		Grid<AthleteRecord> athletesGrid = $(Grid.class).id("athletes-grid");
+		Grid<AthleteRecord> athletesGrid = find(Grid.class).id("athletes-grid");
 		assertThat(test(athletesGrid).size()).isEqualTo(140);
 
 		// Filter
-		test($(TextField.class).id("filter")).setValue("Martinelli");
+		test(find(TextField.class).id("filter")).setValue("Martinelli");
 		assertThat(test(athletesGrid).size()).isEqualTo(1);
 
 		// Remove filter
-		test($(TextField.class).id("filter")).setValue("");
+		test(find(TextField.class).id("filter")).setValue("");
 		assertThat(test(athletesGrid).size()).isEqualTo(140);
 
 		// Sort grid

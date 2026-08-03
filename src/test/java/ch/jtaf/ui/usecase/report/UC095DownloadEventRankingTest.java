@@ -29,7 +29,7 @@ class UC095DownloadEventRankingTest extends AbstractViewTest {
 	@Test
 	void event_ranking() {
 		assertThatNoException()
-			.isThrownBy(() -> test($(Anchor.class).id("event-ranking-1-1")).download(new ByteArrayOutputStream()));
+			.isThrownBy(() -> test(find(Anchor.class).id("event-ranking-1-1")).download(new ByteArrayOutputStream()));
 	}
 
 }

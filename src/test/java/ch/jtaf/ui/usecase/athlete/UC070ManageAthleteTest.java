@@ -34,19 +34,19 @@ class UC070ManageAthleteTest extends AbstractViewTest {
 	@Test
 	void add_athlete() {
 		// Check content of athletes grid
-		Grid<AthleteRecord> athletesGrid = $(Grid.class).id("athletes-grid");
+		Grid<AthleteRecord> athletesGrid = find(Grid.class).id("athletes-grid");
 		assertThat(test(athletesGrid).size()).isEqualTo(140);
 		assertThat(test(athletesGrid).getRow(0).getLastName()).isEqualTo("Bangerter");
 
 		// Add a new athlete
 		gridHeaderButton(athletesGrid, "edit-column").click();
-		assertThat($(AthleteDialog.class).all()).hasSize(1);
+		assertThat(find(AthleteDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Last Name").single()).setValue("Test");
-		test($(TextField.class).withCaption("First Name").single()).setValue("Test");
-		test($(Select.class).withCaption("Gender").single()).selectItem("F");
-		test($(TextField.class).withCaption("Year").single()).setValue("2000");
-		$(Button.class).withText("Save").single().click();
+		test(find(TextField.class).withCaption("Last Name").single()).setValue("Test");
+		test(find(TextField.class).withCaption("First Name").single()).setValue("Test");
+		test(find(Select.class).withCaption("Gender").single()).selectItem("F");
+		test(find(TextField.class).withCaption("Year").single()).setValue("2000");
+		find(Button.class).withText("Save").single().click();
 
 		// Check if athlete was added
 		assertThat(test(athletesGrid).size()).isEqualTo(141);
@@ -60,9 +60,9 @@ class UC070ManageAthleteTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-confirm").click();
+		find(Button.class).id("delete-confirm-dialog-confirm").click();
 
 		// Check that athlete was removed
 		assertThat(test(athletesGrid).size()).isEqualTo(140);

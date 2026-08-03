@@ -35,7 +35,7 @@ class UC002ConfirmEmailTest extends AbstractViewTest {
 
 		UI.getCurrent().navigate("confirm", QueryParameters.simple(Map.of("cf", user.getConfirmationId())));
 
-		assertThat($(H1.class).withText("The confirmation was successful you can now log in.").all()).hasSize(1);
+		assertThat(find(H1.class).withText("The confirmation was successful you can now log in.").all()).hasSize(1);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ class UC002ConfirmEmailTest extends AbstractViewTest {
 
 		navigate(ConfirmView.class);
 
-		assertThat($(H1.class).withText("The confirmation was not successful.").all()).hasSize(1);
+		assertThat(find(H1.class).withText("The confirmation was not successful.").all()).hasSize(1);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ class UC002ConfirmEmailTest extends AbstractViewTest {
 
 		UI.getCurrent().navigate("confirm", QueryParameters.simple(Map.of("cf", "abc")));
 
-		assertThat($(H1.class).withText("The confirmation was not successful.").all()).hasSize(1);
+		assertThat(find(H1.class).withText("The confirmation was not successful.").all()).hasSize(1);
 	}
 
 }

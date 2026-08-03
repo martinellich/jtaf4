@@ -30,14 +30,14 @@ class UC098GenerateEmptyResultSheetsTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		Tabs tabs = $(Tabs.class).single();
-		Tab categories = $(Tab.class).withText("Categories").single();
+		Tabs tabs = find(Tabs.class).single();
+		Tab categories = find(Tab.class).withText("Categories").single();
 		tabs.setSelectedTab(categories);
 	}
 
 	@Test
 	void empty_sheets_per_category() {
-		Grid<CategoryRecord> categoriesGrid = $(Grid.class).id("categories-grid");
+		Grid<CategoryRecord> categoriesGrid = find(Grid.class).id("categories-grid");
 		Anchor sheets = test(categoriesGrid).getCellComponent(0, 4)
 			.getChildren()
 			.filter(Anchor.class::isInstance)

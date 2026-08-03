@@ -27,12 +27,12 @@ class UC083FilterAthletesForResultEntryTest extends AbstractViewTest {
 
 	@Test
 	void search_with_id() {
-		$(Button.class).id("enter-results-1-1").click();
+		find(Button.class).id("enter-results-1-1").click();
 
-		test($(TextField.class).id("filter")).setValue("140");
+		test(find(TextField.class).id("filter")).setValue("140");
 
-		assertThat($(TextField.class).withCaption("80 m").single().getValue()).isEqualTo("12.12");
-		assertThat($(TextField.class).id("points-0").getValue()).isEqualTo("402");
+		assertThat(find(TextField.class).withCaption("80 m").single().getValue()).isEqualTo("12.12");
+		assertThat(find(TextField.class).id("points-0").getValue()).isEqualTo("402");
 	}
 
 }

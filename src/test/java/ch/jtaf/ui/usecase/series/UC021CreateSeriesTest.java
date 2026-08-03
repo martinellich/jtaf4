@@ -35,24 +35,24 @@ class UC021CreateSeriesTest extends AbstractViewTest {
 	@Test
 	void add_series() {
 		// Add new series
-		Grid<SeriesRecord> initialGrid = $(Grid.class).id("series-grid");
+		Grid<SeriesRecord> initialGrid = find(Grid.class).id("series-grid");
 		gridHeaderButton(initialGrid, "delete-column").click();
 
-		TextField textField = $(TextField.class).single();
+		TextField textField = find(TextField.class).single();
 		assertThat(textField.getValue()).isEmpty();
 
 		test(textField).setValue("Test");
 
-		$(Button.class).id("save-series").click();
+		find(Button.class).id("save-series").click();
 
-		Notification savedNotification = $(Notification.class).single();
+		Notification savedNotification = find(Notification.class).single();
 		assertThat(test(savedNotification).getText()).isEqualTo("Series saved");
 		savedNotification.close();
 
 		navigate(SeriesListView.class);
 
 		// Check if series was added
-		Grid<SeriesRecord> seriesGrid = $(Grid.class).id("series-grid");
+		Grid<SeriesRecord> seriesGrid = find(Grid.class).id("series-grid");
 		assertThat(test(seriesGrid).size()).isEqualTo(3);
 		assertThat(test(seriesGrid).getRow(0).getName()).isEqualTo("Test");
 
@@ -64,9 +64,9 @@ class UC021CreateSeriesTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-series-confirm-dialog-confirm").click();
+		find(Button.class).id("delete-series-confirm-dialog-confirm").click();
 
 		// Check if series was removed
 		assertThat(test(seriesGrid).size()).isEqualTo(2);

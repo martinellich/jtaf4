@@ -21,7 +21,7 @@ class ProtectedViewTest extends AbstractViewTest {
 		UI.getCurrent().navigate(ClubsView.class);
 
 		// Assert that the user was rerouted to organization
-		H1 h1 = $(H1.class).id("view-title");
+		H1 h1 = find(H1.class).id("view-title");
 		assertThat(h1.getText()).isEqualTo("Organizations");
 	}
 

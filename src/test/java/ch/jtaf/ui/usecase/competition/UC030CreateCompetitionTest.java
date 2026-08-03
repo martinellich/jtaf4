@@ -36,24 +36,24 @@ class UC030CreateCompetitionTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		TextField name = $(TextField.class).single();
+		TextField name = find(TextField.class).single();
 		assertThat(name.getValue()).isEqualTo("CIS 2019");
 	}
 
 	@Test
 	void add_competition() {
 		// Check content of competitions grid
-		Grid<CompetitionRecord> competitionsGrid = $(Grid.class).id("competitions-grid");
+		Grid<CompetitionRecord> competitionsGrid = find(Grid.class).id("competitions-grid");
 		assertThat(test(competitionsGrid).size()).isEqualTo(2);
 		assertThat(test(competitionsGrid).getRow(0).getName()).isEqualTo("1. CIS Twann");
 
 		// Add competition
 		gridHeaderButton(competitionsGrid, "edit-column").click();
-		assertThat($(CompetitionDialog.class).all()).hasSize(1);
+		assertThat(find(CompetitionDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Name").withValue("").single()).setValue("Test");
-		test($(DatePicker.class).withCaption("Date").single()).setValue(LocalDate.now());
-		$(Button.class).id("edit-save").click();
+		test(find(TextField.class).withCaption("Name").withValue("").single()).setValue("Test");
+		test(find(DatePicker.class).withCaption("Date").single()).setValue(LocalDate.now());
+		find(Button.class).id("edit-save").click();
 
 		// Check if competition was added
 		assertThat(test(competitionsGrid).size()).isEqualTo(3);
@@ -67,9 +67,9 @@ class UC030CreateCompetitionTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-confirm").click();
+		find(Button.class).id("delete-confirm-dialog-confirm").click();
 
 		// Check if competition was removed
 		assertThat(test(competitionsGrid).size()).isEqualTo(2);

@@ -27,7 +27,7 @@ class UC005SwitchLanguageTest extends AbstractViewTest {
 
 			navigate(DashboardView.class);
 
-			assertThat($(Button.class).withText("Resultate eingeben").all()).hasSize(6);
+			assertThat(find(Button.class).withText("Resultate eingeben").all()).hasSize(6);
 		}
 		finally {
 			Locale.setDefault(Locale.ENGLISH);

@@ -33,13 +33,13 @@ class UC012DeleteOrganizationTest extends AbstractViewTest {
 		navigate(OrganizationsView.class);
 
 		// Add an organization that is safe to delete (no series, competitions, etc.).
-		Grid<OrganizationRecord> organizationGrid = $(Grid.class).id("organizations-grid");
+		Grid<OrganizationRecord> organizationGrid = find(Grid.class).id("organizations-grid");
 		gridHeaderButton(organizationGrid, "edit-column").click();
-		assertThat($(OrganizationDialog.class).all()).hasSize(1);
+		assertThat(find(OrganizationDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Key").single()).setValue("DEL");
-		test($(TextField.class).withCaption("Name").single()).setValue("Disposable");
-		$(Button.class).withText("Save").single().click();
+		test(find(TextField.class).withCaption("Key").single()).setValue("DEL");
+		test(find(TextField.class).withCaption("Name").single()).setValue("Disposable");
+		find(Button.class).withText("Save").single().click();
 
 		assertThat(test(organizationGrid).size()).isEqualTo(3);
 		int deleteRow = 2;
@@ -47,17 +47,17 @@ class UC012DeleteOrganizationTest extends AbstractViewTest {
 
 		// A2: user cancels — confirmation dialog closes and the organization stays.
 		clickDeleteOnRow(organizationGrid, deleteRow);
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-organization-confirm-dialog-cancel").click();
+		find(Button.class).id("delete-organization-confirm-dialog-cancel").click();
 
-		assertThat($(ConfirmDialog.class).all()).isEmpty();
+		assertThat(find(ConfirmDialog.class).all()).isEmpty();
 		assertThat(test(organizationGrid).size()).isEqualTo(3);
 
 		// Main flow: user confirms — organization and membership links are removed.
 		clickDeleteOnRow(organizationGrid, deleteRow);
-		assertThat($(ConfirmDialog.class).single().isOpened()).isTrue();
-		$(Button.class).id("delete-organization-confirm-dialog-confirm").click();
+		assertThat(find(ConfirmDialog.class).single().isOpened()).isTrue();
+		find(Button.class).id("delete-organization-confirm-dialog-confirm").click();
 
 		assertThat(test(organizationGrid).size()).isEqualTo(2);
 		assertThat(test(organizationGrid).getRow(0).getOrganizationKey()).isEqualTo("CIS");

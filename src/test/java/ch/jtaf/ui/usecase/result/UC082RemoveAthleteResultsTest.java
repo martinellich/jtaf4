@@ -28,25 +28,25 @@ class UC082RemoveAthleteResultsTest extends AbstractViewTest {
 
 	@Test
 	void remove_results() {
-		$(Button.class).id("enter-results-1-1").click();
+		find(Button.class).id("enter-results-1-1").click();
 
-		test($(TextField.class).id("filter")).setValue("Martinelli");
+		test(find(TextField.class).id("filter")).setValue("Martinelli");
 
 		// Pre-existing result for Martinelli/80 m is "12.12" (see UC-080).
-		assertThat($(TextField.class).withCaption("80 m").single().getValue()).isEqualTo("12.12");
+		assertThat(find(TextField.class).withCaption("80 m").single().getValue()).isEqualTo("12.12");
 
-		$(Button.class).withText("Remove results").single().click();
+		find(Button.class).withText("Remove results").single().click();
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).id("remove-results");
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).id("remove-results");
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("remove-results-confirm").click();
+		find(Button.class).id("remove-results-confirm").click();
 
 		// Form is rebuilt with cleared values
-		assertThat($(TextField.class).withCaption("80 m").single().getValue()).isEmpty();
-		assertThat($(TextField.class).id("points-0").getValue()).isEmpty();
+		assertThat(find(TextField.class).withCaption("80 m").single().getValue()).isEmpty();
+		assertThat(find(TextField.class).id("points-0").getValue()).isEmpty();
 
 		// Restore original value to keep other tests deterministic
-		test($(TextField.class).id("result-0")).setValue("12.12");
+		test(find(TextField.class).id("result-0")).setValue("12.12");
 	}
 
 }

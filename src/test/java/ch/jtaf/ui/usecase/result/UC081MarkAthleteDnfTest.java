@@ -28,11 +28,11 @@ class UC081MarkAthleteDnfTest extends AbstractViewTest {
 
 	@Test
 	void toggle_dnf() {
-		$(Button.class).id("enter-results-1-1").click();
+		find(Button.class).id("enter-results-1-1").click();
 
-		test($(TextField.class).id("filter")).setValue("Martinelli");
+		test(find(TextField.class).id("filter")).setValue("Martinelli");
 
-		Checkbox dnf = $(Checkbox.class).withCaption("DNF").single();
+		Checkbox dnf = find(Checkbox.class).withCaption("DNF").single();
 		assertThat(dnf.getValue()).isFalse();
 
 		test(dnf).click();

@@ -31,47 +31,47 @@ class UC080EnterResultTest extends AbstractViewTest {
 
 	@Test
 	void check_pre_entered_results() {
-		$(Button.class).id("enter-results-1-1").click();
+		find(Button.class).id("enter-results-1-1").click();
 
-		test($(TextField.class).id("filter")).setValue("Martinelli");
+		test(find(TextField.class).id("filter")).setValue("Martinelli");
 
-		assertThat($(TextField.class).withCaption("80 m").single().getValue()).isEqualTo("12.12");
-		assertThat($(TextField.class).id("points-0").getValue()).isEqualTo("402");
+		assertThat(find(TextField.class).withCaption("80 m").single().getValue()).isEqualTo("12.12");
+		assertThat(find(TextField.class).id("points-0").getValue()).isEqualTo("402");
 	}
 
 	@Test
 	void enter_new_results() {
-		$(Button.class).id("enter-results-1-1").click();
+		find(Button.class).id("enter-results-1-1").click();
 
-		test($(TextField.class).id("filter")).setValue("Ansari");
+		test(find(TextField.class).id("filter")).setValue("Ansari");
 
-		test($(TextField.class).id("result-0")).setValue("12.34");
-		assertThat($(TextField.class).id("points-0").getValue()).isEqualTo("48");
+		test(find(TextField.class).id("result-0")).setValue("12.34");
+		assertThat(find(TextField.class).id("points-0").getValue()).isEqualTo("48");
 
-		test($(TextField.class).id("result-1")).setValue("2.11");
-		assertThat($(TextField.class).id("points-1").getValue()).isEqualTo("108");
+		test(find(TextField.class).id("result-1")).setValue("2.11");
+		assertThat(find(TextField.class).id("points-1").getValue()).isEqualTo("108");
 
-		test($(TextField.class).id("result-2")).setValue("23.45");
-		assertThat($(TextField.class).id("points-2").getValue()).isEqualTo("252");
+		test(find(TextField.class).id("result-2")).setValue("23.45");
+		assertThat(find(TextField.class).id("points-2").getValue()).isEqualTo("252");
 	}
 
 	@Test
 	void enter_new_results_incl_long_run() {
-		$(Button.class).id("enter-results-2-1").click();
+		find(Button.class).id("enter-results-2-1").click();
 
-		test($(TextField.class).id("filter")).setValue("Amos");
+		test(find(TextField.class).id("filter")).setValue("Amos");
 
-		test($(TextField.class).id("result-0")).setValue("12.34");
-		assertThat($(TextField.class).id("points-0").getValue()).isEqualTo("453");
+		test(find(TextField.class).id("result-0")).setValue("12.34");
+		assertThat(find(TextField.class).id("points-0").getValue()).isEqualTo("453");
 
-		test($(TextField.class).id("result-1")).setValue("2.11");
-		assertThat($(TextField.class).id("points-1").getValue()).isEqualTo("146");
+		test(find(TextField.class).id("result-1")).setValue("2.11");
+		assertThat(find(TextField.class).id("points-1").getValue()).isEqualTo("146");
 
-		test($(TextField.class).id("result-2")).setValue("23.45");
-		assertThat($(TextField.class).id("points-2").getValue()).isEqualTo("340");
+		test(find(TextField.class).id("result-2")).setValue("23.45");
+		assertThat(find(TextField.class).id("points-2").getValue()).isEqualTo("340");
 
-		test($(TextField.class).id("result-3")).setValue("2.52");
-		assertThat($(TextField.class).id("points-3").getValue()).isEqualTo("68");
+		test(find(TextField.class).id("result-3")).setValue("2.52");
+		assertThat(find(TextField.class).id("points-3").getValue()).isEqualTo("68");
 	}
 
 }

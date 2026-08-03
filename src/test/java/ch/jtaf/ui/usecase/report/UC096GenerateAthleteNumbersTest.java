@@ -31,7 +31,7 @@ class UC096GenerateAthleteNumbersTest extends AbstractViewTest {
 
 	@Test
 	void numbers_ordered_by_athlete() {
-		Grid<CompetitionRecord> competitionsGrid = $(Grid.class).id("competitions-grid");
+		Grid<CompetitionRecord> competitionsGrid = find(Grid.class).id("competitions-grid");
 		Anchor numbers = test(competitionsGrid).getCellComponent(0, 2)
 			.getChildren()
 			.filter(Anchor.class::isInstance)

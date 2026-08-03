@@ -40,7 +40,7 @@ class UC040ManageCategoryTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		TextField name = $(TextField.class).single();
+		TextField name = find(TextField.class).single();
 		assertThat(name.getValue()).isEqualTo("CIS 2019");
 	}
 
@@ -66,32 +66,32 @@ class UC040ManageCategoryTest extends AbstractViewTest {
 	}
 
 	private Grid<CategoryRecord> openCategoriesTab() {
-		Tabs tabs = $(Tabs.class).single();
-		Tab categories = $(Tab.class).withText("Categories").single();
+		Tabs tabs = find(Tabs.class).single();
+		Tab categories = find(Tab.class).withText("Categories").single();
 		tabs.setSelectedTab(categories);
-		return $(Grid.class).id("categories-grid");
+		return find(Grid.class).id("categories-grid");
 	}
 
 	private void addCategory() {
-		Grid<CategoryRecord> categoriesGrid = $(Grid.class).id("categories-grid");
+		Grid<CategoryRecord> categoriesGrid = find(Grid.class).id("categories-grid");
 		gridHeaderButton(categoriesGrid, "edit-column").click();
-		assertThat($(CategoryDialog.class).all()).hasSize(1);
+		assertThat(find(CategoryDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Abbreviation").withValue("").single()).setValue("1");
-		test($(TextField.class).withCaption("Name").withValue("").single()).setValue("Test");
-		test($(Select.class).withCaption("Gender").single()).selectItem("M");
-		test($(TextField.class).withCaption("Year from").single()).setValue("1999");
-		test($(TextField.class).withCaption("Year to").single()).setValue("2000");
-		$(Button.class).id("edit-save").click();
+		test(find(TextField.class).withCaption("Abbreviation").withValue("").single()).setValue("1");
+		test(find(TextField.class).withCaption("Name").withValue("").single()).setValue("Test");
+		test(find(Select.class).withCaption("Gender").single()).selectItem("M");
+		test(find(TextField.class).withCaption("Year from").single()).setValue("1999");
+		test(find(TextField.class).withCaption("Year to").single()).setValue("2000");
+		find(Button.class).id("edit-save").click();
 	}
 
 	private Grid<?> openAssignEventDialog(Grid<CategoryRecord> categoriesGrid) {
 		test(categoriesGrid).clickRow(0);
 
-		Grid<?> categoryEventsGrid = $(Grid.class).id("category-events-grid");
+		Grid<?> categoryEventsGrid = find(Grid.class).id("category-events-grid");
 		gridHeaderButton(categoryEventsGrid, "edit-column").click();
 
-		Button toggle = $(Button.class).id("search-event-dialog-toggle");
+		Button toggle = find(Button.class).id("search-event-dialog-toggle");
 		toggle.click();
 		toggle.click();
 
@@ -99,23 +99,23 @@ class UC040ManageCategoryTest extends AbstractViewTest {
 	}
 
 	private void assertEventsGridFiltering() {
-		Grid<EventRecord> eventsGrid = $(Grid.class).id("events-grid");
+		Grid<EventRecord> eventsGrid = find(Grid.class).id("events-grid");
 		assertGridSize(eventsGrid, 9);
 
-		test($(TextField.class).id("event-filter")).setValue("w");
+		test(find(TextField.class).id("event-filter")).setValue("w");
 		assertGridSize(eventsGrid, 1);
 
-		test($(TextField.class).id("event-filter")).setValue("2");
+		test(find(TextField.class).id("event-filter")).setValue("2");
 		assertGridSize(eventsGrid, 0);
 
-		test($(TextField.class).id("event-filter")).setValue("");
+		test(find(TextField.class).id("event-filter")).setValue("");
 		assertGridSize(eventsGrid, 9);
 	}
 
 	private void assignFirstEvent() {
-		Grid<EventRecord> eventsGrid = $(Grid.class).id("events-grid");
+		Grid<EventRecord> eventsGrid = find(Grid.class).id("events-grid");
 		((Button) test(eventsGrid).getCellComponent(0, "assign-column")).click();
-		$(SearchEventDialog.class).id("search-event-dialog").close();
+		find(SearchEventDialog.class).id("search-event-dialog").close();
 	}
 
 	private void removeFirstRow(Grid<?> grid, String confirmDialogId) {
@@ -126,9 +126,9 @@ class UC040ManageCategoryTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).id(confirmDialogId);
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).id(confirmDialogId);
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id(confirmDialogId + "-confirm").click();
+		find(Button.class).id(confirmDialogId + "-confirm").click();
 	}
 
 	private void assertCategoriesGrid(Grid<CategoryRecord> grid, int expectedSize, String firstAbbreviation) {

@@ -32,25 +32,25 @@ class UC031EditCompetitionTest extends AbstractViewTest {
 
 	@Test
 	void edit_competition() {
-		Grid<CompetitionRecord> competitionsGrid = $(Grid.class).id("competitions-grid");
+		Grid<CompetitionRecord> competitionsGrid = find(Grid.class).id("competitions-grid");
 		assertThat(test(competitionsGrid).size()).isEqualTo(2);
 		assertThat(test(competitionsGrid).getRow(0).getName()).isEqualTo("1. CIS Twann");
 
 		test(competitionsGrid).clickRow(0);
-		assertThat($(CompetitionDialog.class).all()).hasSize(1);
+		assertThat(find(CompetitionDialog.class).all()).hasSize(1);
 
-		TextField name = $(TextField.class).withCaption("Name").withValue("1. CIS Twann").single();
+		TextField name = find(TextField.class).withCaption("Name").withValue("1. CIS Twann").single();
 
 		test(name).setValue("1. CIS Twann Renamed");
-		$(Button.class).id("edit-save").click();
+		find(Button.class).id("edit-save").click();
 
 		assertThat(test(competitionsGrid).getRow(0).getName()).isEqualTo("1. CIS Twann Renamed");
 
 		// Restore original name
 		test(competitionsGrid).clickRow(0);
-		test($(TextField.class).withCaption("Name").withValue("1. CIS Twann Renamed").single())
+		test(find(TextField.class).withCaption("Name").withValue("1. CIS Twann Renamed").single())
 			.setValue("1. CIS Twann");
-		$(Button.class).id("edit-save").click();
+		find(Button.class).id("edit-save").click();
 
 		assertThat(test(competitionsGrid).getRow(0).getName()).isEqualTo("1. CIS Twann");
 	}

@@ -24,13 +24,13 @@ class UC001RegisterAccountTest extends AbstractViewTest {
 
 		navigate(RegisterView.class);
 
-		test($(TextField.class).withCaption("First Name").single()).setValue("John");
-		test($(TextField.class).withCaption("Last Name").single()).setValue("Doe");
-		test($(EmailField.class).withCaption("Email").single()).setValue("john@doe.dev");
-		test($(PasswordField.class).withCaption("Password").single()).setValue("pass");
-		test($(Button.class).withText("Register").single()).click();
+		test(find(TextField.class).withCaption("First Name").single()).setValue("John");
+		test(find(TextField.class).withCaption("Last Name").single()).setValue("Doe");
+		test(find(EmailField.class).withCaption("Email").single()).setValue("john@doe.dev");
+		test(find(PasswordField.class).withCaption("Password").single()).setValue("pass");
+		test(find(Button.class).withText("Register").single()).click();
 
-		Notification notification = $(Notification.class).single();
+		Notification notification = find(Notification.class).single();
 		assertThat(test(notification).getText())
 			.isEqualTo("Thanks for registering. An email was sent to your address. Please check your inbox.");
 	}

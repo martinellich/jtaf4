@@ -34,33 +34,33 @@ class UC041AssignEventToCategoryTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		assertThat($(TextField.class).single().getValue()).isEqualTo("CIS 2019");
+		assertThat(find(TextField.class).single().getValue()).isEqualTo("CIS 2019");
 	}
 
 	@Test
 	void assign_event_to_category() {
-		Tabs tabs = $(Tabs.class).single();
-		tabs.setSelectedTab($(Tab.class).withText("Categories").single());
+		Tabs tabs = find(Tabs.class).single();
+		tabs.setSelectedTab(find(Tab.class).withText("Categories").single());
 
-		Grid<CategoryRecord> categoriesGrid = $(Grid.class).id("categories-grid");
+		Grid<CategoryRecord> categoriesGrid = find(Grid.class).id("categories-grid");
 		test(categoriesGrid).clickRow(0);
-		assertThat($(CategoryDialog.class).all()).hasSize(1);
+		assertThat(find(CategoryDialog.class).all()).hasSize(1);
 
-		Grid<CategoryEventVO> categoryEventsGrid = $(Grid.class).id("category-events-grid");
+		Grid<CategoryEventVO> categoryEventsGrid = find(Grid.class).id("category-events-grid");
 		int initialSize = test(categoryEventsGrid).size();
 		int maxPosition = test(categoryEventsGrid).getRow(initialSize - 1).position();
 
 		// Open the search dialog and assign an unassigned event.
 		gridHeaderButton(categoryEventsGrid, "edit-column").click();
-		assertThat($(SearchEventDialog.class).all()).hasSize(1);
+		assertThat(find(SearchEventDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).id("event-filter")).setValue("ball");
-		Grid<EventRecord> eventsGrid = $(Grid.class).id("events-grid");
+		test(find(TextField.class).id("event-filter")).setValue("ball");
+		Grid<EventRecord> eventsGrid = find(Grid.class).id("events-grid");
 		assertThat(test(eventsGrid).size()).isEqualTo(1);
 		assertThat(test(eventsGrid).getRow(0).getAbbreviation()).isEqualTo("ball");
 
 		((Button) test(eventsGrid).getCellComponent(0, "assign-column")).click();
-		$(SearchEventDialog.class).id("search-event-dialog").close();
+		find(SearchEventDialog.class).id("search-event-dialog").close();
 
 		// Postcondition: event count grew by one and BR-034 sets the next position.
 		assertThat(test(categoryEventsGrid).size()).isEqualTo(initialSize + 1);
@@ -70,9 +70,9 @@ class UC041AssignEventToCategoryTest extends AbstractViewTest {
 
 		// Reopening the search dialog must no longer offer the just-assigned event.
 		gridHeaderButton(categoryEventsGrid, "edit-column").click();
-		test($(TextField.class).id("event-filter")).setValue("ball");
-		assertThat(test($(Grid.class).id("events-grid")).size()).isZero();
-		$(SearchEventDialog.class).id("search-event-dialog").close();
+		test(find(TextField.class).id("event-filter")).setValue("ball");
+		assertThat(test(find(Grid.class).id("events-grid")).size()).isZero();
+		find(SearchEventDialog.class).id("search-event-dialog").close();
 	}
 
 }

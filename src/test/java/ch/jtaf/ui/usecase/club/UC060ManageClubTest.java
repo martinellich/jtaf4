@@ -33,22 +33,22 @@ class UC060ManageClubTest extends AbstractViewTest {
 	@Test
 	void add_club() {
 		// Check content of clubs grid
-		Grid<ClubRecord> clubsGrid = $(Grid.class).id("clubs-grid");
+		Grid<ClubRecord> clubsGrid = find(Grid.class).id("clubs-grid");
 		assertThat(test(clubsGrid).size()).isEqualTo(4);
 		assertThat(test(clubsGrid).getRow(0).getName()).isEqualTo("Erlach");
 
 		// Add new club
 		gridHeaderButton(clubsGrid, "edit-column").click();
-		assertThat($(ClubDialog.class).all()).hasSize(1);
+		assertThat(find(ClubDialog.class).all()).hasSize(1);
 
 		// Test maximize and restore
-		Button toggle = $(Button.class).id("toggle");
+		Button toggle = find(Button.class).id("toggle");
 		toggle.click();
 		toggle.click();
 
-		test($(TextField.class).withCaption("Abbreviation").single()).setValue("Test");
-		test($(TextField.class).withCaption("Name").single()).setValue("Test");
-		$(Button.class).withText("Save").single().click();
+		test(find(TextField.class).withCaption("Abbreviation").single()).setValue("Test");
+		test(find(TextField.class).withCaption("Name").single()).setValue("Test");
+		find(Button.class).withText("Save").single().click();
 
 		// Check if club was added
 		assertThat(test(clubsGrid).size()).isEqualTo(5);
@@ -62,9 +62,9 @@ class UC060ManageClubTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-confirm-dialog-confirm").click();
+		find(Button.class).id("delete-confirm-dialog-confirm").click();
 
 		// Check if club was removed
 		assertThat(test(clubsGrid).size()).isEqualTo(4);

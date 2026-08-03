@@ -34,7 +34,7 @@ class UC023UploadSeriesLogoTest extends AbstractViewTest {
 		Grid<SeriesRecord> seriesGrid = navigateToSeriesList();
 		test(seriesGrid).clickRow(0);
 
-		TextField name = $(TextField.class).single();
+		TextField name = find(TextField.class).single();
 		assertThat(name.getValue()).isEqualTo("CIS 2019");
 	}
 
@@ -49,7 +49,7 @@ class UC023UploadSeriesLogoTest extends AbstractViewTest {
 				Path path = Paths.get(imageUrl.toURI());
 				byte[] logoData = Files.readAllBytes(path);
 
-				Upload upload = $(Upload.class).id("logo-upload");
+				Upload upload = find(Upload.class).id("logo-upload");
 				test(upload).upload("logo.png", "image/png", logoData);
 			}
 		}

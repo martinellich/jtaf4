@@ -37,21 +37,21 @@ class UC010CreateOrganizationTest extends AbstractViewTest {
 	void add_organization() {
 		navigate(OrganizationsView.class);
 
-		H1 h1 = $(H1.class).id("view-title");
+		H1 h1 = find(H1.class).id("view-title");
 		assertThat(h1.getText()).isEqualTo("Organizations");
 
 		// Check content of organizations grid
-		Grid<OrganizationRecord> organizationGrid = $(Grid.class).id("organizations-grid");
+		Grid<OrganizationRecord> organizationGrid = find(Grid.class).id("organizations-grid");
 		assertThat(test(organizationGrid).size()).isEqualTo(2);
 		assertThat(test(organizationGrid).getRow(0).getOrganizationKey()).isEqualTo("CIS");
 
 		// Add organization
 		gridHeaderButton(organizationGrid, "edit-column").click();
-		assertThat($(OrganizationDialog.class).all()).hasSize(1);
+		assertThat(find(OrganizationDialog.class).all()).hasSize(1);
 
-		test($(TextField.class).withCaption("Key").single()).setValue("AAA");
-		test($(TextField.class).withCaption("Name").single()).setValue("Test");
-		$(Button.class).withText("Save").single().click();
+		test(find(TextField.class).withCaption("Key").single()).setValue("AAA");
+		test(find(TextField.class).withCaption("Name").single()).setValue("Test");
+		find(Button.class).withText("Save").single().click();
 
 		// Check if organization was added
 		assertThat(test(organizationGrid).size()).isEqualTo(3);
@@ -65,9 +65,9 @@ class UC010CreateOrganizationTest extends AbstractViewTest {
 			.map(Button.class::cast)
 			.ifPresent(Button::click);
 
-		ConfirmDialog confirmDialog = $(ConfirmDialog.class).single();
+		ConfirmDialog confirmDialog = find(ConfirmDialog.class).single();
 		assertThat(confirmDialog.isOpened()).isTrue();
-		$(Button.class).id("delete-organization-confirm-dialog-confirm").click();
+		find(Button.class).id("delete-organization-confirm-dialog-confirm").click();
 
 		// Check if organization was removed
 		assertThat(test(organizationGrid).size()).isEqualTo(2);

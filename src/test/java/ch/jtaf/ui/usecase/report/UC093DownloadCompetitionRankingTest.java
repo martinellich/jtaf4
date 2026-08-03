@@ -29,7 +29,7 @@ class UC093DownloadCompetitionRankingTest extends AbstractViewTest {
 	@Test
 	void competition_ranking() {
 		assertThatNoException().isThrownBy(
-				() -> test($(Anchor.class).id("competition-ranking-1-1")).download(new ByteArrayOutputStream()));
+				() -> test(find(Anchor.class).id("competition-ranking-1-1")).download(new ByteArrayOutputStream()));
 	}
 
 }
