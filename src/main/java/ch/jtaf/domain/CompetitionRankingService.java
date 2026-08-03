@@ -1,10 +1,10 @@
 package ch.jtaf.domain;
 
-import ch.jtaf.reporting.data.CompetitionRankingData;
-import ch.jtaf.reporting.data.EventsRankingData;
-import ch.jtaf.reporting.report.CompetitionRankingReport;
-import ch.jtaf.reporting.report.DiplomaReport;
-import ch.jtaf.reporting.report.EventsRankingReport;
+import ch.jtaf.domain.data.CompetitionRankingData;
+import ch.jtaf.domain.data.EventsRankingData;
+import ch.jtaf.domain.report.CompetitionRankingReport;
+import ch.jtaf.domain.report.DiplomaReport;
+import ch.jtaf.domain.report.EventsRankingReport;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 

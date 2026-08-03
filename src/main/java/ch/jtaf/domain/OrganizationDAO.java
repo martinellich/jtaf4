@@ -2,7 +2,6 @@ package ch.jtaf.domain;
 
 import ch.jtaf.db.tables.Organization;
 import ch.jtaf.db.tables.records.OrganizationRecord;
-import ch.jtaf.db.tables.records.OrganizationUserRecord;
 import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -37,13 +36,12 @@ public class OrganizationDAO extends JooqDAO<Organization, OrganizationRecord, L
         dslContext.selectFrom(SECURITY_USER)
             .where(SECURITY_USER.EMAIL.eq(username))
             .fetchOptional()
-            .ifPresent(user -> {
-                var organizationUser = new OrganizationUserRecord();
-                organizationUser.setOrganizationId(organizationRecord.getId());
-                organizationUser.setUserId(user.getId());
-                dslContext.attach(organizationUser);
-                organizationUser.store();
-            });
+            .ifPresent(user -> dslContext
+                .insertInto(ORGANIZATION_USER)
+                .set(ORGANIZATION_USER.ORGANIZATION_ID, organizationRecord.getId())
+                .set(ORGANIZATION_USER.USER_ID, user.getId())
+                .onConflictDoNothing()
+                .execute());
     }
 
     public List<OrganizationRecord> findByUsername(String username) {

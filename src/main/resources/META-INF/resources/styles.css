@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins');
+@import url('./main-layout.css');
+@import url('./views/dashboard-view.css');
+
+@font-face {
+    font-family: "Material Symbols";
+    font-weight: 400;
+    src: url("./fonts/MaterialSymbols.woff2") format("woff2");
+}
+
+html {
+    --lumo-border-radius: calc(var(--lumo-size-m) / 2);
+    --lumo-primary-text-color: rgb(255, 179, 25);
+    --lumo-primary-color-50pct: rgba(255, 179, 25, 0.5);
+    --lumo-primary-color-10pct: rgba(255, 179, 25, 0.1);
+    --lumo-primary-color: #ffb319;
+    --lumo-success-text-color: #1da834;
+    --lumo-success-color-50pct: rgba(113, 228, 174, 0.5);
+    --lumo-success-color-10pct: rgba(113, 228, 174, 0.1);
+    --lumo-success-color: #71e4ae;
+    --lumo-error-text-color: #ff0000;
+    --lumo-error-color-50pct: rgba(251, 207, 207, 0.5);
+    --lumo-error-color-10pct: rgba(251, 207, 207, 0.1);
+    --lumo-error-color: #fbcfcf;
+    --lumo-error-contrast-color: #ff0000;
+    --lumo-success-contrast-color: #1da834;
+    --lumo-primary-contrast-color: #fff;
+
+    --lumo-font-family: Poppins, sans-serif;
+}
+
+.navigation-icon {
+    padding-right: 20px;
+}
+
+vaadin-grid {
+    border-width: 0;
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+vaadin-button {
+    cursor: pointer;
+}
+
+.material-symbols {
+    display: inline-block;
+    direction: ltr;
+    font-family: "Material Symbols";
+    font-feature-settings: "liga";
+    font-size: var(--lumo-icon-size-m);
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+}

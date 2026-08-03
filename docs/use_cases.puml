@@ -1,0 +1,147 @@
+@startuml Use Cases Overview
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Visitor" as visitor
+actor "Registered User" as user
+actor "System" as system
+
+visitor <|-- user
+
+rectangle "JTAF" {
+
+    package "Account" {
+        usecase "UC-001\nRegister account" as UC001
+        usecase "UC-002\nConfirm e-mail" as UC002
+        usecase "UC-003\nSign in" as UC003
+        usecase "UC-004\nSign out" as UC004
+        usecase "UC-005\nSwitch language" as UC005
+    }
+
+    package "Organization" {
+        usecase "UC-010\nCreate organization" as UC010
+        usecase "UC-011\nEdit organization" as UC011
+        usecase "UC-012\nDelete organization" as UC012
+        usecase "UC-013\nSelect active organization" as UC013
+    }
+
+    package "Series" {
+        usecase "UC-020\nList series" as UC020
+        usecase "UC-021\nCreate series" as UC021
+        usecase "UC-022\nEdit series" as UC022
+        usecase "UC-023\nUpload series logo" as UC023
+        usecase "UC-024\nDelete series" as UC024
+        usecase "UC-025\nCopy categories from\nanother series" as UC025
+    }
+
+    package "Competition" {
+        usecase "UC-030\nCreate competition" as UC030
+        usecase "UC-031\nEdit competition" as UC031
+        usecase "UC-032\nDelete competition" as UC032
+    }
+
+    package "Categories & Events" {
+        usecase "UC-040\nManage category" as UC040
+        usecase "UC-041\nAssign event to category" as UC041
+        usecase "UC-042\nRemove event from category" as UC042
+        usecase "UC-050\nManage event\n(IAAF coefficients)" as UC050
+    }
+
+    package "Clubs & Athletes" {
+        usecase "UC-060\nManage club" as UC060
+        usecase "UC-070\nManage athlete" as UC070
+        usecase "UC-071\nSearch athletes" as UC071
+        usecase "UC-072\nAssign athlete to series" as UC072
+        usecase "UC-073\nRemove athlete from series" as UC073
+    }
+
+    package "Results" {
+        usecase "UC-080\nEnter result" as UC080
+        usecase "UC-081\nMark athlete DNF" as UC081
+        usecase "UC-082\nRemove athlete results" as UC082
+        usecase "UC-083\nFilter athletes\nfor result entry" as UC083
+        usecase "UC-084\nCalculate IAAF points" as UC084
+    }
+
+    package "Reports" {
+        usecase "UC-090\nView dashboard" as UC090
+        usecase "UC-091\nDownload series ranking" as UC091
+        usecase "UC-092\nDownload club ranking" as UC092
+        usecase "UC-093\nDownload competition ranking" as UC093
+        usecase "UC-094\nDownload diplomas" as UC094
+        usecase "UC-095\nDownload event ranking" as UC095
+        usecase "UC-096\nGenerate athlete numbers" as UC096
+        usecase "UC-097\nGenerate result sheets" as UC097
+        usecase "UC-098\nGenerate empty result\nsheets per category" as UC098
+    }
+}
+
+' --- Visitor (anonymous) ---
+visitor --> UC001
+visitor --> UC002
+visitor --> UC003
+visitor --> UC005
+visitor --> UC090
+visitor --> UC091
+visitor --> UC092
+visitor --> UC093
+
+' --- Registered user ---
+user --> UC004
+user --> UC010
+user --> UC011
+user --> UC012
+user --> UC013
+
+user --> UC020
+user --> UC021
+user --> UC022
+user --> UC023
+user --> UC024
+user --> UC025
+
+user --> UC030
+user --> UC031
+user --> UC032
+
+user --> UC040
+user --> UC041
+user --> UC042
+user --> UC050
+
+user --> UC060
+user --> UC070
+user --> UC071
+user --> UC072
+user --> UC073
+
+user --> UC080
+user --> UC081
+user --> UC082
+user --> UC083
+
+user --> UC094
+user --> UC095
+user --> UC096
+user --> UC097
+user --> UC098
+
+' --- System actor ---
+UC001 ..> system : <<send confirmation e-mail>>
+UC080 ..> UC084 : <<include>>
+UC082 ..> UC081 : <<include>>
+UC024 ..> UC012 : <<extend>>
+
+note bottom of UC084
+  System computes points from
+  IAAF coefficients (a, b, c) and
+  the result string of the event.
+end note
+
+note right of UC072
+  System matches the athlete
+  to a category by gender
+  and year of birth.
+end note
+
+@enduml

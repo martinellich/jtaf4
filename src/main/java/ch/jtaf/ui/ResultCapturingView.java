@@ -2,7 +2,13 @@ package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.db.tables.records.ResultRecord;
-import ch.jtaf.domain.*;
+import ch.jtaf.domain.AthleteDAO;
+import ch.jtaf.domain.CategoryAthleteDAO;
+import ch.jtaf.domain.CategoryAthleteId;
+import ch.jtaf.domain.CompetitionDAO;
+import ch.jtaf.domain.EventDAO;
+import ch.jtaf.domain.ResultCalculator;
+import ch.jtaf.domain.ResultDAO;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
@@ -208,7 +214,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 					categoryAthleteDAO.setDnf(event.getValue().get(ATHLETE.ID), event.getValue().get(CATEGORY.ID),
 							e.getValue());
 				}
-				catch (IllegalStateException ex) {
+				catch (IllegalStateException _) {
 					Notification.show(getTranslation("Set.dnf.unsuccessful"), 6000, Notification.Position.TOP_END);
 				}
 			});

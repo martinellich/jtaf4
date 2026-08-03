@@ -1,9 +1,9 @@
 package ch.jtaf.domain;
 
-import ch.jtaf.reporting.data.NumbersAndSheetsAthlete;
-import ch.jtaf.reporting.data.NumbersAndSheetsCompetition;
-import ch.jtaf.reporting.report.NumbersReport;
-import ch.jtaf.reporting.report.SheetsReport;
+import ch.jtaf.domain.data.NumbersAndSheetsAthlete;
+import ch.jtaf.domain.data.NumbersAndSheetsCompetition;
+import ch.jtaf.domain.report.NumbersReport;
+import ch.jtaf.domain.report.SheetsReport;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.impl.DSL;

@@ -1,9 +1,9 @@
 package ch.jtaf.domain;
 
-import ch.jtaf.reporting.data.ClubRankingData;
-import ch.jtaf.reporting.data.SeriesRankingData;
-import ch.jtaf.reporting.report.ClubRankingReport;
-import ch.jtaf.reporting.report.SeriesRankingReport;
+import ch.jtaf.domain.data.ClubRankingData;
+import ch.jtaf.domain.data.SeriesRankingData;
+import ch.jtaf.domain.report.ClubRankingReport;
+import ch.jtaf.domain.report.SeriesRankingReport;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 

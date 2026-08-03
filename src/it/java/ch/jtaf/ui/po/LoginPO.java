@@ -11,8 +11,8 @@ public class LoginPO {
     }
 
     public void login(String username, String password) {
-        page.fill("vaadin-text-field[name='username'] > input", username);
-        page.fill("vaadin-password-field[name='password'] > input", password);
-        page.click("vaadin-button");
+        page.locator("vaadin-text-field[name='username'] > input").fill(username);
+        page.locator("vaadin-password-field[name='password'] > input").fill(password);
+        page.locator("vaadin-button").click();
     }
 }

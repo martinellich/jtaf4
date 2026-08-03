@@ -31,7 +31,7 @@ error-screenshots/
 /vite.generated.ts
 
 /src/test/resources/secrets/
+
 /src/main/frontend/generated/*
-/src/main/bundles/prod.bundle
+/src/main/frontend/index.html
 /src/main/resources/rebel.xml
-/src/main/resources/application-dev.properties

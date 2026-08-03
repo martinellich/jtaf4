@@ -3,7 +3,6 @@ package ch.jtaf.ui.component;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.Tag;
-import elemental.json.JsonObject;
 
 @Tag("google-analytics")
 public class GoogleAnalytics extends Component implements HasSize {
@@ -66,7 +65,7 @@ public class GoogleAnalytics extends Component implements HasSize {
 				""", pageName);
 	}
 
-	public void sendEvent(String eventName, JsonObject eventParams) {
+	public void sendEvent(String eventName, Object... eventParams) {
 		getElement().executeJs("""
 				gtag('event', $0, $1); // $0 is the event name, $1 is the parameters object
 				""", eventName, eventParams);
