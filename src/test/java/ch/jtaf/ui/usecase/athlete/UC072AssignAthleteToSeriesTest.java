@@ -77,10 +77,11 @@ class UC072AssignAthleteToSeriesTest extends AbstractViewTest {
 
 		// Check if athlete was assigned
 		assertThat(test(athletesGrid).size()).isEqualTo(109);
-		assertThat(test(athletesGrid).getRow(40).getLastName()).isEqualTo("Hermoso");
+		int assignedRow = findRowByLastName(athletesGrid, "Zimmermann");
 
-		// Remove athlete from category
-		test(athletesGrid).getCellComponent(40, "remove-column")
+		// Remove the assigned athlete again so the seeded state is restored for other
+		// tests.
+		test(athletesGrid).getCellComponent(assignedRow, "remove-column")
 			.getChildren()
 			.filter(Button.class::isInstance)
 			.findFirst()
@@ -93,6 +94,16 @@ class UC072AssignAthleteToSeriesTest extends AbstractViewTest {
 
 		// Check if athlete was removed
 		assertThat(test(athletesGrid).size()).isEqualTo(108);
+	}
+
+	private int findRowByLastName(Grid<AthleteRecord> athletesGrid, String lastName) {
+		int size = test(athletesGrid).size();
+		for (int i = 0; i < size; i++) {
+			if (lastName.equals(test(athletesGrid).getRow(i).getLastName())) {
+				return i;
+			}
+		}
+		throw new AssertionError("Athlete with last name '" + lastName + "' not found");
 	}
 
 }
