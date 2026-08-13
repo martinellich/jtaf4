@@ -25,11 +25,11 @@
 
 ### A1: No data
 
-**Trigger:** Step 3 — the series has no competitions or results.
+**Trigger:** Step 3 — the series has no competitions.
 **Flow:**
 
-1. `getSeriesRanking` returns an empty optional and the report invocation throws.
-2. Browser receives an error response.
+1. `getSeriesRanking` returns an empty optional and the report invocation throws; the browser receives an error response.
+2. If the series has competitions but no results, a PDF with empty category tables is produced instead.
 
 ## Postconditions
 
@@ -39,13 +39,13 @@
 
 ### Failure Postconditions
 
-- No file is downloaded; the visitor sees an error.
+- Unknown series: no file is downloaded; the visitor sees an error. PDF-generation errors are swallowed and yield an empty (0-byte) download.
 
 ## Business Rules
 
 ### BR-059: Eligibility
 
-Only athletes with `CATEGORY_ATHLETE.DNF = false` are included in the series ranking.
+Only athletes with `CATEGORY_ATHLETE.DNF = false` are included, and only athletes with a result in **every** competition of the series appear in the ranking.
 
 ### BR-060: Public access
 

@@ -15,7 +15,7 @@
 ## Main Success Scenario
 
 1. User clicks the "Logout" button in the top navigation bar.
-2. System invokes Spring Security logout, invalidates the session, and clears the security context.
+2. System invokes Spring Security logout, which clears the stateless authentication (JWT) cookie and the security context, and resets the Vaadin session state (a legacy remember-me cookie is removed as well).
 3. System redirects the user to the dashboard.
 4. MainLayout hides protected navigation entries and shows the "Login" / "Register" actions.
 
@@ -27,7 +27,7 @@ _None._
 
 ### Success Postconditions
 
-- The user's session is invalidated.
+- The user's authentication cookie is cleared.
 - Protected views are no longer accessible without re-authenticating.
 
 ### Failure Postconditions
@@ -38,4 +38,4 @@ _None._
 
 ### BR-007: Session invalidation
 
-Logout fully invalidates the HTTP session; bookmarked protected URLs require a fresh sign-in.
+Logout removes the stateless authentication (JWT) cookie; bookmarked protected URLs require a fresh sign-in.

@@ -18,14 +18,14 @@
 1. User focuses the "Filter" text field (focused automatically on view load).
 2. User types a string.
 3. On every keystroke (`ValueChangeMode.EAGER`) the data provider re-queries with the new filter.
-4. System matches the substring against the athletes' names (case-insensitive prefix on first/last name) within the active organization.
+4. System matches the filter within the active organization. In `AthletesView` the match is a case-insensitive **substring** search across all athlete columns (names, gender, year of birth, ids); in `SearchAthleteDialog` it is a lower-cased **prefix** match on last name or first name.
 5. The grid updates with the filtered results.
 
 ## Alternative Flows
 
 ### A1: Numeric filter (in result entry)
 
-**Trigger:** Result-entry filter is numeric (UC-083).
+**Trigger:** The filter in `SearchAthleteDialog` or in result entry (UC-083) is numeric.
 **Flow:**
 
 1. The condition becomes `ATHLETE.ID = <number>`, returning a single athlete row.
@@ -35,7 +35,7 @@
 **Trigger:** Step 2 — filter cleared.
 **Flow:**
 
-1. In `SearchAthleteDialog` the data provider returns no rows (empty filter); in `AthletesView` it returns the full organization list.
+1. In `SearchAthleteDialog` the grid is empty only before any filter has been typed; once the filter is cleared back to an empty string, all not-yet-enrolled athletes are listed. In `AthletesView` the full organization list is shown.
 
 ## Postconditions
 
@@ -49,6 +49,6 @@ _None — the operation is read-only._
 
 ## Business Rules
 
-### BR-043: Case-insensitive prefix matching
+### BR-043: Case-insensitive matching
 
-Filter text is upper-cased and compared with `LIKE 'X%'` against last name and first name.
+Matching is case-insensitive but differs per entry point: `AthletesView` compares `LIKE '%X%'` (substring) against every athlete column, while `SearchAthleteDialog` and result entry compare `LIKE 'X%'` (prefix) against last name and first name.

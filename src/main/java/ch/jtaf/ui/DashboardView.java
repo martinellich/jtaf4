@@ -179,9 +179,9 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 						.navigate(ResultCapturingView.class, competition.getId().toString()));
 					var enterResultsDiv = new Div(enterResults);
 					competitionRankingDiv.add(enterResultsDiv);
-
-					competitionIndex++;
 				}
+
+				competitionIndex++;
 			}
 			var hr = new Hr();
 			hr.setClassName("dashboard-separator");

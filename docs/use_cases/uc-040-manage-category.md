@@ -29,15 +29,17 @@
 **Flow:**
 
 1. System opens a confirm dialog.
-2. After confirmation, `CATEGORY_EVENT` rows for the category are removed first, then the category itself.
-3. Grid refreshes.
+2. After confirmation, the system attempts to delete the `CATEGORY` row directly (child rows are **not** removed first).
+3. If `CATEGORY_EVENT`, `CATEGORY_ATHLETE`, or `RESULT` rows still reference the category, the database raises a foreign-key error, which is shown as a notification; the category remains.
+4. Grid refreshes.
 
 ### A2: Validation failure
 
 **Trigger:** Step 4 — required field empty or year not numeric.
 **Flow:**
 
-1. The relevant validator (`NotEmptyValidator`, `JtafStringToIntegerConverter`) blocks the save.
+1. The relevant validator (`NotEmptyValidator`, `JtafStringToIntegerConverter`) marks the field invalid and the save is blocked; the dialog stays open.
+2. Exception: the gender select only carries a required indicator without a validator — an unset gender passes the UI check and fails at the database (`NOT NULL`), surfacing as an error notification.
 
 ## Postconditions
 

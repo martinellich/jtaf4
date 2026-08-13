@@ -13,14 +13,14 @@
 - The user is signed in and an active organization is selected.
 - The current series has been saved at least once (`copy categories` button is hidden until a series id exists).
 - The current series has no categories yet (the button hides itself once `count > 0`).
-- At least one other series in the organization contains categories.
+- At least one other series exists in the organization (the combo box lists all other series, whether or not they contain categories).
 
 ## Main Success Scenario
 
 1. User opens the current series in `SeriesView`.
 2. User clicks "Copy categories".
 3. System opens `CopyCategoriesDialog` and lists other series of the organization in a combo box.
-4. User picks the source series and clicks "Copy".
+4. User picks the source series and clicks "Copy" (the button is disabled until a source series is selected).
 5. For each category in the source series the system clones the row, points it at the current series, and persists it.
 6. For each cloned category the system also clones every `CATEGORY_EVENT` row, preserving event assignments and positions.
 7. System notifies the user with "Categories copied" and closes the dialog.
@@ -33,7 +33,7 @@
 **Trigger:** Step 3 — combo box is empty.
 **Flow:**
 
-1. The user cancels the dialog and creates categories manually.
+1. The "Copy" button stays disabled; the user cancels the dialog and creates categories manually.
 
 ### A2: Current series already has categories
 
@@ -51,7 +51,7 @@
 
 ### Failure Postconditions
 
-- No partial copy is left behind (the operation is transactional per category).
+- No partial copy is left behind (the whole copy runs in a single transaction).
 
 ## Business Rules
 

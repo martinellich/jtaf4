@@ -194,6 +194,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		save.setId("save-series");
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(event -> {
+			if (!binder.validate().isOk()) {
+				return;
+			}
+
 			seriesDAO.save(binder.getBean());
 
 			Notification.show(getTranslation("Series.saved"), 6000, Notification.Position.TOP_END);
@@ -207,7 +211,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			if (seriesRecord != null && organizationProvider.getOrganization() != null) {
 				var dialog = new CopyCategoriesDialog(organizationProvider.getOrganization().getId(),
 						seriesRecord.getId(), seriesDAO);
-				dialog.addAfterCopyListener(e -> refreshAll());
+				dialog.addAfterCopyListener(e -> {
+					refreshAll();
+					if (copyCategories != null) {
+						copyCategories.setVisible(false);
+					}
+				});
 				dialog.open();
 			}
 
@@ -271,7 +280,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 	}
 
 	private void createCompetitionsSection() {
-		var dialog = new CompetitionDialog(getTranslation("Category"), competitionDAO);
+		var dialog = new CompetitionDialog(getTranslation("Competition"), competitionDAO);
 
 		competitionsGrid = new Grid<>();
 		competitionsGrid.setId("competitions-grid");

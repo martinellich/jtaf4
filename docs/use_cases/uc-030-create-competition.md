@@ -18,7 +18,7 @@
 
 1. User clicks the "+" / Add action in the competitions grid.
 2. System opens `CompetitionDialog` with `medal_percentage = 0` and `series_id` set to the current series.
-3. User enters a name and a date and (optionally) checks "Always first three medals".
+3. User enters a name, a date, and a medal percentage (0–100) and (optionally) checks "Always first three medals".
 4. User saves.
 5. System persists the competition and refreshes the grid.
 
@@ -26,10 +26,10 @@
 
 ### A1: Required fields missing
 
-**Trigger:** Step 4 — name is blank.
+**Trigger:** Step 4 — name, date, or medal percentage is missing, or the percentage is outside 0–100.
 **Flow:**
 
-1. Validator blocks the save until a name is provided.
+1. Validation marks the affected fields and blocks the save; the dialog stays open.
 
 ## Postconditions
 
@@ -46,7 +46,7 @@
 
 ### BR-026: Default medal percentage
 
-A newly created competition starts with `medal_percentage = 0`; either it must be raised or `always_first_three_medals` must be enabled before diplomas are meaningful.
+A newly created competition starts with `medal_percentage = 0`. Medals (and therefore diplomas) are awarded only when `medal_percentage > 0`; within that, `always_first_three_medals` raises the medal count to at least three.
 
 ### BR-027: Series binding
 

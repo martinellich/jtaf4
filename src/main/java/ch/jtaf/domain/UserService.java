@@ -98,6 +98,7 @@ public class UserService {
 
         if (securityUser != null) {
             securityUser.setConfirmed(true);
+            securityUser.setConfirmationId(null);
             securityUser.store();
 
             return true;

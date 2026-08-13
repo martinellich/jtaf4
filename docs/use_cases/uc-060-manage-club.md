@@ -36,7 +36,7 @@
 **Trigger:** Step 5 — abbreviation or name empty.
 **Flow:**
 
-1. `NotEmptyValidator` blocks the save until corrected.
+1. `NotEmptyValidator` marks the field invalid and the save is blocked until corrected; the dialog stays open.
 
 ## Postconditions
 

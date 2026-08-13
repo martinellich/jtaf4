@@ -42,17 +42,31 @@ public class DiplomaReport extends AbstractReport {
 			var pdfWriter = PdfWriter.getInstance(document, byteArrayOutputStream);
 			document.open();
 
+			var pageWritten = false;
 			for (var category : ranking.categories()) {
+				var numberOfMedals = ranking.numberOfMedals(category);
 				var rank = 1;
 				for (var athlete : category.sortedAthletes()) {
+					if (rank > numberOfMedals) {
+						break;
+					}
+					if (pageWritten) {
+						document.newPage();
+					}
 					createTitle();
 					createLogo();
 					createCompetitionInfo();
 					createAthleteInfo(athlete, category, rank);
 
 					rank++;
-					document.newPage();
+					pageWritten = true;
 				}
+			}
+
+			if (!pageWritten) {
+				// a PDF must contain at least one page, so deliver an empty download
+				// instead
+				return new byte[0];
 			}
 
 			document.close();

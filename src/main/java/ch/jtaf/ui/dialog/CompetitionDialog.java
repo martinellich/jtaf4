@@ -5,7 +5,9 @@ import ch.jtaf.domain.CompetitionDAO;
 import ch.jtaf.ui.validator.NotEmptyValidator;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.validator.IntegerRangeValidator;
 
 import java.io.Serial;
 
@@ -30,16 +32,26 @@ public class CompetitionDialog extends EditDialog<CompetitionRecord> {
 			.bind(CompetitionRecord::getName, CompetitionRecord::setName);
 
 		var date = new DatePicker(getTranslation("Date"));
-		name.setRequiredIndicatorVisible(true);
+		date.setRequiredIndicatorVisible(true);
 
-		binder.forField(date).bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
+		binder.forField(date)
+			.asRequired(getTranslation("May.not.be.empty"))
+			.bind(CompetitionRecord::getCompetitionDate, CompetitionRecord::setCompetitionDate);
+
+		var medalPercentage = new IntegerField(getTranslation("Medal.percentage"));
+		medalPercentage.setRequiredIndicatorVisible(true);
+
+		binder.forField(medalPercentage)
+			.asRequired(getTranslation("May.not.be.empty"))
+			.withValidator(new IntegerRangeValidator(getTranslation("Must.be.between.0.and.100"), 0, 100))
+			.bind(CompetitionRecord::getMedalPercentage, CompetitionRecord::setMedalPercentage);
 
 		var alwaysFirstThreeMedals = new Checkbox(getTranslation("Always.first.three.medals"));
 
 		binder.forField(alwaysFirstThreeMedals)
 			.bind(CompetitionRecord::getAlwaysFirstThreeMedals, CompetitionRecord::setAlwaysFirstThreeMedals);
 
-		formLayout.add(name, date);
+		formLayout.add(name, date, medalPercentage, alwaysFirstThreeMedals);
 	}
 
 }

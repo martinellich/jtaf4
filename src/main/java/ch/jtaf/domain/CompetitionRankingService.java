@@ -108,7 +108,7 @@ public class CompetitionRankingService {
                                 RESULT.athlete().club().NAME,
                                 RESULT.RESULT_)
                                 .from(RESULT)
-                                .where(RESULT.category().SERIES_ID.eq(COMPETITION.SERIES_ID))
+                                .where(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
                                 .and(RESULT.event().ID.eq(EVENT.ID))
                                 .and(RESULT.RESULT_.isNotNull())
                         ).convertFrom(r -> r.map(mapping(EventsRankingData.Event.Result::new))))

@@ -39,6 +39,21 @@ class UC002ConfirmEmailTest extends AbstractViewTest {
 	}
 
 	@Test
+	void confirmation_link_is_single_use() throws UserAlreadyExistException {
+		setupVaadin();
+
+		SecurityUserRecord user = userService.createUser("Rita", "Weber", "rita.weber@nodomain.xyz", "pass",
+				Locale.of("de", "CH"));
+		String confirmationId = user.getConfirmationId();
+
+		assertThat(userService.confirm(confirmationId)).isTrue();
+
+		UI.getCurrent().navigate("confirm", QueryParameters.simple(Map.of("cf", confirmationId)));
+
+		assertThat(find(H1.class).withText("The confirmation was not successful.").all()).hasSize(1);
+	}
+
+	@Test
 	void missing_query_parameter() {
 		setupVaadin();
 

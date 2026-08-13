@@ -72,12 +72,11 @@ class UC084CalculateIaafPointsTest {
 	@Test
 	void br055_underperformance_clamps_to_zero() {
 		EventRecord run = event(1L); // 60 m M, B=1460 cs (= 14.60 s).
-		// Time slower than B yields a negative base; non-integer C gives NaN, rounded to
-		// 0.
+		// Time slower than B yields a negative base; points are clamped to 0.
 		assertThat(resultCalculator.calculatePoints(run, "20.00")).isZero();
 
 		EventRecord jumpThrow = event(16L); // Weitsprung M, B=130 cm.
-		// Distance below B gives a negative base; rounds to 0.
+		// Distance below B gives a negative base; points are clamped to 0.
 		assertThat(resultCalculator.calculatePoints(jumpThrow, "1.00")).isZero();
 	}
 

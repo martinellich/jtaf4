@@ -33,8 +33,15 @@ public class CopyCategoriesDialog extends Dialog {
 		var copy = new Button(getTranslation("Copy"));
 		copy.setId("copy-categories-copy");
 		copy.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		copy.setEnabled(false);
+		seriesSelection.addValueChangeListener(event -> copy.setEnabled(event.getValue() != null));
 		copy.addClickListener(event -> {
-			seriesDAO.copyCategories(seriesSelection.getValue().getId(), currentSeriesId);
+			var selectedSeries = seriesSelection.getValue();
+			if (selectedSeries == null) {
+				return;
+			}
+
+			seriesDAO.copyCategories(selectedSeries.getId(), currentSeriesId);
 			Notification.show(getTranslation("Categories.copied"), 6000, Notification.Position.TOP_END);
 
 			fireEvent(new AfterCopyEvent(this));

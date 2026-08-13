@@ -28,8 +28,8 @@
 **Trigger:** Step 2 — filter cleared.
 **Flow:**
 
-1. The data provider returns no rows (`1 = 2` condition).
-2. The form below the grid is cleared.
+1. The grid is empty (`1 = 2` condition) only before any filter has been typed.
+2. Clearing the filter back to an empty string lists **all** athletes of the competition; the form below the grid is not cleared.
 
 ## Postconditions
 

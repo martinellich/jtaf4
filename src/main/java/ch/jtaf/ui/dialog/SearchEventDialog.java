@@ -103,8 +103,8 @@ public class SearchEventDialog extends Dialog {
 			.setAutoWidth(true)
 			.setKey(EVENT.EVENT_TYPE.getName());
 		grid.addColumn(EventRecord::getA).setHeader("A").setAutoWidth(true);
-		grid.addColumn(EventRecord::getA).setHeader("B").setAutoWidth(true);
-		grid.addColumn(EventRecord::getA).setHeader("C").setAutoWidth(true);
+		grid.addColumn(EventRecord::getB).setHeader("B").setAutoWidth(true);
+		grid.addColumn(EventRecord::getC).setHeader("C").setAutoWidth(true);
 
 		grid.addComponentColumn(eventRecord -> new Button(getTranslation("Assign.Event"), e -> {
 			fireEvent(new AssignEvent(this, eventRecord));

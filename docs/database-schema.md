@@ -110,40 +110,40 @@ erDiagram
     }
     
     category_athlete {
-        bigint category_id FK
-        bigint athlete_id FK
+        bigint category_id PK, FK
+        bigint athlete_id PK, FK
         boolean dnf
     }
     
     category_event {
-        bigint category_id FK
-        bigint event_id FK
+        bigint category_id PK, FK
+        bigint event_id PK, FK
         int position
     }
     
     organization_user {
-        bigint organization_id FK
-        bigint user_id FK
+        bigint organization_id PK, FK
+        bigint user_id PK, FK
     }
     
     user_group {
-        bigint user_id FK
-        bigint group_id FK
+        bigint user_id PK, FK
+        bigint group_id PK, FK
     }
 
     %% Relationships
-    organization ||--o{ series : "owns"
-    organization ||--o{ event : "defines"
-    organization ||--o{ club : "contains"
-    organization ||--o{ athlete : "registers"
+    organization |o--o{ series : "owns"
+    organization |o--o{ event : "defines"
+    organization |o--o{ club : "contains"
+    organization |o--o{ athlete : "registers"
     organization ||--o{ organization_user : "has users"
     
     security_user ||--o{ organization_user : "belongs to orgs"
     security_user ||--o{ user_group : "has roles"
     security_group ||--o{ user_group : "assigned to users"
     
-    series ||--o{ competition : "contains"
-    series ||--o{ category : "defines"
+    series |o--o{ competition : "contains"
+    series |o--o{ category : "defines"
     
     competition ||--o{ result : "records"
     
@@ -154,7 +154,7 @@ erDiagram
     event ||--o{ result : "measured in"
     event ||--o{ category_event : "part of categories"
     
-    club ||--o{ athlete : "represents"
+    club |o--o{ athlete : "represents"
     
     athlete ||--o{ result : "achieves"
     athlete ||--o{ category_athlete : "competes in"
@@ -188,8 +188,8 @@ erDiagram
 
 The `event` table contains coefficients (a, b, c) used in IAAF scoring formulas to convert raw performance results into standardized points:
 
-- **RUN**: Short distance events - `points = a * ((b - time_in_centiseconds) / 100)^c`
-- **RUN_LONG**: Long distance events - `points = a * ((b - time_in_centiseconds) / 100)^c`
-- **JUMP_THROW**: Field events - `points = a * ((distance_in_centimeters - b) / 100)^c`
+- **RUN**: Short distance events, result entered as `ss.cc` (e.g. `12.34`) - `points = a * ((b - time_in_centiseconds) / 100)^c`
+- **RUN_LONG**: Long distance events, result entered as minutes and seconds separated by a dot (`mm.ss`, e.g. `2.15` = 2 min 15 s; no centiseconds) - `points = a * ((b - time_in_centiseconds) / 100)^c`
+- **JUMP_THROW**: Field events, result entered in metres (e.g. `3.11`) and converted to centimetres internally - `points = a * ((distance_in_centimeters - b) / 100)^c`
 
-This ensures fair comparison across different disciplines in multi-event competitions.
+Calculated points are clamped at zero (`ResultCalculator` returns 0 for NaN or negative values). This ensures fair comparison across different disciplines in multi-event competitions.

@@ -36,7 +36,7 @@
 
 - The `SERIES` row reflects the new values.
 - If `hidden = true`, the series no longer appears on the public dashboard (UC-090).
-- If `locked = true`, the series is treated as final by downstream features (e.g. UC-025 hides "Copy categories").
+- The `locked` flag is stored and displayed but has no behavioral consequences.
 
 ### Failure Postconditions
 
@@ -50,4 +50,4 @@ Hidden series are excluded from the public dashboard listing.
 
 ### BR-020: Locked series
 
-Locking a series indicates that the season is over; UI affordances (e.g. category copy) become unavailable.
+Locking a series indicates that the season is over. The flag is informational only: it is shown in the series list, but no feature currently consults it (the "Copy categories" visibility, for example, depends solely on the category count).

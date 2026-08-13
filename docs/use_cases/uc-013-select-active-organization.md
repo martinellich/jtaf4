@@ -18,20 +18,19 @@
 1. User opens the "My Organizations" view.
 2. System lists organizations the user belongs to.
 3. User clicks "Select" on a row.
-4. System stores the chosen organization in the session-scoped `OrganizationProvider`.
+4. System stores the chosen organization in the session-scoped `OrganizationProvider` and persists it in the `jtaf-organization-id` cookie (max-age 24 h).
 5. System navigates to the series list of that organization.
-6. MainLayout updates the drawer to show the organization key as the label of the series link and reveals Events / Clubs / Athletes navigation.
+6. MainLayout updates the drawer to show the organization key as the label of the series link. (The Events / Clubs / Athletes links are visible for any signed-in user, independent of the selection.)
 
 ## Alternative Flows
 
 ### A1: No active organization yet
 
-**Trigger:** A user signs in for the first time and visits a protected view directly.
+**Trigger:** A user visits a protected view with no active organization (and no valid `jtaf-organization-id` cookie).
 **Flow:**
 
-1. The view is rendered with `OrganizationProvider.getOrganization() == null`.
-2. Listing falls back to `false condition`, so no rows are shown.
-3. User must select an organization first.
+1. `ProtectedView.beforeEnter` reroutes to the "My Organizations" view.
+2. User selects an organization and navigates on from there.
 
 ## Postconditions
 
@@ -42,10 +41,10 @@
 
 ### Failure Postconditions
 
-- No active organization is set; protected grids stay empty.
+- No active organization is set; protected views reroute to the organization selection.
 
 ## Business Rules
 
 ### BR-015: Single active organization
 
-A user works in exactly one organization at a time within a session; switching is done by selecting another row.
+A user works in exactly one organization at a time; switching is done by selecting another row. On a later visit the selection is restored from the `jtaf-organization-id` cookie, guarded by a membership check.

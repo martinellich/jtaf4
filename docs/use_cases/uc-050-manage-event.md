@@ -38,7 +38,8 @@
 **Trigger:** Step 5 — required text field empty or A/B/C not numeric.
 **Flow:**
 
-1. The respective validator/converter blocks the save.
+1. The respective validator/converter marks the field invalid and the save is blocked; the dialog stays open.
+2. Exceptions: the gender select is not validated (only marked required), and the A/B/C fields present an empty value as `0.0` (null representation) rather than rejecting it. In the database `abbreviation`, `name`, `gender`, and `event_type` are nullable — the requirements are enforced by the UI only.
 
 ## Postconditions
 

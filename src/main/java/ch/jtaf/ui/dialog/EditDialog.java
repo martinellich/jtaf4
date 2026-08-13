@@ -7,8 +7,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.binder.Binder;
 import org.jooq.UpdatableRecord;
+import org.jooq.exception.DataAccessException;
 import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
@@ -68,8 +70,18 @@ public abstract class EditDialog<R extends UpdatableRecord<R>> extends Dialog {
 		save.setId("edit-save");
 		save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 		save.addClickListener(event -> {
+			if (!binder.validate().isOk()) {
+				return;
+			}
+
 			var recordToSave = binder.getBean();
-			jooqDAO.save(recordToSave);
+			try {
+				jooqDAO.save(recordToSave);
+			}
+			catch (DataAccessException ex) {
+				Notification.show(ex.getMessage(), 6000, Notification.Position.TOP_END);
+				return;
+			}
 
 			if (afterSave != null) {
 				afterSave.accept(recordToSave);

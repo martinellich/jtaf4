@@ -96,6 +96,9 @@ public class SheetsReport extends AbstractReport {
 	}
 
 	private void createLogo() throws DocumentException {
+		if (logo == null || logo.length == 0) {
+			return;
+		}
 		try {
 			var image = Image.getInstance(logo);
 			image.setAbsolutePosition(cmToPixel(1f), cmToPixel(17.5f));

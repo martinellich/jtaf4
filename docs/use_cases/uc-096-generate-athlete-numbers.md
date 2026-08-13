@@ -30,7 +30,7 @@
 **Trigger:** Step 3 — `getAthletes` returns an empty list.
 **Flow:**
 
-1. The PDF is generated empty.
+1. The download is an empty (0-byte) file.
 
 ## Postconditions
 
@@ -40,10 +40,10 @@
 
 ### Failure Postconditions
 
-- No file is downloaded; the user sees an error.
+- PDF-generation errors are swallowed and yield an empty (0-byte) download.
 
 ## Business Rules
 
 ### BR-069: Sort selection at click time
 
-The two link variants exist precisely so the same data can be printed in different orders without changing settings.
+The two link variants exist precisely so the same data can be printed in different orders without changing settings. Caveat: the printed number is a running index over the chosen sort order, so the same athlete receives a **different number** depending on which link is used.
