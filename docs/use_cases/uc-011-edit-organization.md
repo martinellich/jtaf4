@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Use Case ID:** UC-011   
-**Use Case Name:** Edit organization   
-**Primary Actor:** Registered User   
-**Goal:** Update the key or name of an organization the user belongs to.   
-**Status:** Draft
+**Use Case ID:** UC-011
+**Use Case Name:** Edit organization
+**Primary Actor:** Registered User
+**Goal:** Update the key or name of an organization the user belongs to.
+**Status:** Implemented
 
 ## Preconditions
 
@@ -20,8 +20,7 @@
 3. System opens the organization dialog populated with the current values.
 4. User edits the key and/or name.
 5. User saves the dialog.
-6. The system displays a message and says hello to the user.
-7. System persists the change and refreshes the grid. (Saving also re-runs the creation of the user's `ORGANIZATION_USER` link, which is idempotent.)
+6. System persists the change and refreshes the grid. (Saving also re-runs the creation of the user's `ORGANIZATION_USER` link, which is idempotent.)
 
 ## Alternative Flows
 
@@ -45,6 +44,6 @@
 
 ## Business Rules
 
-### BR-001: Visibility of organizations
+### BR-012: Visibility of organizations
 
 The grid only lists organizations where the signed-in user appears in `ORGANIZATION_USER`.
