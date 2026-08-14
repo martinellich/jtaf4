@@ -6,7 +6,7 @@
 **Use Case Name:** Edit organization   
 **Primary Actor:** Registered User   
 **Goal:** Update the key or name of an organization the user belongs to.   
-**Status:** Approved
+**Status:** Draft
 
 ## Preconditions
 
