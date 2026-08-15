@@ -76,7 +76,7 @@
 
         <db.image>postgres:16.1</db.image>
         <db.username>jtaf4</db.username>
-        <db.password>jtaf420</db.password>
+        <db.password>jtaf420</db.password><!-- NOSONAR - throwaway credentials for the ephemeral Testcontainers database used at build time -->
 
         <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
         <sonar.organization>martinellich</sonar.organization>
