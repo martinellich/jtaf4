@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sonarqube": {
+      "command": "sonar",
+      "args": [
+        "run",
+        "mcp"
+      ]
+    }
+  }
+}
