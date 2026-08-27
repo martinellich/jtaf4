@@ -36,7 +36,7 @@
 **Trigger:** Step 5 — `JtafStringToIntegerConverter` rejects the value.
 **Flow:**
 
-1. The dialog shows "Must be a number" and blocks the save.
+1. The dialog shows "Must be a number", the save is blocked, and the dialog stays open.
 
 ## Postconditions
 

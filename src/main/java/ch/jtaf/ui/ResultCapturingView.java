@@ -22,6 +22,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -123,6 +124,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		filter.setId("filter");
 		filter.setAutoselect(true);
 		filter.setAutofocus(true);
+		filter.setValueChangeMode(ValueChangeMode.EAGER);
 		filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 		return filter;
 	}
@@ -198,8 +200,18 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 				var finalResultRecord = resultRecord;
 				result.addValueChangeListener(ve -> {
 					var resultValue = ve.getValue();
+
+					int calculatedPoints;
+					try {
+						calculatedPoints = resultCalculator.calculatePoints(eventRecord, resultValue);
+					}
+					catch (NumberFormatException _) {
+						Notification.show(getTranslation("Invalid.result"), 6000, Notification.Position.TOP_END);
+						return;
+					}
+
 					finalResultRecord.setResult(resultValue);
-					finalResultRecord.setPoints(resultCalculator.calculatePoints(eventRecord, resultValue));
+					finalResultRecord.setPoints(calculatedPoints);
 					points.setValue(
 							finalResultRecord.getPoints() == null ? "" : finalResultRecord.getPoints().toString());
 

@@ -6,6 +6,17 @@ import java.util.List;
 public record CompetitionRankingData(String name, LocalDate competitionDate, boolean alwaysFirstThreeMedals,
 		int medalPercentage, List<Category> categories) {
 
+	public int numberOfMedals(Category category) {
+		double numberOfMedals = 0;
+		if (medalPercentage > 0) {
+			numberOfMedals = category.sortedAthletes().size() * (medalPercentage / 100.0);
+			if (numberOfMedals < 3 && alwaysFirstThreeMedals) {
+				numberOfMedals = 3;
+			}
+		}
+		return (int) numberOfMedals;
+	}
+
 	public record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
 		public List<Athlete> sortedAthletes() {

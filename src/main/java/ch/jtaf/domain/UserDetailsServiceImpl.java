@@ -39,6 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .fetch();
 
             return new User(securityUserRecord.getEmail(), securityUserRecord.getSecret(),
+                    Boolean.TRUE.equals(securityUserRecord.getConfirmed()), true, true, true,
                     groups.stream()
                         .map(group -> new SimpleGrantedAuthority("ROLE_" + group.getValue(SECURITY_GROUP.NAME)))
                         .toList());

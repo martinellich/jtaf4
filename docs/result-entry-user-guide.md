@@ -88,7 +88,7 @@ The "Enter Results" button is only available for:
 
 Result entry URLs follow this pattern:
 ```
-https://your-jtaf-instance.com/result-capturing/[competition-id]
+https://your-jtaf-instance.com/resultcapturing/[competition-id]
 ```
 
 You can bookmark specific competition result entry pages for quick access.

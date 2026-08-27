@@ -23,17 +23,22 @@
 
 ## Alternative Flows
 
-_None._
+### A1: Category not found
+
+**Trigger:** Step 3 — the category id is unknown.
+**Flow:**
+
+1. The category lookup (`orElseThrow`) raises an exception and the browser shows an error.
 
 ## Postconditions
 
 ### Success Postconditions
 
-- A PDF with one blank sheet per category event is delivered, ready to be filled in by hand.
+- A PDF with one blank A5 sheet for the category, listing all of its events, is delivered ready to be filled in by hand. The competition header row is left blank.
 
 ### Failure Postconditions
 
-- No file is downloaded; the user sees an error.
+- Unknown category: no file is downloaded; the user sees an error. PDF-generation errors are swallowed and yield an empty (0-byte) download.
 
 ## Business Rules
 

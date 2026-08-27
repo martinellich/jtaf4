@@ -55,9 +55,18 @@ class CompetitionRankingServiceTest {
 
 	@Test
 	void get_diplomas_pdf() {
+		// competition 6 has medal_percentage = 50, so there are medal winners
 		byte[] pdf = competitionRankingService.getDiplomasAsPdf(6L, Locale.of("de", "CH"));
 
 		assertThat(pdf).isNotEmpty();
+	}
+
+	@Test
+	void get_diplomas_pdf_without_medals() {
+		// competition 1 has medal_percentage = 0, so no diplomas are generated
+		byte[] pdf = competitionRankingService.getDiplomasAsPdf(1L, Locale.of("de", "CH"));
+
+		assertThat(pdf).isEmpty();
 	}
 
 }

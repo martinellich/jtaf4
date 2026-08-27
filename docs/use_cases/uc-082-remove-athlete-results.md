@@ -18,8 +18,8 @@
 1. User clicks "Remove results" below the result form.
 2. System opens a confirm dialog.
 3. User confirms.
-4. System resets the DNF flag to `false` (UC-081).
-5. System deletes every `RESULT` row where `athlete_id` matches the selected athlete and `competition_id` matches the current competition.
+4. System resets the DNF checkbox to `false`; the flag is only written to the database if it was actually set (UC-081).
+5. System deletes every `RESULT` row where `athlete_id` matches the selected athlete and `competition_id` matches the current competition. The DNF reset and the deletion run in separate transactions.
 6. System rebuilds the result form from scratch (cleared values).
 
 ## Alternative Flows

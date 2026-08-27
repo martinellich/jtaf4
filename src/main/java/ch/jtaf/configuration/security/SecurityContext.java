@@ -31,7 +31,7 @@ public final class SecurityContext {
 
 	/**
 	 * Gets the username of the currently signed-in user.
-	 * @return the username of the current user or <code>null</code> if the user has not
+	 * @return the username of the current user or an empty string if the user has not
 	 * signed in
 	 */
 	public String getUsername() {
@@ -39,13 +39,15 @@ public final class SecurityContext {
 		if (authentication == null) {
 			return "";
 		}
-		else {
-			return switch (authentication.getPrincipal()) {
-				case UserDetails userDetails -> Objects.requireNonNullElse(userDetails.getUsername(), "");
-				case Jwt jwt -> Objects.requireNonNullElse(jwt.getSubject(), "");
-				case null, default -> ""; // Anonymous or no authentication.
-			};
+		var principal = authentication.getPrincipal();
+		if (principal instanceof UserDetails userDetails) {
+			return Objects.requireNonNullElse(userDetails.getUsername(), "");
 		}
+		if (principal instanceof Jwt jwt) {
+			return Objects.requireNonNullElse(jwt.getSubject(), "");
+		}
+		// Anonymous or no authentication.
+		return "";
 	}
 
 	/**

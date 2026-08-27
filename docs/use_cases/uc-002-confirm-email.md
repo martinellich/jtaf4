@@ -18,8 +18,8 @@
 1. Visitor clicks the confirmation link `/<host>/confirm?cf=<token>` from the e-mail.
 2. System reads the `cf` query parameter.
 3. System looks up the user by confirmation token.
-4. System sets `confirmed = true` on the user record.
-5. System displays a success message and a link to sign in.
+4. System sets `confirmed = true` on the user record and clears the confirmation token.
+5. System displays a success message and a "Login" link that routes to the organizations view (unauthenticated visitors are redirected to sign-in first).
 
 ## Alternative Flows
 
@@ -53,4 +53,4 @@
 
 ### BR-004: Single-use confirmation
 
-A confirmation token is consumed once; subsequent visits with the same token find the user already confirmed and lead to the failure flow.
+A confirmation token is consumed once: it is cleared when the account is confirmed, so subsequent visits with the same token match no user and lead to the failure flow.

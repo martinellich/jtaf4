@@ -27,7 +27,7 @@
 **Trigger:** Step 3 — `medal_percentage = 0` and `always_first_three_medals = false`.
 **Flow:**
 
-1. The PDF is generated but contains no diploma pages.
+1. No diploma pages exist, so the download is an empty (0-byte) file.
 
 ## Postconditions
 
@@ -37,7 +37,7 @@
 
 ### Failure Postconditions
 
-- No file is downloaded; the user sees an error.
+- Unknown competition: no file is downloaded; the user sees an error. PDF-generation errors are swallowed and yield an empty (0-byte) download.
 
 ## Business Rules
 

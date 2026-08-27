@@ -28,19 +28,19 @@
 
 ### A1: E-mail already registered
 
-**Trigger:** Step 5 — an active user with the same e-mail already exists.
+**Trigger:** Step 5 — a user with the same e-mail already exists (confirmed or not).
 **Flow:**
 
-1. System rejects the request and rolls back the transaction.
-2. System shows the message "User already exists".
+1. System rejects the request before anything is written.
+2. System shows the message "A user with this email address already exists!".
 3. Visitor stays on the registration form.
 
 ### A2: Required field missing or invalid
 
-**Trigger:** Step 4 — first name, last name, e-mail, or password is empty.
+**Trigger:** Step 4 — first name, last name, e-mail, or password is empty, or the e-mail is not a valid address.
 **Flow:**
 
-1. System highlights the missing fields.
+1. System marks the invalid fields; the user is not created.
 2. Visitor corrects the input and resubmits at step 4.
 
 ## Postconditions

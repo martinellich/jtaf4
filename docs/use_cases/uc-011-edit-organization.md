@@ -20,7 +20,7 @@
 3. System opens the organization dialog populated with the current values.
 4. User edits the key and/or name.
 5. User saves the dialog.
-6. System persists the change and refreshes the grid.
+6. System persists the change and refreshes the grid. (Saving also re-runs the creation of the user's `ORGANIZATION_USER` link, which is idempotent.)
 
 ## Alternative Flows
 
@@ -29,7 +29,7 @@
 **Trigger:** Step 5 — required fields missing or unique key conflict.
 **Flow:**
 
-1. System reports the error in the dialog or via Notification.
+1. Missing required fields are marked and block the save; a unique-key conflict is reported via Notification. The dialog stays open in both cases.
 2. User adjusts the values and resubmits.
 
 ## Postconditions

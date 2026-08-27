@@ -11,6 +11,7 @@ import org.openpdf.text.pdf.PdfWriter;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -89,7 +90,7 @@ public abstract class AbstractReport {
 			var table = new PdfPTable(3);
 			table.setWidthPercentage(100f);
 
-			var cellLeft = new PdfPCell(new Phrase(DATE_TIME_FORMATTER.format(LocalDate.now()),
+			var cellLeft = new PdfPCell(new Phrase(DATE_TIME_FORMATTER.format(LocalDate.now(ZoneId.systemDefault())),
 					FontFactory.getFont(HELVETICA, DEFAULT_FONT_SIZE)));
 			cellLeft.setBorder(0);
 			cellLeft.setBorderWidthTop(1f);

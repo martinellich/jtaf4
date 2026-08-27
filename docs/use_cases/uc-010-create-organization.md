@@ -30,7 +30,7 @@
 **Trigger:** Step 5 — the unique constraint on `organization_key` is violated.
 **Flow:**
 
-1. System surfaces the database error in a Notification.
+1. System surfaces the database error in a Notification; the dialog stays open.
 2. User edits the key in the dialog and resubmits.
 
 ### A2: Required field missing
@@ -38,7 +38,7 @@
 **Trigger:** Step 4 — name or key is empty.
 **Flow:**
 
-1. System highlights the missing fields and blocks the save.
+1. System highlights the missing fields and blocks the save; the dialog stays open.
 
 ## Postconditions
 

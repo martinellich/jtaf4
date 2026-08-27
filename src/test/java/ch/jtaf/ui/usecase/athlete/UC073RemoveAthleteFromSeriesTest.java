@@ -45,7 +45,7 @@ class UC073RemoveAthleteFromSeriesTest extends AbstractViewTest {
 
 		// Assign an unassigned athlete so the test can remove it without altering seeded
 		// state.
-		gridHeaderButton(athletesGrid, "remove-column").click();
+		gridHeaderButton(athletesGrid, "remove-column", "assign-athlete").click();
 		assertThat(find(SearchAthleteDialog.class).all()).hasSize(1);
 
 		test(find(TextField.class).withCaption("Filter").withValue("").single()).setValue("z");

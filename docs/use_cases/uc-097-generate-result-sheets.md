@@ -20,7 +20,7 @@
    * "Sheets" — ordered by category, last name, first name.
    * "Ordered by club" — ordered by club, category, last name, first name.
 2. System triggers a download.
-3. `NumberAndSheetsService.createSheets` joins athletes with their categories, gathers each category's events ordered by `position`, and pulls the series logo.
+3. `NumberAndSheetsService.createSheets` joins athletes with their categories, gathers each category's events ordered by `position`, and pulls the series logo. Athletes come from the whole series, not just this competition.
 4. System renders `SheetsReport` in the user's locale.
 5. Browser downloads `sheets_orderby_(athlete|club)<competitionId>.pdf`.
 
@@ -41,7 +41,7 @@
 
 ### Failure Postconditions
 
-- No file is downloaded; the user sees an error.
+- Unknown competition: no file is downloaded; the user sees an error. PDF-generation errors are swallowed and yield an empty (0-byte) download.
 
 ## Business Rules
 

@@ -26,13 +26,15 @@ public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
     }
 
     @Transactional
-    public void copyCategories(Long seriesIdToCopy, Long currentSeriesId) {
+    public void copyCategories(Long seriesIdToCopy, Long currentSeriesId, int yearOffset) {
         dslContext
             .selectFrom(CATEGORY)
             .where(CATEGORY.SERIES_ID.eq(seriesIdToCopy))
             .fetch().forEach(category -> {
                 var copyCategory = category.copy();
                 copyCategory.setSeriesId(currentSeriesId);
+                copyCategory.setYearFrom(shiftYear(category.getYearFrom(), yearOffset));
+                copyCategory.setYearTo(shiftYear(category.getYearTo(), yearOffset));
                 dslContext.attach(copyCategory);
                 copyCategory.store();
                 dslContext
@@ -46,6 +48,14 @@ public class SeriesDAO extends JooqDAO<Series, SeriesRecord, Long> {
                         copyCategoryEvent.store();
                 });
         });
+    }
+
+    /**
+     * Shifts a birth year by the offset, leaving the open bounds of the oldest and the
+     * youngest category untouched.
+     */
+    private static int shiftYear(int year, int yearOffset) {
+        return year == CategoryYears.OPEN_FROM || year == CategoryYears.OPEN_TO ? year : year + yearOffset;
     }
 
     @Transactional

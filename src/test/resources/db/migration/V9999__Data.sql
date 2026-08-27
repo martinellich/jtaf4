@@ -785,7 +785,7 @@ INSERT INTO competition (id, name, competition_date, always_first_three_medals, 
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(3, '38. Jugendmeisterschaft', '2018-09-01', true, 0, false, 2);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(4, '1. CIS Twann', '2019-05-04', true, 0, false, 3);
 INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(5, '2. CIS Erlach', '2019-05-25', true, 0, false, 3);
-INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(6, '39. Jugendmeisterschaft', '2019-08-31', true, 0, false, 4);
+INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(6, '39. Jugendmeisterschaft', '2019-08-31', true, 50, false, 4);
 
 ALTER SEQUENCE competition_seq RESTART WITH 7;
 

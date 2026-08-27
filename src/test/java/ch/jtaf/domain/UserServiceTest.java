@@ -38,6 +38,16 @@ class UserServiceTest {
 	}
 
 	@Test
+	void confirm_is_single_use() throws UserAlreadyExistException {
+		SecurityUserRecord user = userService.createUser("Paula", "Muster", "paula.muster@nodomain.xyz", "pass",
+				Locale.of("de", "CH"));
+		String confirmationId = user.getConfirmationId();
+
+		assertThat(userService.confirm(confirmationId)).isTrue();
+		assertThat(userService.confirm(confirmationId)).isFalse();
+	}
+
+	@Test
 	void confirm_with_invalid_confirmation_id() {
 		boolean confirmed = userService.confirm(UUID.randomUUID().toString());
 

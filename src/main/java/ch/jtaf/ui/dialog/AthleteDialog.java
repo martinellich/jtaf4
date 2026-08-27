@@ -68,11 +68,11 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 
 		binder.forField(gender).bind(AthleteRecord::getGender, AthleteRecord::setGender);
 
-		var yearOfBirth = new TextField(getTranslation("Year"));
-		yearOfBirth.setAutoselect(true);
-		lastName.setRequiredIndicatorVisible(true);
+		var year = new TextField(getTranslation("Year"));
+		year.setAutoselect(true);
+		year.setRequiredIndicatorVisible(true);
 
-		binder.forField(yearOfBirth)
+		binder.forField(year)
 			.withConverter(new JtafStringToIntegerConverter(getTranslation("Must.be.a.number")))
 			.withNullRepresentation(0)
 			.bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
@@ -93,15 +93,6 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 				return clubRecordMap.get(value);
 			}
 		}).bind(AthleteRecord::getClubId, AthleteRecord::setClubId);
-
-		var year = new TextField("Year");
-		year.setAutoselect(true);
-		year.setRequiredIndicatorVisible(true);
-
-		binder.forField(year)
-			.withConverter(new JtafStringToIntegerConverter(getTranslation("Must.be.a.number")))
-			.withNullRepresentation(0)
-			.bind(AthleteRecord::getYearOfBirth, AthleteRecord::setYearOfBirth);
 
 		formLayout.add(lastName, firstName, gender, year, club);
 	}

@@ -18,8 +18,8 @@
 1. UC-080 invokes `ResultCalculator.calculatePoints(eventRecord, resultValue)`.
 2. System parses the raw result value according to the event type:
    * `RUN` — seconds with optional centiseconds, e.g. `12.34`.
-   * `RUN_LONG` — minutes:seconds with optional centiseconds, e.g. `2:15.67`.
-   * `JUMP_THROW` — distance in centimeters, e.g. `450`.
+   * `RUN_LONG` — minutes and seconds separated by a **dot**, e.g. `2.15` = 2 min 15 s (no centiseconds; a `:` is rejected).
+   * `JUMP_THROW` — distance in **metres**, e.g. `3.11`; converted to centimetres internally.
 3. System applies the IAAF formula:
    * Time events: `points = A * ((B - timeInCentiseconds) / 100)^C`.
    * Distance events: `points = A * ((distanceInCentimeters - B) / 100)^C`.
@@ -33,15 +33,15 @@
 **Trigger:** Step 2 — the value cannot be parsed.
 **Flow:**
 
-1. The calculator returns `null` (or 0) and the points field stays empty.
-2. The result is still saved with the raw value so the user can correct it.
+1. The calculator throws a `NumberFormatException`.
+2. The result-entry view catches it, shows an "Invalid result" notification, and saves nothing; `RESULT.points` is never null.
 
 ### A2: Performance below scoring threshold
 
 **Trigger:** Step 3 — the formula yields a negative value (e.g. time slower than `B`, distance below `B`).
 **Flow:**
 
-1. The calculator clamps the points to zero.
+1. The calculator explicitly clamps the points to zero (`NaN` or negative results of the formula return 0).
 
 ## Postconditions
 
@@ -52,7 +52,7 @@
 
 ### Failure Postconditions
 
-- The points field is empty for invalid input.
+- Invalid input leaves the stored results unchanged; the user sees an "Invalid result" notification.
 
 ## Business Rules
 

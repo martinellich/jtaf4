@@ -18,8 +18,8 @@
 2. System displays e-mail and password fields.
 3. Visitor enters credentials and submits.
 4. System verifies the credentials against `SECURITY_USER` via Spring Security.
-5. System creates an authenticated session and forwards the visitor to the dashboard.
-6. Application drawer reveals the protected navigation links.
+5. System issues a stateless authentication cookie (JWT, `VaadinStatelessSecurityConfigurer`) and forwards the visitor to the originally requested page, falling back to the dashboard.
+6. Application drawer reveals the protected navigation links (shown for any signed-in user, independent of organization selection).
 
 ## Alternative Flows
 
@@ -51,12 +51,12 @@
 
 ### Success Postconditions
 
-- A Spring Security session exists and the user can navigate to protected views.
+- The visitor is authenticated via the stateless JWT cookie and can navigate to protected views.
 - The MainLayout shows the username, the logout button, and the organization-bound menu items.
 
 ### Failure Postconditions
 
-- No session is created.
+- No authentication is established.
 - The visitor remains on the login overlay.
 
 ## Business Rules

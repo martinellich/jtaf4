@@ -5,7 +5,7 @@
 **Use Case ID:** UC-031
 **Use Case Name:** Edit competition
 **Primary Actor:** Registered User
-**Goal:** Update an existing competition's name, date, lock state, or medal settings.
+**Goal:** Update an existing competition's name, date, or medal settings.
 **Status:** Implemented
 
 ## Preconditions
@@ -17,7 +17,7 @@
 
 1. User clicks the row of a competition in the competitions grid.
 2. System opens `CompetitionDialog` populated with the current values.
-3. User edits name, date, and/or medal settings.
+3. User edits name, date, and/or medal settings (medal percentage, "Always first three medals").
 4. User saves.
 5. System persists the changes and refreshes the grid.
 
@@ -25,10 +25,10 @@
 
 ### A1: Validation failure
 
-**Trigger:** Step 4 — name is blank.
+**Trigger:** Step 4 — name, date, or medal percentage is missing, or the percentage is outside 0–100.
 **Flow:**
 
-1. Validator blocks save until corrected.
+1. Validation marks the affected fields and blocks the save; database errors are shown as a notification and the dialog stays open.
 
 ## Postconditions
 
@@ -45,4 +45,4 @@
 
 ### BR-028: Medal scheme
 
-`always_first_three_medals` overrides the percentage rule by guaranteeing the top three a medal regardless of `medal_percentage`.
+`always_first_three_medals` only takes effect when `medal_percentage > 0`; it then guarantees at least the top three a medal. With `medal_percentage = 0` no medals are awarded at all.

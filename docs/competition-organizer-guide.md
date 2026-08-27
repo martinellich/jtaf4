@@ -216,10 +216,12 @@ Categories group athletes by age and gender for fair competition.
 For recurring series, you can copy categories from previous years:
 
 1. **Use Copy Categories Feature**
-   - In Categories tab, click "Copy Categories"
-   - Select source series
-   - Choose which categories to copy
-   - Adjust age ranges for new year
+   - In the series form, click "Copy Categories" (only offered while the series has no categories yet)
+   - Select the source series
+   - Optionally tick "Increase years of birth" and set the offset (usually 1) so the age brackets move
+     with the new season; abbreviation and name stay unchanged, and the open bounds of the oldest
+     (1900) and youngest (9999) category are left as they are
+   - Click "Copy"
 
 2. **Benefits**
    - Saves setup time
@@ -264,7 +266,32 @@ Before registering athletes, set up clubs:
 
 - **Search Existing Athletes**: Find athletes from other series in your organization
 - **Bulk Assignment**: Assign multiple athletes to categories simultaneously
-- **Import/Export**: Use for large athlete databases (contact support for assistance)
+
+### Importing Registrations from Excel
+
+If you receive the registrations as a spreadsheet, import them in one step:
+
+1. **Prepare the file**
+   - One `.xlsx` file, first sheet
+   - A header row with `Name` (family name), `Vorname` (given name), `Geb. Datum` (birth date or
+     birth year) and `Geschlecht` (`m` / `w`) in the first four columns
+   - Rows above the header (for example a title) are ignored; the first empty row ends the list
+
+2. **Run the import**
+   - In the series view, open the "Athletes" tab and click "Import athletes"
+   - Upload the file
+   - Check the preview: every row shows whether the athlete is *new*, *existing*, *already assigned*
+     or has *no matching category*; click a column header to sort — sorting by status brings all
+     problematic rows together
+   - Click "Import"
+
+3. **What happens**
+   - Athletes already known to your organization (same name, year of birth and gender) are reused
+   - Unknown athletes are created without a club — you can add the club later
+   - Everybody with a matching category is enrolled in the series
+   - Athletes without a matching category are created but not enrolled; create the missing category
+     and assign them afterwards
+   - Importing the same file twice does not create duplicates
 
 ## Result Entry and Management
 

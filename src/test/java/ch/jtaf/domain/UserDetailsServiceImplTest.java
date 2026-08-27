@@ -24,11 +24,25 @@ class UserDetailsServiceImplTest {
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 
+	@Autowired
+	private UserService userService;
+
 	@Test
 	void load_user_by_username() {
 		UserDetails userDetails = userDetailsService.loadUserByUsername("simon@martinelli.ch");
 
 		assertThat(userDetails.getUsername()).isEqualTo("simon@martinelli.ch");
+		assertThat(userDetails.isEnabled()).isTrue();
+	}
+
+	@Test
+	void unconfirmed_user_is_disabled() throws UserAlreadyExistException {
+		userService.createUser("Ursula", "Unbestaetigt", "ursula.unbestaetigt@nodomain.xyz", "pass",
+				java.util.Locale.GERMAN);
+
+		UserDetails userDetails = userDetailsService.loadUserByUsername("ursula.unbestaetigt@nodomain.xyz");
+
+		assertThat(userDetails.isEnabled()).isFalse();
 	}
 
 	@Test

@@ -27,7 +27,7 @@
 **Flow:**
 
 1. `CategoryAthleteDAO.setDnf` throws `IllegalStateException`.
-2. System shows the localized message "Set DNF unsuccessful".
+2. System shows the localized message "DNF could not be set".
 3. The checkbox state is left as the user toggled.
 
 ## Postconditions

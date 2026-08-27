@@ -71,7 +71,7 @@ public class CompetitionRankingReport extends RankingReport {
 						table = createAthletesTable();
 						document.newPage();
 					}
-					createAthleteRow(table, rank, athlete, calculateNumberOfMedals(category));
+					createAthleteRow(table, rank, athlete, ranking.numberOfMedals(category));
 					rank++;
 					numberOfRows += 1;
 				}
@@ -81,25 +81,13 @@ public class CompetitionRankingReport extends RankingReport {
 						table = createAthletesTable();
 						document.newPage();
 					}
-					createAthleteRow(table, -1, athlete, calculateNumberOfMedals(category));
+					createAthleteRow(table, -1, athlete, ranking.numberOfMedals(category));
 					rank++;
 					numberOfRows += 1;
 				}
 				document.add(table);
 			}
 		}
-	}
-
-	private int calculateNumberOfMedals(CompetitionRankingData.Category category) {
-		double numberOfMedals = 0;
-		if (ranking.medalPercentage() > 0) {
-			double percentage = ranking.medalPercentage();
-			numberOfMedals = category.sortedAthletes().size() * (percentage / 100);
-			if (numberOfMedals < 3 && ranking.alwaysFirstThreeMedals()) {
-				numberOfMedals = 3;
-			}
-		}
-		return (int) numberOfMedals;
 	}
 
 	private PdfPTable createAthletesTable() {

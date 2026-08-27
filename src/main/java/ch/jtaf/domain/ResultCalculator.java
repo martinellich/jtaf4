@@ -26,6 +26,10 @@ public class ResultCalculator {
 		else if (EventType.valueOf(event.getEventType()) == EventType.JUMP_THROW) {
 			points = event.getA() * Math.pow((Double.parseDouble(result) * 100 - event.getB()) / 100, event.getC());
 		}
+		// BR-055: results below the event threshold produce NaN or negative values
+		if (Double.isNaN(points) || points < 0) {
+			return 0;
+		}
 		return (int) Math.round(points);
 	}
 

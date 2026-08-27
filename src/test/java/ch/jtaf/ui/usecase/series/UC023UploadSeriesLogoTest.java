@@ -16,9 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * UC-023: Upload series logo.
@@ -39,23 +39,15 @@ class UC023UploadSeriesLogoTest extends AbstractViewTest {
 	}
 
 	@Test
-	void logo_upload() {
-		try {
-			URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
-			if (imageUrl == null) {
-				fail("Image not found");
-			}
-			else {
-				Path path = Paths.get(imageUrl.toURI());
-				byte[] logoData = Files.readAllBytes(path);
+	void logo_upload() throws URISyntaxException, IOException {
+		URL imageUrl = getClass().getClassLoader().getResource("images/logo.png");
+		assertThat(imageUrl).as("Image not found").isNotNull();
 
-				Upload upload = find(Upload.class).id("logo-upload");
-				test(upload).upload("logo.png", "image/png", logoData);
-			}
-		}
-		catch (URISyntaxException | IOException e) {
-			fail(e.getMessage(), e);
-		}
+		Path path = Paths.get(Objects.requireNonNull(imageUrl).toURI());
+		byte[] logoData = Files.readAllBytes(path);
+
+		Upload upload = find(Upload.class).id("logo-upload");
+		test(upload).upload("logo.png", "image/png", logoData);
 	}
 
 }

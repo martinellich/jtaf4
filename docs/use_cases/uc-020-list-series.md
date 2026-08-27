@@ -27,8 +27,8 @@
 **Trigger:** Step 2 — `OrganizationProvider.getOrganization()` is null.
 **Flow:**
 
-1. The query condition becomes `false`, so the grid is empty.
-2. User is expected to select an organization (UC-013) first.
+1. `ProtectedView.beforeEnter` reroutes to the "My Organizations" view; the series list is not rendered.
+2. User selects an organization (UC-013) and returns.
 
 ## Postconditions
 
@@ -38,7 +38,7 @@
 
 ### Failure Postconditions
 
-- The grid is empty (no organization selected, or the organization owns no series yet).
+- Without an active organization the user is rerouted to the organization selection; the grid is empty only when the organization owns no series yet.
 
 ## Business Rules
 

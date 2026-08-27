@@ -7,9 +7,11 @@ import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.IntegerField;
 
 public class CopyCategoriesDialog extends Dialog {
 
@@ -30,11 +32,35 @@ public class CopyCategoriesDialog extends Dialog {
 
 		add(seriesSelection);
 
+		var increaseYears = new Checkbox(getTranslation("Increase.years"));
+		increaseYears.setId("increase-years");
+
+		var yearOffset = new IntegerField(getTranslation("Year.offset"));
+		yearOffset.setId("year-offset");
+		yearOffset.setValue(1);
+		yearOffset.setMin(1);
+		yearOffset.setMax(10);
+		yearOffset.setStepButtonsVisible(true);
+		yearOffset.setEnabled(false);
+
+		increaseYears.addValueChangeListener(event -> yearOffset.setEnabled(Boolean.TRUE.equals(event.getValue())));
+
+		add(increaseYears, yearOffset);
+
 		var copy = new Button(getTranslation("Copy"));
 		copy.setId("copy-categories-copy");
 		copy.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+		copy.setEnabled(false);
+		seriesSelection.addValueChangeListener(event -> copy.setEnabled(event.getValue() != null));
 		copy.addClickListener(event -> {
-			seriesDAO.copyCategories(seriesSelection.getValue().getId(), currentSeriesId);
+			var selectedSeries = seriesSelection.getValue();
+			if (selectedSeries == null) {
+				return;
+			}
+
+			var offset = Boolean.TRUE.equals(increaseYears.getValue()) && yearOffset.getValue() != null
+					? yearOffset.getValue() : 0;
+			seriesDAO.copyCategories(selectedSeries.getId(), currentSeriesId, offset);
 			Notification.show(getTranslation("Categories.copied"), 6000, Notification.Position.TOP_END);
 
 			fireEvent(new AfterCopyEvent(this));

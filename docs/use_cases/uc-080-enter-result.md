@@ -11,13 +11,13 @@
 ## Preconditions
 
 - The user is signed in (`USER` or `ADMIN`).
-- The user has navigated to `/result-capturing/<competitionId>` from the dashboard "Enter Results" button.
+- The user has navigated to `/resultcapturing/<competitionId>` from the dashboard "Enter Results" button.
 - At least one athlete is enrolled in a category whose events the competition contests.
 
 ## Main Success Scenario
 
 1. User opens the result-entry view.
-2. System lists athletes registered to the competition and offers a filter (UC-083).
+2. System shows an initially empty athletes grid and a filter (UC-083); athletes appear once a filter value is entered.
 3. User selects an athlete (or the system auto-selects the only filtered result).
 4. System loads the events of the athlete's category in `position` order and renders a result/points pair per event.
 5. System pre-populates existing `RESULT` rows for the athlete in this competition.
@@ -64,7 +64,7 @@
 
 ### Failure Postconditions
 
-- The keystroke is reflected in the field but no row is saved (e.g. invalid input — see UC-084).
+- On invalid input the system shows an "Invalid result" notification and no row is saved (see UC-084).
 
 ## Business Rules
 

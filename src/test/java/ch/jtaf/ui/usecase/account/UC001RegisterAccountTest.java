@@ -35,4 +35,32 @@ class UC001RegisterAccountTest extends AbstractViewTest {
 			.isEqualTo("Thanks for registering. An email was sent to your address. Please check your inbox.");
 	}
 
+	@Test
+	void register_with_missing_fields_is_blocked() {
+		setupVaadin();
+
+		navigate(RegisterView.class);
+
+		test(find(Button.class).withText("Register").single()).click();
+
+		assertThat(find(Notification.class).all()).isEmpty();
+		assertThat(find(TextField.class).withCaption("First Name").single().isInvalid()).isTrue();
+	}
+
+	@Test
+	void register_with_invalid_email_is_blocked() {
+		setupVaadin();
+
+		navigate(RegisterView.class);
+
+		test(find(TextField.class).withCaption("First Name").single()).setValue("John");
+		test(find(TextField.class).withCaption("Last Name").single()).setValue("Doe");
+		test(find(EmailField.class).withCaption("Email").single()).setValue("not-an-email");
+		test(find(PasswordField.class).withCaption("Password").single()).setValue("pass");
+		test(find(Button.class).withText("Register").single()).click();
+
+		assertThat(find(Notification.class).all()).isEmpty();
+		assertThat(find(EmailField.class).withCaption("Email").single().isInvalid()).isTrue();
+	}
+
 }

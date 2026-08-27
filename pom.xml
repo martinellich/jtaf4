@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
     </parent>
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.10.11</version>
+    <version>4.11.0</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -51,32 +51,33 @@
     <properties>
         <java.version>25</java.version>
 
-        <vaadin.version>25.2.4</vaadin.version>
+        <vaadin.version>25.2.6</vaadin.version>
         <openpdf.version>3.0.5</openpdf.version>
+        <poi.version>5.5.1</poi.version>
         <jooq-spring.version>1.1.1</jooq-spring.version>
         <jooq-utilities.version>1.1.4</jooq-utilities.version>
 
-        <flyway-maven-plugin.version>13.1.0</flyway-maven-plugin.version>
+        <flyway-maven-plugin.version>13.3.0</flyway-maven-plugin.version>
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
 
         <jspecify.version>1.0.1</jspecify.version>
         <errorprone.version>2.50.0</errorprone.version>
         <nullaway.version>0.13.8</nullaway.version>
-        <spring-javaformat-maven-plugin.version>0.0.47</spring-javaformat-maven-plugin.version>
+        <spring-javaformat-maven-plugin.version>0.0.48</spring-javaformat-maven-plugin.version>
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.15</jacoco.version>
-        <playwright.version>1.61.0</playwright.version>
+        <playwright.version>1.62.0</playwright.version>
         <mopo.version>0.0.6</mopo.version>
 
-        <browserless-test.version>1.1.1</browserless-test.version>
-        <archunit.version>1.4.2</archunit.version>
+        <browserless-test.version>1.1.2</browserless-test.version>
+        <archunit.version>1.5.0</archunit.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
 
         <db.image>postgres:16.1</db.image>
         <db.username>jtaf4</db.username>
-        <db.password>jtaf420</db.password>
+        <db.password>jtaf420</db.password><!-- NOSONAR - throwaway credentials for the ephemeral Testcontainers database used at build time -->
 
         <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
         <sonar.organization>martinellich</sonar.organization>
@@ -170,6 +171,12 @@
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
             <version>${openpdf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
         </dependency>
 
         <dependency>
@@ -470,7 +477,7 @@
             <plugin>
                 <groupId>com.hello2morrow</groupId>
                 <artifactId>sonargraph-maven-plugin</artifactId>
-                <version>26.4.0</version>
+                <version>26.4.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
