@@ -77,6 +77,21 @@ public abstract class AbstractViewTest extends SpringBrowserlessTest {
 		return (Button) grid.getColumnByKey(columnKey).getHeaderComponent();
 	}
 
+	/**
+	 * Returns the button with the given id from a column header that holds several
+	 * buttons.
+	 */
+	protected static Button gridHeaderButton(Grid<?> grid, String columnKey, String buttonId) {
+		return grid.getColumnByKey(columnKey)
+			.getHeaderComponent()
+			.getChildren()
+			.filter(Button.class::isInstance)
+			.map(Button.class::cast)
+			.filter(button -> button.getId().filter(buttonId::equals).isPresent())
+			.findFirst()
+			.orElseThrow(() -> new AssertionError("No button with id " + buttonId + " in header of " + columnKey));
+	}
+
 	protected Grid<SeriesRecord> navigateToSeriesList() {
 		navigate(OrganizationsView.class);
 

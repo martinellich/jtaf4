@@ -7,11 +7,13 @@ import ch.jtaf.ui.AbstractViewTest;
 import ch.jtaf.ui.SeriesListView;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,86 @@ class UC025CopyCategoriesTest extends AbstractViewTest {
 
 	@Test
 	void add_series_and_copy_categories() {
-		// Add new series
+		addSeriesNamedTest();
+
+		// Copy series
+		find(Button.class).id("copy-categories").click();
+
+		ComboBox<SeriesRecord> seriesSelection = find(ComboBox.class).id("series-selection");
+		seriesSelection.setValue(seriesSelection.getLazyDataView().getItem(0));
+		find(Button.class).id("copy-categories-copy").click();
+
+		Notification copiedNotification = find(Notification.class).single();
+		assertThat(test(copiedNotification).getText()).isEqualTo("Categories copied");
+		copiedNotification.close();
+
+		// Select Categories tab
+		Tabs tabs = find(Tabs.class).single();
+		Tab categories = find(Tab.class).withText("Categories").single();
+		tabs.setSelectedTab(categories);
+
+		// Check if categories have been copied
+		Grid<CategoryRecord> categoriesGrid = find(Grid.class).id("categories-grid");
+		assertThat(test(categoriesGrid).size()).isEqualTo(12);
+		assertThat(test(categoriesGrid).getRow(0).getAbbreviation()).isEqualTo("A");
+
+		removeSeriesNamedTest();
+	}
+
+	@Test
+	void copy_categories_and_increase_years_of_birth() {
+		addSeriesNamedTest();
+
+		// Copy categories one year older
+		find(Button.class).id("copy-categories").click();
+
+		ComboBox<SeriesRecord> seriesSelection = find(ComboBox.class).id("series-selection");
+		seriesSelection.setValue(seriesSelection.getLazyDataView().getItem(0));
+
+		IntegerField yearOffset = find(IntegerField.class).id("year-offset");
+		assertThat(yearOffset.isEnabled()).isFalse();
+
+		find(Checkbox.class).id("increase-years").setValue(true);
+		assertThat(yearOffset.isEnabled()).isTrue();
+		assertThat(yearOffset.getValue()).isEqualTo(1);
+
+		find(Button.class).id("copy-categories-copy").click();
+
+		Notification copiedNotification = find(Notification.class).single();
+		assertThat(test(copiedNotification).getText()).isEqualTo("Categories copied");
+		copiedNotification.close();
+
+		// Select Categories tab
+		Tabs tabs = find(Tabs.class).single();
+		Tab categories = find(Tab.class).withText("Categories").single();
+		tabs.setSelectedTab(categories);
+
+		// The abbreviation is unchanged, the years of birth are shifted by one
+		Grid<CategoryRecord> categoriesGrid = find(Grid.class).id("categories-grid");
+		assertThat(test(categoriesGrid).size()).isEqualTo(12);
+
+		// Oldest category: the open lower bound stays untouched
+		CategoryRecord oldestCategory = test(categoriesGrid).getRow(0);
+		assertThat(oldestCategory.getAbbreviation()).isEqualTo("A");
+		assertThat(oldestCategory.getYearFrom()).isEqualTo(1900);
+		assertThat(oldestCategory.getYearTo()).isEqualTo(2003);
+
+		// Category in the middle: both bounds are shifted
+		CategoryRecord middleCategory = test(categoriesGrid).getRow(1);
+		assertThat(middleCategory.getAbbreviation()).isEqualTo("B");
+		assertThat(middleCategory.getYearFrom()).isEqualTo(2004);
+		assertThat(middleCategory.getYearTo()).isEqualTo(2005);
+
+		// Youngest category: the open upper bound stays untouched
+		CategoryRecord youngestCategory = test(categoriesGrid).getRow(5);
+		assertThat(youngestCategory.getAbbreviation()).isEqualTo("F");
+		assertThat(youngestCategory.getYearFrom()).isEqualTo(2012);
+		assertThat(youngestCategory.getYearTo()).isEqualTo(9999);
+
+		removeSeriesNamedTest();
+	}
+
+	private void addSeriesNamedTest() {
 		Grid<SeriesRecord> initialGrid = find(Grid.class).id("series-grid");
 		gridHeaderButton(initialGrid, "delete-column").click();
 
@@ -59,29 +140,9 @@ class UC025CopyCategoriesTest extends AbstractViewTest {
 
 		// Navigate to SeriesView
 		test(seriesGrid).clickRow(0);
+	}
 
-		// Copy series
-		find(Button.class).id("copy-categories").click();
-
-		ComboBox<SeriesRecord> seriesSelection = find(ComboBox.class).id("series-selection");
-		seriesSelection.setValue(seriesSelection.getLazyDataView().getItem(0));
-		find(Button.class).id("copy-categories-copy").click();
-
-		Notification copiedNotification = find(Notification.class).single();
-		assertThat(test(copiedNotification).getText()).isEqualTo("Categories copied");
-		copiedNotification.close();
-
-		// Select Categories tab
-		Tabs tabs = find(Tabs.class).single();
-		Tab categories = find(Tab.class).withText("Categories").single();
-		tabs.setSelectedTab(categories);
-
-		// Check if categories have been copied
-		Grid<CategoryRecord> categoriesGrid = find(Grid.class).id("categories-grid");
-		assertThat(test(categoriesGrid).size()).isEqualTo(12);
-		assertThat(test(categoriesGrid).getRow(0).getAbbreviation()).isEqualTo("A");
-
-		// Remove series
+	private void removeSeriesNamedTest() {
 		navigate(SeriesListView.class);
 		Grid<SeriesRecord> refreshedGrid = find(Grid.class).id("series-grid");
 

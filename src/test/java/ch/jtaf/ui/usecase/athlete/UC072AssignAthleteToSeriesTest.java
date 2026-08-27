@@ -52,7 +52,7 @@ class UC072AssignAthleteToSeriesTest extends AbstractViewTest {
 		assertThat(test(athletesGrid).getRow(0).getLastName()).isEqualTo("Berger");
 
 		// Assign athlete
-		gridHeaderButton(athletesGrid, "remove-column").click();
+		gridHeaderButton(athletesGrid, "remove-column", "assign-athlete").click();
 
 		assertThat(find(SearchAthleteDialog.class).all()).hasSize(1);
 

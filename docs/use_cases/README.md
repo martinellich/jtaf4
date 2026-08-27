@@ -58,6 +58,7 @@ The use case catalogue below is reverse-engineered from the JTAF source code (Va
 | UC-071 | [Search athletes](uc-071-search-athletes.md)                           | Registered User |
 | UC-072 | [Assign athlete to series](uc-072-assign-athlete-to-series.md)         | Registered User |
 | UC-073 | [Remove athlete from series](uc-073-remove-athlete-from-series.md)     | Registered User |
+| UC-074 | [Import athletes from Excel](uc-074-import-athletes-from-excel.md)     | Registered User |
 
 ## Results
 

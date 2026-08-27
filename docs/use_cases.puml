@@ -53,6 +53,7 @@ rectangle "JTAF" {
         usecase "UC-071\nSearch athletes" as UC071
         usecase "UC-072\nAssign athlete to series" as UC072
         usecase "UC-073\nRemove athlete from series" as UC073
+        usecase "UC-074\nImport athletes\nfrom Excel" as UC074
     }
 
     package "Results" {
@@ -114,6 +115,7 @@ user --> UC070
 user --> UC071
 user --> UC072
 user --> UC073
+user --> UC074
 
 user --> UC080
 user --> UC081
@@ -142,6 +144,14 @@ note right of UC072
   System matches the athlete
   to a category by gender
   and year of birth.
+end note
+
+UC074 ..> UC072 : <<include>>
+
+note bottom of UC074
+  Registrations arrive as an .xlsx file.
+  Known athletes are reused, unknown ones
+  are created without a club.
 end note
 
 @enduml

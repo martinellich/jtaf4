@@ -10,6 +10,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -23,6 +24,20 @@ public class AthleteDAO extends JooqDAO<Athlete, AthleteRecord, Long> {
 
     public AthleteDAO(DSLContext dslContext) {
         super(dslContext, ATHLETE);
+    }
+
+    public Optional<AthleteRecord> findByOrganizationIdAndNameAndYearOfBirthAndGender(
+            long organizationId, String lastName, String firstName, int yearOfBirth, String gender) {
+        return dslContext
+            .selectFrom(ATHLETE)
+            .where(ATHLETE.ORGANIZATION_ID.eq(organizationId))
+            .and(ATHLETE.LAST_NAME.eq(lastName))
+            .and(ATHLETE.FIRST_NAME.eq(firstName))
+            .and(ATHLETE.YEAR_OF_BIRTH.eq(yearOfBirth))
+            .and(ATHLETE.GENDER.eq(gender))
+            .orderBy(ATHLETE.ID)
+            .limit(1)
+            .fetchOptional();
     }
 
     public List<AthleteRecord> findBySeriesId(Long seriesId) {

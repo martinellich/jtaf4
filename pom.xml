@@ -53,6 +53,7 @@
 
         <vaadin.version>25.2.6</vaadin.version>
         <openpdf.version>3.0.5</openpdf.version>
+        <poi.version>5.5.1</poi.version>
         <jooq-spring.version>1.1.1</jooq-spring.version>
         <jooq-utilities.version>1.1.4</jooq-utilities.version>
 
@@ -170,6 +171,12 @@
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
             <version>${openpdf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
         </dependency>
 
         <dependency>

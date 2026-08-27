@@ -6,6 +6,7 @@ import ch.jtaf.db.tables.records.CategoryAthleteRecord;
 import ch.martinelli.oss.jooqspring.JooqDAO;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,26 +18,37 @@ import static org.jooq.impl.DSL.select;
 @Repository
 public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthleteRecord, CategoryAthleteId> {
 
-    public CategoryAthleteDAO(DSLContext dslContext) {
+    private final CategoryDAO categoryDAO;
+
+    public CategoryAthleteDAO(DSLContext dslContext, CategoryDAO categoryDAO) {
         super(dslContext, CATEGORY_ATHLETE);
+        this.categoryDAO = categoryDAO;
     }
 
     @Transactional
     public void createCategoryAthlete(AthleteRecord athleteRecord, long seriesId) {
-        var categoryId = dslContext
-            .select(CATEGORY.ID)
-            .from(CATEGORY)
-            .where(CATEGORY.SERIES_ID.eq(seriesId))
-            .and(CATEGORY.GENDER.eq(athleteRecord.getGender()))
-            .and(CATEGORY.YEAR_FROM.le(athleteRecord.getYearOfBirth()))
-            .and(CATEGORY.YEAR_TO.ge(athleteRecord.getYearOfBirth()))
-            .fetchOneInto(Long.class);
+        var categoryId = categoryDAO
+            .findIdBySeriesIdAndGenderAndYearOfBirth(seriesId, athleteRecord.getGender(), athleteRecord.getYearOfBirth())
+            .orElse(null);
 
+        createCategoryAthlete(athleteRecord.getId(), categoryId);
+    }
+
+    @Transactional
+    public void createCategoryAthlete(Long athleteId, @Nullable Long categoryId) {
         var categoryAthleteRecord = CATEGORY_ATHLETE.newRecord();
-        categoryAthleteRecord.setAthleteId(athleteRecord.getId());
+        categoryAthleteRecord.setAthleteId(athleteId);
         categoryAthleteRecord.setCategoryId(categoryId);
         categoryAthleteRecord.attach(dslContext.configuration());
         categoryAthleteRecord.store();
+    }
+
+    public boolean isAssignedToSeries(Long athleteId, long seriesId) {
+        return dslContext
+            .fetchExists(dslContext
+                .selectFrom(CATEGORY_ATHLETE)
+                .where(CATEGORY_ATHLETE.ATHLETE_ID.eq(athleteId))
+                .and(CATEGORY_ATHLETE.CATEGORY_ID.in(select(CATEGORY.ID).from(CATEGORY).where(CATEGORY.SERIES_ID.eq(seriesId)))));
     }
 
     @Transactional

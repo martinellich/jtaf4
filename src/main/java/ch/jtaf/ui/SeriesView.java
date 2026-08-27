@@ -70,6 +70,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient NumberAndSheetsService numberAndSheetsService;
 
+	private final transient AthleteImportService athleteImportService;
+
 	@Nullable private Button copyCategories;
 
 	@Nullable private SeriesRecord seriesRecord;
@@ -90,7 +92,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 	public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
 			OrganizationProvider organizationProvider, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO,
 			AthleteDAO athleteDAO, ClubDAO clubDAO, EventDAO eventDAO, SeriesDAO seriesDAO,
-			CategoryAthleteDAO categoryAthleteDAO) {
+			CategoryAthleteDAO categoryAthleteDAO, AthleteImportService athleteImportService) {
 		super(organizationProvider);
 		this.competitionDAO = competitionDAO;
 		this.numberAndSheetsService = numberAndSheetsService;
@@ -101,6 +103,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		this.eventDAO = eventDAO;
 		this.seriesDAO = seriesDAO;
 		this.categoryAthleteDAO = categoryAthleteDAO;
+		this.athleteImportService = athleteImportService;
 
 		createSeriesForm(organizationProvider, seriesDAO);
 
@@ -446,6 +449,20 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			}
 		});
 
+		var importAthletes = new Button(getTranslation("Import.Athletes"));
+		importAthletes.setId("import-athletes");
+		importAthletes.addClickListener(event -> {
+			if (organizationRecord != null && seriesRecord != null) {
+				var dialog = new ImportAthletesDialog(organizationRecord.getId(), seriesRecord.getId(),
+						athleteImportService);
+				dialog.addAfterImportListener(e -> refreshAll());
+				dialog.open();
+			}
+		});
+
+		var athleteActions = new HorizontalLayout(assign, importAthletes);
+		athleteActions.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
 		athletesGrid.addComponentColumn(athleteRecord -> {
 			var remove = new Button(getTranslation("Remove"));
 			remove.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -458,7 +475,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			var horizontalLayout = new HorizontalLayout(remove);
 			horizontalLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 			return horizontalLayout;
-		}).setTextAlign(ColumnTextAlign.END).setHeader(assign).setAutoWidth(true).setKey("remove-column");
+		}).setTextAlign(ColumnTextAlign.END).setHeader(athleteActions).setAutoWidth(true).setKey("remove-column");
 	}
 
 	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
