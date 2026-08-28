@@ -74,6 +74,7 @@ rectangle "JTAF" {
         usecase "UC-096\nGenerate athlete numbers" as UC096
         usecase "UC-097\nGenerate result sheets" as UC097
         usecase "UC-098\nGenerate empty result\nsheets per category" as UC098
+        usecase "UC-099\nGenerate categories sheet" as UC099
     }
 }
 
@@ -127,6 +128,7 @@ user --> UC095
 user --> UC096
 user --> UC097
 user --> UC098
+user --> UC099
 
 ' --- System actor ---
 UC001 ..> system : <<send confirmation e-mail>>

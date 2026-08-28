@@ -70,6 +70,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private final transient NumberAndSheetsService numberAndSheetsService;
 
+	private final transient CategoriesReportService categoriesReportService;
+
 	private final transient AthleteImportService athleteImportService;
 
 	@Nullable private Button copyCategories;
@@ -92,10 +94,12 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 	public SeriesView(CompetitionDAO competitionDAO, NumberAndSheetsService numberAndSheetsService,
 			OrganizationProvider organizationProvider, CategoryDAO categoryDAO, CategoryEventDAO categoryEventDAO,
 			AthleteDAO athleteDAO, ClubDAO clubDAO, EventDAO eventDAO, SeriesDAO seriesDAO,
-			CategoryAthleteDAO categoryAthleteDAO, AthleteImportService athleteImportService) {
+			CategoryAthleteDAO categoryAthleteDAO, AthleteImportService athleteImportService,
+			CategoriesReportService categoriesReportService) {
 		super(organizationProvider);
 		this.competitionDAO = competitionDAO;
 		this.numberAndSheetsService = numberAndSheetsService;
+		this.categoriesReportService = categoriesReportService;
 		this.categoryDAO = categoryDAO;
 		this.categoryEventDAO = categoryEventDAO;
 		this.athleteDAO = athleteDAO;
@@ -391,7 +395,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 				sheet.setTarget(BLANK);
 
 				return new HorizontalLayout(sheet);
-			})).setAutoWidth(true);
+			})).setHeader(createCategoriesSheetAnchor()).setAutoWidth(true).setKey("sheets-column");
 
 			addActionColumnAndSetSelectionListener(categoryDAO, categoriesGrid, dialog, categoryRecord -> refreshAll(),
 					() -> {
@@ -402,6 +406,19 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 						return newRecord;
 					}, this::refreshAll);
 		}
+	}
+
+	private Anchor createCategoriesSheetAnchor() {
+		var categoriesSheet = new Anchor(event -> {
+			if (seriesRecord != null) {
+				event.setFileName("categories" + seriesRecord.getId() + ".pdf");
+				event.getOutputStream()
+					.write(categoriesReportService.createCategoriesSheet(seriesRecord.getId(), getLocale()));
+			}
+		}, getTranslation("Categories.Sheet"));
+		categoriesSheet.setId("categories-sheet");
+		categoriesSheet.setTarget(BLANK);
+		return categoriesSheet;
 	}
 
 	private void createAthletesSection() {
