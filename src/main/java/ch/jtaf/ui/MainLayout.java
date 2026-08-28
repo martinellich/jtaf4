@@ -39,6 +39,8 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver, Be
 
 	private final String applicationVersion;
 
+	private final String environment;
+
 	private final transient SecurityContext securityContext;
 
 	private final Div version = new Div();
@@ -60,9 +62,11 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver, Be
 	@Nullable private RouterLink register;
 
 	public MainLayout(OrganizationProvider organizationProvider,
-			@Value("${application.version}") String applicationVersion, SecurityContext securityContext) {
+			@Value("${application.version}") String applicationVersion,
+			@Value("${jtaf.environment}") String environment, SecurityContext securityContext) {
 		this.organizationProvider = organizationProvider;
 		this.applicationVersion = applicationVersion;
+		this.environment = environment;
 		this.securityContext = securityContext;
 
 		setPrimarySection(Section.DRAWER);
@@ -108,6 +112,13 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver, Be
 		var header = new Header(toggle, viewTitle, info);
 		header.addClassNames(Background.BASE, Border.BOTTOM, BorderColor.CONTRAST_10, BoxSizing.BORDER, Display.FLEX,
 				Height.XLARGE, AlignItems.CENTER, Width.FULL);
+		if (!environment.isBlank()) {
+			var environmentBadge = new Span(environment);
+			environmentBadge.setId("environment-badge");
+			environmentBadge.addClassName("environment-badge");
+			header.addComponentAtIndex(2, environmentBadge);
+			header.addClassName("environment-" + environment.toLowerCase(Locale.ROOT));
+		}
 		return header;
 	}
 

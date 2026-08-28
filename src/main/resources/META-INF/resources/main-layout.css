@@ -11,6 +11,22 @@ nav {
     border-bottom-width: 0 !important;
 }
 
+/* Non-production environments (JTAF_ENVIRONMENT set, see MainLayout) */
+.environment-badge {
+    background-color: #d32f2f;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 2px 14px;
+    border-radius: var(--lumo-border-radius-m);
+    white-space: nowrap;
+}
+
+header.environment-test {
+    background-image: linear-gradient(0deg, rgba(211, 47, 47, 0.18), rgba(211, 47, 47, 0.18));
+    border-bottom: 3px solid #d32f2f !important;
+}
+
 footer {
     overflow: hidden;
     margin-right: 20px;

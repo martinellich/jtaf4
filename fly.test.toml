@@ -6,6 +6,10 @@ primary_region = 'fra'
 
 [build]
 
+[env]
+  # Shows the TEST badge and recolors the header (see MainLayout)
+  JTAF_ENVIRONMENT = 'TEST'
+
 [http_service]
   internal_port = 8080
   force_https = true
