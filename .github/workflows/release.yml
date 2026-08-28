@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version: '25'
-          distribution: 'adopt'
+          distribution: 'temurin'
 
       - name: Cache local Maven repository
         uses: actions/cache@v6
