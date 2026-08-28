@@ -1,6 +1,4 @@
-FROM azul/zulu-openjdk-alpine:21.0.1
-
-VOLUME /tmp
+FROM azul/zulu-openjdk-alpine:25-jre
 
 COPY target/*.jar app.jar
 

@@ -12,7 +12,7 @@
 
     <groupId>ch.jtaf</groupId>
     <artifactId>jtaf4</artifactId>
-    <version>4.11.0</version>
+    <version>4.11.1</version>
 
     <name>JTAF 4</name>
     <description>JTAF - Track And Field</description>
@@ -502,18 +502,6 @@
                             <version>${nullaway.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.jelastic</groupId>
-                <artifactId>jelastic-maven-plugin</artifactId>
-                <version>1.9.5</version>
-                <configuration>
-                    <email>${jelastic.username}</email>
-                    <password>${jelastic.password}</password>
-                    <context>ROOT</context>
-                    <environment>jtaf4</environment>
-                    <api_hoster>app.hidora.com</api_hoster>
                 </configuration>
             </plugin>
         </plugins>
