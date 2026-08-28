@@ -1,0 +1,30 @@
+# Test environment: second Fly app deployed automatically from every green
+# push on develop (see .github/workflows/ci.yml). Runs against the Neon
+# branch "test" of the production database.
+app = 'jtaf4-test'
+primary_region = 'fra'
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Unlike prod the test machine may scale to zero: losing Vaadin sessions
+  # is acceptable here and an idle machine costs nothing. First deploy must
+  # use `fly deploy -c fly.test.toml --ha=false`.
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '60s'
+    method = 'GET'
+    path = '/actuator/health'
+
+[[vm]]
+  memory = '1g'
+  cpu_kind = 'shared'
+  cpus = 1

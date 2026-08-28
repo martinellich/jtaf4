@@ -40,7 +40,69 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      # The UI header shows which commit runs on test: 4.11.1-SNAPSHOT becomes
+      # e.g. 4.11.1-a1b2c3d. This has to happen before the build because the
+      # version is filtered into application.properties while packaging.
+      - name: Set version from commit
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: |
+          set -euo pipefail
+          BASE=$(./mvnw -B help:evaluate -Dexpression=project.version -q -DforceStdout)
+          ./mvnw -B versions:set -DnewVersion="${BASE%-SNAPSHOT}-${GITHUB_SHA::7}" -DgenerateBackupPoms=false
+
       - name: Maven Build, Test, and Sonar
         run: ./mvnw -B verify sonar:sonar -Pcoverage -Dsonar.projectKey=martinellich_jtaf4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # Handed to deploy-test, which deploys exactly the jar that was verified
+      # here (.dockerignore lets only this one file into the image context)
+      - name: Upload the jar
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        uses: actions/upload-artifact@v7
+        with:
+          name: jtaf4-jar
+          path: target/jtaf4-*.jar
+          retention-days: 1
+
+  # Every green push on develop is deployed to the test environment
+  deploy-test:
+    name: Deploy to Fly.io (test)
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    # Never run two deploys at once; a single Fly machine is replaced in place
+    concurrency: fly-deploy-test
+    permissions:
+      contents: read
+      actions: write  # delete the jar artifact after deploying
+    steps:
+
+      # Only the Dockerfile and fly.test.toml are needed here; the jar comes
+      # from the build job (jOOQ codegen needs Docker/Testcontainers, which
+      # the Fly builder does not have), so this job has no JDK and no Maven
+      - uses: actions/checkout@v7
+
+      - name: Download the verified jar
+        uses: actions/download-artifact@v8
+        with:
+          name: jtaf4-jar
+          path: target
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_TEST }}
+        run: flyctl deploy -c fly.test.toml --remote-only
+
+      # The jar counts against the Actions storage quota; once deployed it is
+      # no longer needed. Only on success - a failed deploy keeps the artifact
+      # so the job can be re-run (retention-days above cleans it up regardless)
+      - name: Delete the jar artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts"
+          --jq '.artifacts[] | select(.name == "jtaf4-jar") | .id' |
+          xargs -I{} gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/{}"
