@@ -305,7 +305,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			.setKey(COMPETITION.COMPETITION_DATE.getName());
 		competitionsGrid.addColumn(new ComponentRenderer<>(competition -> {
 			var sheetsOrderedByAthlete = new Anchor(event -> {
-				event.setFileName("sheets_orderby_athlete" + competition.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("sheets_orderby_athlete" + competition.getId() + ".pdf");
 				event.getOutputStream()
 					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
 							getLocale(), CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
@@ -313,7 +314,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			sheetsOrderedByAthlete.setTarget(BLANK);
 
 			var sheetsOrderedByClub = new Anchor(event -> {
-				event.setFileName("sheets_orderby_club" + competition.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("sheets_orderby_club" + competition.getId() + ".pdf");
 				event.getOutputStream()
 					.write(numberAndSheetsService.createSheets(competition.getSeriesId(), competition.getId(),
 							getLocale(), CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME,
@@ -322,7 +324,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			sheetsOrderedByClub.setTarget(BLANK);
 
 			var numbersOrderedByAthlete = new Anchor(event -> {
-				event.setFileName("numbers_orderby_athlete" + competition.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("numbers_orderby_athlete" + competition.getId() + ".pdf");
 				event.getOutputStream()
 					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
 							CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
@@ -330,7 +333,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			numbersOrderedByAthlete.setTarget(BLANK);
 
 			var numbersOrderedByClub = new Anchor(event -> {
-				event.setFileName("numbers_orderby_club" + competition.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("numbers_orderby_club" + competition.getId() + ".pdf");
 				event.getOutputStream()
 					.write(numberAndSheetsService.createNumbers(competition.getSeriesId(), getLocale(),
 							CLUB.ABBREVIATION, CATEGORY.ABBREVIATION, ATHLETE.LAST_NAME, ATHLETE.FIRST_NAME));
@@ -385,7 +389,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 			categoriesGrid.addColumn(new ComponentRenderer<>(category -> {
 				var sheet = new Anchor(event -> {
 					if (seriesRecord != null) {
-						event.setFileName("sheet" + category.getId() + ".pdf");
+						event.setContentType("application/pdf");
+						event.inline("sheet" + category.getId() + ".pdf");
 						event.getOutputStream()
 							.write(numberAndSheetsService.createEmptySheets(seriesRecord.getId(), category.getId(),
 									getLocale()));
@@ -411,7 +416,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 	private Anchor createCategoriesSheetAnchor() {
 		var categoriesSheet = new Anchor(event -> {
 			if (seriesRecord != null) {
-				event.setFileName("categories" + seriesRecord.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("categories" + seriesRecord.getId() + ".pdf");
 				event.getOutputStream()
 					.write(categoriesReportService.createCategoriesSheet(seriesRecord.getId(), getLocale()));
 			}

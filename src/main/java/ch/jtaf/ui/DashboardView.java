@@ -65,7 +65,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 			seriesLayout.add(buttonLayout);
 
 			var seriesRankingAnchor = new Anchor(event -> {
-				event.setFileName("series_ranking" + series.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("series_ranking" + series.getId() + ".pdf");
 				event.getOutputStream().write(seriesRankingService.getSeriesRankingAsPdf(series.getId(), getLocale()));
 			}, "");
 			seriesRankingAnchor.setId("series-ranking-" + seriesIndex);
@@ -81,7 +82,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 			buttonLayout.add(seriesRankingDiv);
 
 			var clubRankingAnchor = new Anchor(event -> {
-				event.setFileName("club_ranking" + series.getId() + ".pdf");
+				event.setContentType("application/pdf");
+				event.inline("club_ranking" + series.getId() + ".pdf");
 				event.getOutputStream().write(seriesRankingService.getClubRankingAsPdf(series.getId(), getLocale()));
 			}, "");
 			clubRankingAnchor.setId("club-ranking-" + seriesIndex);
@@ -119,7 +121,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 				competitionLayout.add(links);
 
 				var competitionRankingAnchor = new Anchor(event -> {
-					event.setFileName("competition_ranking" + competition.getId() + ".pdf");
+					event.setContentType("application/pdf");
+					event.inline("competition_ranking" + competition.getId() + ".pdf");
 					event.getOutputStream()
 						.write(competitionRankingService.getCompetitionRankingAsPdf(competition.getId(), getLocale()));
 				}, "");
@@ -138,7 +141,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 
 				if (securityContext.isUserLoggedIn()) {
 					var diplomaAnchor = new Anchor(event -> {
-						event.setFileName("diploma" + competition.getId() + ".pdf");
+						event.setContentType("application/pdf");
+						event.inline("diploma" + competition.getId() + ".pdf");
 						event.getOutputStream()
 							.write(competitionRankingService.getDiplomasAsPdf(competition.getId(), getLocale()));
 					}, "");
@@ -155,7 +159,8 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 					links.add(diplomaDiv);
 
 					var eventRankingAnchor = new Anchor(event -> {
-						event.setFileName("event_ranking" + competition.getId() + ".pdf");
+						event.setContentType("application/pdf");
+						event.inline("event_ranking" + competition.getId() + ".pdf");
 						event.getOutputStream()
 							.write(competitionRankingService.getEventRankingAsPdf(competition.getId(), getLocale()));
 					}, "");
