@@ -1,6 +1,7 @@
 package ch.jtaf.ui.dialog;
 
 import ch.jtaf.configuration.security.OrganizationProvider;
+import ch.jtaf.db.tables.records.OrganizationRecord;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.domain.AthleteDAO;
@@ -20,6 +21,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class AthleteDialog extends EditDialog<AthleteRecord> {
@@ -27,17 +30,35 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	private final transient OrganizationProvider organizationProvider;
+	private final transient Supplier<@Nullable Long> organizationIdSupplier;
 
 	private final transient ClubDAO clubDAO;
 
 	private Map<Long, ClubRecord> clubRecordMap = new HashMap<>();
 
+	/**
+	 * Creates a dialog whose club list is based on the active organization.
+	 */
 	public AthleteDialog(String title, AthleteDAO athleteDAO, ClubDAO clubDAO,
 			OrganizationProvider organizationProvider) {
+		this(title, athleteDAO, clubDAO,
+				() -> Optional.ofNullable(organizationProvider.getOrganization())
+					.map(OrganizationRecord::getId)
+					.orElse(null));
+	}
+
+	/**
+	 * Creates a dialog whose club list is based on the given organization.
+	 */
+	public AthleteDialog(String title, AthleteDAO athleteDAO, ClubDAO clubDAO, long organizationId) {
+		this(title, athleteDAO, clubDAO, () -> organizationId);
+	}
+
+	private AthleteDialog(String title, AthleteDAO athleteDAO, ClubDAO clubDAO,
+			Supplier<@Nullable Long> organizationIdSupplier) {
 		super(title, "600px", athleteDAO);
 		this.clubDAO = clubDAO;
-		this.organizationProvider = organizationProvider;
+		this.organizationIdSupplier = organizationIdSupplier;
 	}
 
 	@SuppressWarnings("DuplicatedCode")
@@ -98,13 +119,13 @@ public class AthleteDialog extends EditDialog<AthleteRecord> {
 	}
 
 	private List<ClubRecord> getClubs() {
-		var organizationRecord = organizationProvider.getOrganization();
+		var organizationId = organizationIdSupplier.get();
 
-		if (organizationRecord == null) {
+		if (organizationId == null) {
 			return Collections.emptyList();
 		}
 		else {
-			var clubs = clubDAO.findByOrganizationId(organizationRecord.getId());
+			var clubs = clubDAO.findByOrganizationId(organizationId);
 			clubRecordMap = clubs.stream().collect(Collectors.toMap(ClubRecord::getId, clubRecord -> clubRecord));
 			return clubs;
 		}

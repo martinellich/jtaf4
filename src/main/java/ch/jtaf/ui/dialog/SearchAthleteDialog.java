@@ -1,6 +1,5 @@
 package ch.jtaf.ui.dialog;
 
-import ch.jtaf.configuration.security.OrganizationProvider;
 import ch.jtaf.db.tables.records.AthleteRecord;
 import ch.jtaf.db.tables.records.ClubRecord;
 import ch.jtaf.domain.AthleteDAO;
@@ -21,9 +20,11 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.impl.DSL;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serial;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ch.jtaf.db.tables.Athlete.ATHLETE;
@@ -47,8 +48,12 @@ public class SearchAthleteDialog extends Dialog {
 
 	private final ConfigurableFilterDataProvider<AthleteRecord, Void, String> dataProvider;
 
-	public SearchAthleteDialog(AthleteDAO athleteDAO, ClubDAO clubDAO, OrganizationProvider organizationProvider,
-			Long organizationId, Long seriesId, ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
+	private final TextField filter;
+
+	@Nullable private AthleteRecord pendingNewRecord;
+
+	public SearchAthleteDialog(AthleteDAO athleteDAO, ClubDAO clubDAO, long organizationId, long seriesId,
+			ComponentEventListener<AthleteSelectedEvent> athleteSelectedListener) {
 		setDraggable(true);
 		setResizable(true);
 
@@ -65,9 +70,9 @@ public class SearchAthleteDialog extends Dialog {
 
 		getHeader().add(toggle, close);
 
-		var dialog = new AthleteDialog(getTranslation("Athlete"), athleteDAO, clubDAO, organizationProvider);
+		var dialog = new AthleteDialog(getTranslation("Athlete"), athleteDAO, clubDAO, organizationId);
 
-		var filter = new TextField(getTranslation("Filter"));
+		filter = new TextField(getTranslation("Filter"));
 		filter.setAutoselect(true);
 		filter.setAutofocus(true);
 		filter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -119,15 +124,11 @@ public class SearchAthleteDialog extends Dialog {
 			return null;
 		}).setHeader(getTranslation("Club")).setAutoWidth(true);
 
-		addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, athleteRecord -> dataProvider.refreshAll(),
-				() -> {
-					var newRecord = ATHLETE.newRecord();
-					newRecord.setOrganizationId(organizationId);
-					return newRecord;
-				}, getTranslation("Assign.Athlete"), athleteRecord -> {
-					fireEvent(new AthleteSelectedEvent(this, athleteRecord));
-					close();
-				}, dataProvider::refreshAll);
+		addActionColumnAndSetSelectionListener(athleteDAO, grid, dialog, this::afterSave, () -> {
+			pendingNewRecord = ATHLETE.newRecord();
+			pendingNewRecord.setOrganizationId(organizationId);
+			return pendingNewRecord;
+		}, getTranslation("Assign.Athlete"), this::select, dataProvider::refreshAll);
 
 		filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
 
@@ -138,6 +139,32 @@ public class SearchAthleteDialog extends Dialog {
 		toggle();
 
 		filter.focus();
+	}
+
+	/**
+	 * Sets the filter text, e.g. to continue a search started in the calling view.
+	 */
+	public void setFilterValue(String value) {
+		filter.setValue(value);
+	}
+
+	/**
+	 * A newly created athlete is selected right away; an edited athlete only refreshes
+	 * the grid.
+	 */
+	private void afterSave(AthleteRecord athleteRecord) {
+		if (pendingNewRecord != null && Objects.equals(athleteRecord.getId(), pendingNewRecord.getId())) {
+			pendingNewRecord = null;
+			select(athleteRecord);
+		}
+		else {
+			dataProvider.refreshAll();
+		}
+	}
+
+	private void select(AthleteRecord athleteRecord) {
+		fireEvent(new AthleteSelectedEvent(this, athleteRecord));
+		close();
 	}
 
 	private void initialSize() {

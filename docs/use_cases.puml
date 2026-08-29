@@ -62,6 +62,7 @@ rectangle "JTAF" {
         usecase "UC-082\nRemove athlete results" as UC082
         usecase "UC-083\nFilter athletes\nfor result entry" as UC083
         usecase "UC-084\nCalculate IAAF points" as UC084
+        usecase "UC-085\nAssign athlete\nduring result entry" as UC085
     }
 
     package "Reports" {
@@ -122,6 +123,7 @@ user --> UC080
 user --> UC081
 user --> UC082
 user --> UC083
+user --> UC085
 
 user --> UC094
 user --> UC095
@@ -133,6 +135,7 @@ user --> UC099
 ' --- System actor ---
 UC001 ..> system : <<send confirmation e-mail>>
 UC080 ..> UC084 : <<include>>
+UC085 ..> UC072 : <<include>>
 UC082 ..> UC081 : <<include>>
 UC024 ..> UC012 : <<extend>>
 
