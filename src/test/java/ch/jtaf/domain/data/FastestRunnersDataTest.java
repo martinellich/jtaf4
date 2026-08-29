@@ -3,7 +3,11 @@ package ch.jtaf.domain.data;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -85,6 +89,38 @@ class FastestRunnersDataTest {
 			.ranking("M");
 
 		assertThat(ranking).extracting(r -> r.runner().lastName()).containsExactly("Valid");
+	}
+
+	@Test
+	void ranking_is_limited_to_the_fastest_fifteen_runners() {
+		var runners = IntStream.rangeClosed(1, 20)
+			.mapToObj(i -> runner("R" + i, "M", "80", 80, String.format(Locale.ROOT, "%.2f", 11 + i / 10.0)))
+			.toArray(FastestRunnersData.Runner[]::new);
+
+		var ranking = data(runners).ranking("M");
+
+		assertThat(ranking).hasSize(FastestRunnersData.MAX_RUNNERS);
+		assertThat(ranking.getFirst().runner().lastName()).isEqualTo("R1");
+		assertThat(ranking.getLast().runner().lastName()).isEqualTo("R15");
+		assertThat(ranking.getLast().rank()).isEqualTo(15);
+	}
+
+	@Test
+	void runners_sharing_the_last_rank_are_all_included() {
+		// 14 distinct times, then three runners tied on rank 15, then one slower runner
+		var runners = IntStream.rangeClosed(1, 14)
+			.mapToObj(i -> runner("R" + i, "F", "80", 80, String.format(Locale.ROOT, "%.2f", 11 + i / 10.0)))
+			.collect(Collectors.toCollection(ArrayList::new));
+		runners.add(runner("Tie1", "F", "80", 80, "13.00"));
+		runners.add(runner("Tie2", "F", "60", 60, "9.75"));
+		runners.add(runner("Tie3", "F", "80", 80, "13.00"));
+		runners.add(runner("Slower", "F", "80", 80, "13.10"));
+
+		var ranking = new FastestRunnersData("Test", LocalDate.of(2026, 8, 29), runners).ranking("F");
+
+		assertThat(ranking).hasSize(17);
+		assertThat(ranking).extracting(r -> r.runner().lastName()).doesNotContain("Slower");
+		assertThat(ranking.subList(14, 17)).extracting(FastestRunnersData.RankedRunner::rank).containsOnly(15);
 	}
 
 }

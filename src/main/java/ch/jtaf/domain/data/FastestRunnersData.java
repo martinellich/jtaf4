@@ -18,6 +18,12 @@ public record FastestRunnersData(String name, LocalDate competitionDate, List<Ru
 
 	public static final int REFERENCE_DISTANCE = 80;
 
+	/**
+	 * Maximum number of runners per gender in the ranking. Runners sharing the last rank
+	 * are all included so nobody is cut off arbitrarily.
+	 */
+	public static final int MAX_RUNNERS = 15;
+
 	private static final Pattern SPRINT_DISTANCE = Pattern.compile("^(60|80)(\\D.*)?$");
 
 	/**
@@ -38,10 +44,20 @@ public record FastestRunnersData(String name, LocalDate competitionDate, List<Ru
 	}
 
 	/**
-	 * Ranking of the runners of the given gender ordered by levelled time. Runners with
-	 * the same levelled time share the rank (1, 1, 3).
+	 * Ranking of the fastest {@link #MAX_RUNNERS} runners of the given gender ordered by
+	 * levelled time. Runners with the same levelled time share the rank (1, 1, 3);
+	 * runners sharing the last rank within the limit are all included.
 	 */
 	public List<RankedRunner> ranking(String gender) {
+		var ranking = fullRanking(gender);
+		if (ranking.size() <= MAX_RUNNERS) {
+			return ranking;
+		}
+		var lastRank = ranking.get(MAX_RUNNERS - 1).rank();
+		return ranking.stream().filter(ranked -> ranked.rank() <= lastRank).toList();
+	}
+
+	private List<RankedRunner> fullRanking(String gender) {
 		var sorted = runners.stream()
 			.filter(runner -> gender.equals(runner.gender()))
 			.filter(runner -> runner.normalizedTime().isPresent())

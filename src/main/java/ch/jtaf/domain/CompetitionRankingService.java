@@ -6,6 +6,7 @@ import ch.jtaf.domain.data.FastestRunnersData;
 import ch.jtaf.domain.report.CompetitionRankingReport;
 import ch.jtaf.domain.report.DiplomaReport;
 import ch.jtaf.domain.report.EventsRankingReport;
+import ch.jtaf.domain.report.FastestRunnersReport;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,10 @@ public class CompetitionRankingService {
 
     public byte[] getEventRankingAsPdf(Long competitionId, Locale locale) {
         return new EventsRankingReport(getEventsRanking(competitionId).orElseThrow(), locale).create();
+    }
+
+    public byte[] getFastestRunnersAsPdf(Long competitionId, Locale locale) {
+        return new FastestRunnersReport(getFastestRunners(competitionId).orElseThrow(), locale).create();
     }
 
     public Optional<CompetitionRankingData> getCompetitionRanking(Long competitionId) {

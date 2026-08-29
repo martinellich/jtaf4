@@ -73,6 +73,13 @@ class CompetitionRankingServiceTest {
 	}
 
 	@Test
+	void get_fastest_runners_pdf() {
+		byte[] pdf = competitionRankingService.getFastestRunnersAsPdf(1L, Locale.of("de", "CH"));
+
+		assertThat(pdf).isNotEmpty();
+	}
+
+	@Test
 	void get_diplomas_pdf() {
 		// competition 6 has medal_percentage = 50, so there are medal winners
 		byte[] pdf = competitionRankingService.getDiplomasAsPdf(6L, Locale.of("de", "CH"));
