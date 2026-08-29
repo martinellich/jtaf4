@@ -1,15 +1,19 @@
 package ch.jtaf.ui;
 
 import ch.jtaf.configuration.security.Role;
+import ch.jtaf.db.tables.records.CompetitionRecord;
 import ch.jtaf.db.tables.records.ResultRecord;
 import ch.jtaf.domain.AthleteDAO;
 import ch.jtaf.domain.CategoryAthleteDAO;
 import ch.jtaf.domain.CategoryAthleteId;
+import ch.jtaf.domain.ClubDAO;
 import ch.jtaf.domain.CompetitionDAO;
 import ch.jtaf.domain.EventDAO;
 import ch.jtaf.domain.ResultCalculator;
 import ch.jtaf.domain.ResultDAO;
+import ch.jtaf.domain.SeriesDAO;
 import ch.jtaf.ui.dialog.ConfirmDialog;
+import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -17,6 +21,8 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -62,9 +68,17 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	private final transient EventDAO eventDAO;
 
+	private final transient AthleteDAO athleteDAO;
+
+	private final transient ClubDAO clubDAO;
+
+	private final transient SeriesDAO seriesDAO;
+
 	private final Grid<Record5<Long, String, String, String, Long>> grid = new Grid<>();
 
 	private final Div form = new Div();
+
+	private final TextField filter = new TextField();
 
 	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> dataProvider;
 
@@ -72,19 +86,29 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	private long competitionId;
 
+	@SuppressWarnings("java:S107")
 	public ResultCapturingView(ResultCalculator resultCalculator, ResultDAO resultDAO,
 			CategoryAthleteDAO categoryAthleteDAO, AthleteDAO athleteDAO, CompetitionDAO competitionDAO,
-			EventDAO eventDAO) {
+			EventDAO eventDAO, ClubDAO clubDAO, SeriesDAO seriesDAO) {
 		this.resultCalculator = resultCalculator;
 		this.resultDAO = resultDAO;
 		this.categoryAthleteDAO = categoryAthleteDAO;
 		this.competitionDAO = competitionDAO;
 		this.eventDAO = eventDAO;
+		this.athleteDAO = athleteDAO;
+		this.clubDAO = clubDAO;
+		this.seriesDAO = seriesDAO;
 
 		this.dataProvider = createDataProvider(athleteDAO);
 
-		var filter = createFilter();
-		add(filter);
+		createFilter();
+		var assignAthlete = new Button(getTranslation("Assign.Athlete"));
+		assignAthlete.setId("assign-athlete");
+		assignAthlete.addClickListener(event -> openSearchAthleteDialog());
+
+		var filterBar = new HorizontalLayout(filter, assignAthlete);
+		filterBar.setAlignItems(FlexComponent.Alignment.BASELINE);
+		add(filterBar);
 
 		createGrid();
 		add(grid);
@@ -119,14 +143,46 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		grid.setHeight("200px");
 	}
 
-	private TextField createFilter() {
-		var filter = new TextField();
+	private void createFilter() {
 		filter.setId("filter");
 		filter.setAutoselect(true);
 		filter.setAutofocus(true);
 		filter.setValueChangeMode(ValueChangeMode.EAGER);
 		filter.addValueChangeListener(event -> dataProvider.setFilter(event.getValue()));
-		return filter;
+	}
+
+	private void openSearchAthleteDialog() {
+		// The athletes belong to the organization of the series of this competition
+		var series = competitionDAO.findById(competitionId)
+			.flatMap(competition -> seriesDAO.findById(competition.getSeriesId()))
+			.orElse(null);
+		if (series == null) {
+			return;
+		}
+
+		var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, series.getOrganizationId(), series.getId(),
+				this::onAthleteSelect);
+		if (!StringUtils.isNumeric(filter.getValue())) {
+			dialog.setFilterValue(filter.getValue());
+		}
+		dialog.open();
+	}
+
+	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent event) {
+		var athleteRecord = event.getAthleteRecord();
+		var seriesId = competitionDAO.findById(competitionId).map(CompetitionRecord::getSeriesId).orElse(null);
+		if (seriesId == null) {
+			return;
+		}
+
+		if (categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesId).isEmpty()) {
+			Notification.show(getTranslation("No.matching.category"), 6000, Notification.Position.TOP_END);
+			return;
+		}
+
+		// Filtering by the athlete number yields exactly one row which is auto-selected
+		filter.setValue(String.valueOf(athleteRecord.getId()));
+		dataProvider.refreshAll();
 	}
 
 	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> createDataProvider(

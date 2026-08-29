@@ -10,6 +10,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static ch.jtaf.db.tables.Category.CATEGORY;
 import static ch.jtaf.db.tables.CategoryAthlete.CATEGORY_ATHLETE;
 import static org.jooq.impl.DSL.select;
@@ -25,13 +27,21 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
         this.categoryDAO = categoryDAO;
     }
 
+    /**
+     * Assigns the athlete to the category of the series that matches the athlete's gender
+     * and year of birth.
+     * @return the id of the matching category, or empty if the series has no category for
+     * the athlete (in this case nothing is inserted)
+     */
     @Transactional
-    public void createCategoryAthlete(AthleteRecord athleteRecord, long seriesId) {
+    public Optional<Long> createCategoryAthlete(AthleteRecord athleteRecord, long seriesId) {
         var categoryId = categoryDAO
-            .findIdBySeriesIdAndGenderAndYearOfBirth(seriesId, athleteRecord.getGender(), athleteRecord.getYearOfBirth())
-            .orElse(null);
+            .findIdBySeriesIdAndGenderAndYearOfBirth(seriesId, athleteRecord.getGender(), athleteRecord.getYearOfBirth());
 
-        createCategoryAthlete(athleteRecord.getId(), categoryId);
+        if (categoryId.isPresent() && !isAssignedToSeries(athleteRecord.getId(), seriesId)) {
+            createCategoryAthlete(athleteRecord.getId(), categoryId.get());
+        }
+        return categoryId;
     }
 
     @Transactional

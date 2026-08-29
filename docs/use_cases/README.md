@@ -69,6 +69,7 @@ The use case catalogue below is reverse-engineered from the JTAF source code (Va
 | UC-082 | [Remove athlete results](uc-082-remove-athlete-results.md)                        | Registered User |
 | UC-083 | [Filter athletes for result entry](uc-083-filter-athletes-for-result-entry.md)    | Registered User |
 | UC-084 | [Calculate IAAF points](uc-084-calculate-iaaf-points.md)                          | System          |
+| UC-085 | [Assign athlete during result entry](uc-085-assign-athlete-during-result-entry.md) | Registered User |
 
 ## Reports
 

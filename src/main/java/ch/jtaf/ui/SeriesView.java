@@ -466,8 +466,8 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		assign.setId("assign-athlete");
 		assign.addClickListener(event -> {
 			if (organizationRecord != null && seriesRecord != null) {
-				var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationProvider,
-						organizationRecord.getId(), seriesRecord.getId(), this::onAthleteSelect);
+				var dialog = new SearchAthleteDialog(athleteDAO, clubDAO, organizationRecord.getId(),
+						seriesRecord.getId(), this::onAthleteSelect);
 				dialog.open();
 			}
 		});
@@ -503,8 +503,9 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 
 	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
 		var athleteRecord = athleteSelectedEvent.getAthleteRecord();
-		if (seriesRecord != null) {
-			categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId());
+		if (seriesRecord != null
+				&& categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId()).isEmpty()) {
+			Notification.show(getTranslation("No.matching.category"), 6000, Notification.Position.TOP_END);
 		}
 
 		refreshAll();
