@@ -176,6 +176,15 @@ public class DashboardView extends VerticalLayout implements HasDynamicTitle {
 					var eventRankingDiv = new Div(eventRankingAnchor);
 					links.add(eventRankingDiv);
 
+					var fastestRunners = new Button(getTranslation("Fastest.Runners"), MaterialSymbol.SPRINT.create());
+					fastestRunners.setId("fastest-runners-" + seriesIndex + "-" + competitionIndex);
+					fastestRunners.setWidth(BUTTON_WIDTH);
+					fastestRunners.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+					fastestRunners.addClassName(LumoUtility.FontWeight.MEDIUM);
+					fastestRunners.addClickListener(event -> UI.getCurrent()
+						.navigate(FastestRunnersView.class, competition.getId().toString()));
+					links.add(new Div(fastestRunners));
+
 					var enterResults = new Button(getTranslation("Enter.Results"), MaterialSymbol.KEYBOARD.create());
 					enterResults.setId("enter-results-" + seriesIndex + "-" + competitionIndex);
 					enterResults.addThemeVariants(ButtonVariant.LUMO_ERROR);

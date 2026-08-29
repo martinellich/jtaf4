@@ -54,6 +54,25 @@ class CompetitionRankingServiceTest {
 	}
 
 	@Test
+	void get_fastest_runners() {
+		// competition 1 has 80 m and 60 m results for both genders
+		var fastestRunners = competitionRankingService.getFastestRunners(1L);
+
+		assertThat(fastestRunners).isPresent();
+		assertThat(fastestRunners.get().name()).isEqualTo("1. CIS Twann");
+		assertThat(fastestRunners.get().runners()).isNotEmpty()
+			.allSatisfy(runner -> assertThat(runner.distance()).isIn(60, 80));
+
+		var men = fastestRunners.get().ranking("M");
+		var women = fastestRunners.get().ranking("F");
+		assertThat(men).isNotEmpty().allSatisfy(ranked -> assertThat(ranked.runner().gender()).isEqualTo("M"));
+		assertThat(women).isNotEmpty().allSatisfy(ranked -> assertThat(ranked.runner().gender()).isEqualTo("F"));
+		assertThat(men.getFirst().rank()).isEqualTo(1);
+		assertThat(men).isSortedAccordingTo((a, b) -> Double.compare(a.runner().normalizedTime().orElseThrow(),
+				b.runner().normalizedTime().orElseThrow()));
+	}
+
+	@Test
 	void get_diplomas_pdf() {
 		// competition 6 has medal_percentage = 50, so there are medal winners
 		byte[] pdf = competitionRankingService.getDiplomasAsPdf(6L, Locale.of("de", "CH"));

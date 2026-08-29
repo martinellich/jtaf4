@@ -77,6 +77,7 @@ rectangle "JTAF" {
         usecase "UC-097\nGenerate result sheets" as UC097
         usecase "UC-098\nGenerate empty result\nsheets per category" as UC098
         usecase "UC-099\nGenerate categories sheet" as UC099
+        usecase "UC-100\nView fastest runners" as UC100
     }
 }
 
@@ -128,6 +129,7 @@ user --> UC085
 user --> UC086
 
 user --> UC094
+user --> UC100
 user --> UC095
 user --> UC096
 user --> UC097
