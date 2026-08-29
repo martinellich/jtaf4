@@ -63,6 +63,7 @@ rectangle "JTAF" {
         usecase "UC-083\nFilter athletes\nfor result entry" as UC083
         usecase "UC-084\nCalculate IAAF points" as UC084
         usecase "UC-085\nAssign athlete\nduring result entry" as UC085
+        usecase "UC-086\nCorrect athlete\nduring result entry" as UC086
     }
 
     package "Reports" {
@@ -124,6 +125,7 @@ user --> UC081
 user --> UC082
 user --> UC083
 user --> UC085
+user --> UC086
 
 user --> UC094
 user --> UC095
@@ -136,6 +138,7 @@ user --> UC099
 UC001 ..> system : <<send confirmation e-mail>>
 UC080 ..> UC084 : <<include>>
 UC085 ..> UC072 : <<include>>
+UC086 ..> UC080 : <<extend>>
 UC082 ..> UC081 : <<include>>
 UC024 ..> UC012 : <<extend>>
 

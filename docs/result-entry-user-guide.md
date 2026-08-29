@@ -283,6 +283,17 @@ The athlete grid shows:
 
 This information helps ensure you're entering results for the correct athlete in the correct category.
 
+### Correcting Athlete Details
+
+If the name on the result sheet does not match the grid (e.g. a typo from registration), you can fix it without leaving result entry:
+
+1. **Select the athlete**: Filter by ID or name so the athlete is selected
+2. **Click "Edit Athlete"**: The button next to the filter is enabled as soon as an athlete is selected
+3. **Correct the name**: Change last name and/or first name and click "Save"
+4. **Continue entering results**: The grid shows the corrected name and the athlete stays selected
+
+Note: Gender, year of birth and club cannot be changed here because they determine the athlete's category. Use the athlete list of the organization for such changes.
+
 ## Result Formats and Validation
 
 ### Format Requirements

@@ -12,6 +12,7 @@ import ch.jtaf.domain.EventDAO;
 import ch.jtaf.domain.ResultCalculator;
 import ch.jtaf.domain.ResultDAO;
 import ch.jtaf.domain.SeriesDAO;
+import ch.jtaf.ui.dialog.AthleteNameDialog;
 import ch.jtaf.ui.dialog.ConfirmDialog;
 import ch.jtaf.ui.dialog.SearchAthleteDialog;
 import com.vaadin.flow.component.AbstractField;
@@ -80,6 +81,8 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 	private final TextField filter = new TextField();
 
+	private final Button editAthlete = new Button();
+
 	private ConfigurableFilterDataProvider<Record5<Long, String, String, String, Long>, Void, String> dataProvider;
 
 	@Nullable private TextField resultTextField;
@@ -106,7 +109,12 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		assignAthlete.setId("assign-athlete");
 		assignAthlete.addClickListener(event -> openSearchAthleteDialog());
 
-		var filterBar = new HorizontalLayout(filter, assignAthlete);
+		editAthlete.setText(getTranslation("Edit.Athlete"));
+		editAthlete.setId("edit-athlete");
+		editAthlete.setEnabled(false);
+		editAthlete.addClickListener(event -> openAthleteDialog());
+
+		var filterBar = new HorizontalLayout(filter, assignAthlete, editAthlete);
 		filterBar.setAlignItems(FlexComponent.Alignment.BASELINE);
 		add(filterBar);
 
@@ -115,7 +123,10 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 
 		add(form);
 
-		grid.asSingleSelect().addValueChangeListener(this::createForm);
+		grid.asSingleSelect().addValueChangeListener(event -> {
+			editAthlete.setEnabled(event.getValue() != null);
+			createForm(event);
+		});
 	}
 
 	private void createGrid() {
@@ -168,6 +179,23 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		dialog.open();
 	}
 
+	/**
+	 * Opens the name form for the selected athlete to correct a misspelled name without
+	 * leaving the result entry. Gender, year of birth and club stay untouched because
+	 * they determine the category.
+	 */
+	private void openAthleteDialog() {
+		var selected = grid.asSingleSelect().getValue();
+		if (selected == null) {
+			return;
+		}
+
+		athleteDAO.findById(selected.get(ATHLETE.ID)).ifPresent(athleteRecord -> {
+			var dialog = new AthleteNameDialog(getTranslation("Edit.Athlete"), athleteDAO);
+			dialog.open(athleteRecord, saved -> selectAthlete(saved.getId()));
+		});
+	}
+
 	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent event) {
 		var athleteRecord = event.getAthleteRecord();
 		var seriesId = competitionDAO.findById(competitionId).map(CompetitionRecord::getSeriesId).orElse(null);
@@ -180,8 +208,14 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 			return;
 		}
 
-		// Filtering by the athlete number yields exactly one row which is auto-selected
-		filter.setValue(String.valueOf(athleteRecord.getId()));
+		selectAthlete(athleteRecord.getId());
+	}
+
+	/**
+	 * Filtering by the athlete number yields exactly one row which is auto-selected.
+	 */
+	private void selectAthlete(long athleteId) {
+		filter.setValue(String.valueOf(athleteId));
 		dataProvider.refreshAll();
 	}
 
@@ -200,7 +234,9 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		}, (Query<Record5<Long, String, String, String, Long>, String> query) -> {
 			int count = athleteDAO.countAthletes(competitionId, createCondition(query));
 			if (count == 0) {
-				form.removeAll();
+				// Clears the form and disables the athlete editing via the selection
+				// listener
+				grid.deselectAll();
 			}
 			return count;
 		}, athleteRecord -> athleteRecord.get(ATHLETE.ID)).withConfigurableFilter();
