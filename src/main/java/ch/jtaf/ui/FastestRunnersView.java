@@ -8,7 +8,9 @@ import ch.jtaf.ui.component.MaterialSymbol;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
@@ -25,7 +27,8 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 /**
  * Shows the fastest runners of a competition across the 80 m and 60 m sprints, separately
  * for men and women. 60 m times are levelled to 80 m (× 80/60) so both events can be
- * ranked together, e.g. to select the participants of the sprint finals.
+ * ranked together, e.g. to select the participants of the sprint finals. Each list is
+ * limited to {@link FastestRunnersData#MAX_RUNNERS} and can be exported as PDF.
  */
 @RolesAllowed({ Role.USER, Role.ADMIN })
 @Route
@@ -55,7 +58,17 @@ public class FastestRunnersView extends VerticalLayout implements HasDynamicTitl
 		var refresh = new Button(getTranslation("Refresh"), MaterialSymbol.REFRESH.create());
 		refresh.setId("refresh");
 		refresh.addClickListener(event -> load());
-		add(refresh);
+
+		var pdfAnchor = new Anchor(event -> {
+			event.setContentType("application/pdf");
+			event.inline("fastest_runners" + competitionId + ".pdf");
+			event.getOutputStream().write(competitionRankingService.getFastestRunnersAsPdf(competitionId, getLocale()));
+		}, "");
+		pdfAnchor.setId("fastest-runners-pdf");
+		pdfAnchor.setTarget("_blank");
+		pdfAnchor.add(new Button(getTranslation("Download.PDF"), MaterialSymbol.PICTURE_AS_PDF.create()));
+
+		add(new HorizontalLayout(refresh, pdfAnchor));
 
 		add(new H3(getTranslation("Runners.Male")), maleGrid);
 		add(new H3(getTranslation("Runners.Female")), femaleGrid);

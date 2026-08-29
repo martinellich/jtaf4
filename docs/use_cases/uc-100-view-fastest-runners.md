@@ -18,9 +18,10 @@
 1. User clicks "Fastest Runners" on the dashboard for a competition (button only visible to authenticated users).
 2. System navigates to `/fastestrunners/<competitionId>` (`FastestRunnersView`).
 3. `CompetitionRankingService.getFastestRunners` loads every `RUN` result of **this competition** across all categories whose event is a 60 m or 80 m sprint (BR-070).
-4. `FastestRunnersData` levels 60 m times to 80 m (BR-071) and builds one ranking per gender (BR-072).
+4. `FastestRunnersData` levels 60 m times to 80 m (BR-071) and builds one ranking per gender (BR-072), limited to the fastest 15 (BR-074).
 5. System shows two grids — men and women — with rank, name, year of birth, category, club, event, measured time and levelled time (80 m).
 6. User clicks "Refresh" to reload the ranking after further results have been entered.
+7. User clicks "Download PDF"; the system renders both rankings as PDF (`FastestRunnersReport`, `CompetitionRankingService.getFastestRunnersAsPdf`) and opens it in a new tab.
 
 ## Alternative Flows
 
@@ -64,4 +65,8 @@ Runners are ranked by levelled time ascending, separately for athletes with gend
 
 ### BR-073: Authenticated only
 
-The button and the view are only available to signed-in users.
+The button and the view are only available to signed-in users (`@RolesAllowed({USER, ADMIN})` on the view, button rendered only when `SecurityContext.isUserLoggedIn()`).
+
+### BR-074: Limited to the fastest 15
+
+Each ranking (men, women) contains at most the 15 fastest runners (`FastestRunnersData.MAX_RUNNERS`). Runners sharing the 15th rank are all included so nobody is cut off arbitrarily. The PDF uses the same limit.
