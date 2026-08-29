@@ -86,3 +86,4 @@ The use case catalogue below is reverse-engineered from the JTAF source code (Va
 | UC-097 | [Generate result sheets](uc-097-generate-result-sheets.md)                         | Registered User |
 | UC-098 | [Generate empty result sheets per category](uc-098-generate-empty-result-sheets.md) | Registered User |
 | UC-099 | [Generate categories sheet](uc-099-generate-categories-sheet.md)                   | Registered User |
+| UC-100 | [View fastest runners](uc-100-view-fastest-runners.md)                             | Registered User |

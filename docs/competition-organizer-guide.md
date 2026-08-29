@@ -361,6 +361,7 @@ If you receive the registrations as a spreadsheet, import them in one step:
 1. **Competition Rankings**: Athletes ranked by total points within each category
 2. **Event Rankings**: Best performances per event across all categories
 3. **Diplomas**: Certificates for medal winners based on competition settings
+4. **Fastest Runners** (on screen, signed-in users only): The fastest runners across the 80 m and 60 m sprints, separately for men and women. 60 m times are levelled to 80 m (× 80/60) so both events can be ranked together — useful to select the participants of the sprint finals during the competition. Use "Refresh" to reload after entering more results.
 
 #### Series Reports
 1. **Series Rankings**: Cumulative points across all competitions in series

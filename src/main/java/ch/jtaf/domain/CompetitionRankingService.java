@@ -2,6 +2,7 @@ package ch.jtaf.domain;
 
 import ch.jtaf.domain.data.CompetitionRankingData;
 import ch.jtaf.domain.data.EventsRankingData;
+import ch.jtaf.domain.data.FastestRunnersData;
 import ch.jtaf.domain.report.CompetitionRankingReport;
 import ch.jtaf.domain.report.DiplomaReport;
 import ch.jtaf.domain.report.EventsRankingReport;
@@ -9,6 +10,7 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 import static ch.jtaf.db.tables.Category.CATEGORY;
@@ -119,6 +121,46 @@ public class CompetitionRankingService {
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
             .fetchOptional(mapping(EventsRankingData::new));
+    }
+
+    /**
+     * All sprint results (80 m and 60 m) of the competition across all categories. The
+     * ranking itself (gender split, levelling, ordering) is done by {@link FastestRunnersData}.
+     */
+    public Optional<FastestRunnersData> getFastestRunners(Long competitionId) {
+        return dslContext
+            .select(
+                COMPETITION.NAME,
+                COMPETITION.COMPETITION_DATE,
+                multiset(
+                    select(
+                        RESULT.athlete().FIRST_NAME,
+                        RESULT.athlete().LAST_NAME,
+                        RESULT.athlete().YEAR_OF_BIRTH,
+                        RESULT.category().ABBREVIATION,
+                        RESULT.athlete().club().NAME,
+                        RESULT.athlete().GENDER,
+                        RESULT.event().ABBREVIATION,
+                        RESULT.event().NAME,
+                        RESULT.RESULT_)
+                        .from(RESULT)
+                        .where(RESULT.COMPETITION_ID.eq(COMPETITION.ID))
+                        .and(RESULT.event().EVENT_TYPE.eq(EventType.RUN.name()))
+                        .and(RESULT.RESULT_.isNotNull())
+                        .and(RESULT.RESULT_.ne(""))
+                ).convertFrom(r -> r.map(record -> {
+                    var distance = FastestRunnersData.sprintDistance(record.value7(), record.value8());
+                    return distance.isPresent()
+                        ? new FastestRunnersData.Runner(record.value1(), record.value2(), record.value3(),
+                            record.value4(), record.value5(), record.value6(), record.value7(),
+                            distance.getAsInt(), record.value9())
+                        : null;
+                }))
+            )
+            .from(COMPETITION)
+            .where(COMPETITION.ID.eq(competitionId))
+            .fetchOptional(record -> new FastestRunnersData(record.value1(), record.value2(),
+                record.value3().stream().filter(Objects::nonNull).toList()));
     }
 
     private byte[] getLogo(Long competitionId) {
