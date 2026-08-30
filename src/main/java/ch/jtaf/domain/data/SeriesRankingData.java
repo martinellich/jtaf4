@@ -11,6 +11,10 @@ public record SeriesRankingData(String name, int numberOfCompetitions, List<Cate
 
 	public record Category(String abbreviation, String name, int yearFrom, int yearTo, List<Athlete> athletes) {
 
+		/**
+		 * UC-091, BR-059: only athletes with a result in every competition of the series
+		 * appear in the ranking, ordered by total points.
+		 */
 		public List<Athlete> getFilteredAndSortedAthletes(int numberOfCompetitions) {
 			return athletes.stream()
 				.filter(athlete -> athlete.results != null && athlete.results().size() == numberOfCompetitions)

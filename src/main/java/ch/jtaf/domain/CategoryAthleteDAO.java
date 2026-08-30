@@ -29,7 +29,8 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
 
     /**
      * Assigns the athlete to the category of the series that matches the athlete's gender
-     * and year of birth.
+     * and year of birth (UC-072/UC-085, BR-044). The {@link #isAssignedToSeries} guard
+     * enforces BR-045: an athlete is enrolled in at most one category per series.
      * @return the id of the matching category, or empty if the series has no category for
      * the athlete (in this case nothing is inserted)
      */

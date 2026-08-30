@@ -8,6 +8,10 @@ import com.vaadin.flow.router.*;
 
 import java.io.Serial;
 
+/**
+ * Realizes UC-003 (Sign in): the login overlay (Steps 1-3), the localized error state for
+ * {@code ?error} (A1) and the forward of already signed-in visitors (A3).
+ */
 @Route
 @PageTitle("JTAF - Login")
 public class LoginView extends LoginOverlay implements AfterNavigationObserver, BeforeEnterObserver {

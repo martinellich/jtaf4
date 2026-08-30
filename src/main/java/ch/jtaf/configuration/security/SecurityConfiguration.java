@@ -17,6 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
+/**
+ * Realizes UC-003 (Sign in), Steps 4-5: credential verification through the Spring
+ * Security filter chain with BCrypt and the stateless JWT cookie issued by
+ * {@code VaadinStatelessSecurityConfigurer}.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {

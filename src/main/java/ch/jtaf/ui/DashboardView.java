@@ -25,6 +25,12 @@ import java.time.format.DateTimeFormatter;
 
 import static ch.jtaf.ui.util.LogoUtil.resizeLogo;
 
+/**
+ * Realizes UC-090 (View dashboard) and the public report downloads UC-091 (series
+ * ranking), UC-092 (club ranking) and UC-093 (competition ranking); signed-in users
+ * additionally get UC-094 (diplomas), UC-095 (event ranking) and the entry points to
+ * UC-080 and UC-100.
+ */
 @AnonymousAllowed
 @Route(value = "")
 public class DashboardView extends VerticalLayout implements HasDynamicTitle {

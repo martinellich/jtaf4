@@ -427,6 +427,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		return categoriesSheet;
 	}
 
+	/**
+	 * UC-072 (Assign athlete to series), Step 1, and UC-074 (Import athletes from Excel):
+	 * the athletes grid with its assign, import and remove actions.
+	 */
 	private void createAthletesSection() {
 		athletesGrid = new Grid<>();
 		athletesGrid.setId("athletes-grid");
@@ -501,6 +505,11 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		}).setTextAlign(ColumnTextAlign.END).setHeader(athleteActions).setAutoWidth(true).setKey("remove-column");
 	}
 
+	/**
+	 * UC-072 (Assign athlete to series), Steps 4-6: enrols the selected athlete into the
+	 * automatically resolved category, or shows the "No matching category" notification
+	 * (A1).
+	 */
 	private void onAthleteSelect(SearchAthleteDialog.AthleteSelectedEvent athleteSelectedEvent) {
 		var athleteRecord = athleteSelectedEvent.getAthleteRecord();
 		if (seriesRecord != null
@@ -511,6 +520,10 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		refreshAll();
 	}
 
+	/**
+	 * UC-073 (Remove athlete from series): deletes the athlete's enrolment in this
+	 * series.
+	 */
 	private void removeAthleteFromSeries(UpdatableRecord<?> updatableRecord) {
 		var athleteRecord = (AthleteRecord) updatableRecord;
 		if (seriesRecord != null) {

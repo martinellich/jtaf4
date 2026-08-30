@@ -18,6 +18,12 @@ import static ch.jtaf.db.tables.Series.SERIES;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 
+/**
+ * Realizes UC-091 (Download series ranking) and UC-092 (Download club ranking). The
+ * series-ranking query excludes DNF athletes (BR-059, first half); athletes without a
+ * result in every competition are filtered in
+ * {@code SeriesRankingData.Category#getFilteredAndSortedAthletes} (BR-059, second half).
+ */
 // @formatter:off
 @Service
 public class SeriesRankingService {

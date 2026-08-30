@@ -31,6 +31,12 @@ import static ch.jtaf.db.tables.Athlete.ATHLETE;
 import static ch.jtaf.ui.component.GridBuilder.addActionColumnAndSetSelectionListener;
 import static org.jooq.impl.DSL.lower;
 
+/**
+ * Realizes UC-072 (Assign athlete to series) and UC-085 (Assign athlete during result
+ * entry), Steps 2-3: the search grid is empty until a filter is typed, lists only
+ * athletes not yet enrolled in the series (A2) and allows creating a new athlete that is
+ * assigned right away (A4).
+ */
 public class SearchAthleteDialog extends Dialog {
 
 	@Serial

@@ -50,6 +50,11 @@ import static ch.jtaf.db.tables.Competition.COMPETITION;
 import static ch.jtaf.db.tables.Result.RESULT;
 import static org.jooq.impl.DSL.upper;
 
+/**
+ * Realizes UC-080 (Enter result) with the athlete filter of UC-083, the DNF toggle of
+ * UC-081, the result removal of UC-082 and the athlete assignment/correction of
+ * UC-085/UC-086.
+ */
 @RolesAllowed({ Role.USER, Role.ADMIN })
 @Route
 public class ResultCapturingView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
@@ -324,7 +329,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 			});
 
 			categoryAthleteDAO
-				.findById(new CategoryAthleteId(event.getValue().get(CATEGORY.ID), event.getValue().get(ATHLETE.ID)))
+				.findById(new CategoryAthleteId(event.getValue().get(ATHLETE.ID), event.getValue().get(CATEGORY.ID)))
 				.ifPresent(categoryAthleteRecord -> dnf.setValue(categoryAthleteRecord.getDnf()));
 
 			form.add(dnf);
