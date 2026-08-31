@@ -579,7 +579,8 @@ INSERT INTO category_athlete (category_id, athlete_id) VALUES(25, 204);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(35, 205);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(36, 206);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(33, 207);
-INSERT INTO category_athlete (category_id, athlete_id) VALUES(35, 208);
+-- Removed orphan enrolment (category 35, athlete 208): athlete 208 does not exist;
+-- the row slipped in because FK checks are disabled during seeding.
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(29, 209);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(29, 210);
 INSERT INTO category_athlete (category_id, athlete_id) VALUES(34, 211);
@@ -2298,6 +2299,53 @@ INSERT INTO user_group (user_id, group_id) VALUES(2, 2);
 
 INSERT INTO organization_user (organization_id, user_id) VALUES (1, 2);
 INSERT INTO organization_user (organization_id, user_id) VALUES (2, 2);
+
+-- Specification-coverage fixtures (docs/gap_analysis.md): an organization that is not
+-- linked to any seeded user, holding hidden series that exercise the ranking edge cases:
+-- a series without competitions, a series with a competition but no results, a series
+-- with a DNF athlete and an athlete missing a competition, and overlapping categories.
+
+INSERT INTO organization (id, organization_key, name, owner) VALUES(3, 'TST', 'Test Fixtures', 'fixtures@jtaf.ch');
+ALTER SEQUENCE organization_seq RESTART WITH 4;
+
+INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(5, 'Fixture No Competitions', NULL, true, false, 3);
+INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(6, 'Fixture No Results', NULL, true, false, 3);
+INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(7, 'Fixture Ranking Rules', NULL, true, false, 3);
+INSERT INTO series (id, name, logo, hidden, locked, organization_id) VALUES(8, 'Fixture Overlapping Categories', NULL, true, false, 3);
+ALTER SEQUENCE series_seq RESTART WITH 9;
+
+INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(7, 'Fixture No Results Meeting', '2020-05-02', true, 0, false, 6);
+INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(8, 'Fixture Ranking Meeting 1', '2020-05-09', true, 0, false, 7);
+INSERT INTO competition (id, name, competition_date, always_first_three_medals, medal_percentage, locked, series_id) VALUES(9, 'Fixture Ranking Meeting 2', '2020-05-16', true, 0, false, 7);
+ALTER SEQUENCE competition_seq RESTART WITH 10;
+
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(49, 'M', 'Maenner', 'M', 1900, 9999, 6);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(50, 'M', 'Maenner', 'M', 1900, 9999, 7);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(51, 'M', 'Maenner', 'M', 1900, 9999, 8);
+INSERT INTO category (id, abbreviation, name, gender, year_from, year_to, series_id) VALUES(52, 'M2', 'Maenner 2', 'M', 1950, 2050, 8);
+ALTER SEQUENCE category_seq RESTART WITH 53;
+
+INSERT INTO category_event (category_id, event_id, position) VALUES(49, 1, 0);
+INSERT INTO category_event (category_id, event_id, position) VALUES(50, 1, 0);
+
+INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(234, 'Fabio', 'Fixturecomplete', 'M', 2000, NULL, 3);
+INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(235, 'Dario', 'Fixturednf', 'M', 2001, NULL, 3);
+INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(236, 'Ivo', 'Fixtureincomplete', 'M', 2002, NULL, 3);
+INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(237, 'Nico', 'Fixturenoresult', 'M', 2003, NULL, 3);
+INSERT INTO athlete (id, first_name, last_name, gender, year_of_birth, club_id, organization_id) VALUES(238, 'Olaf', 'Fixtureoverlap', 'M', 2004, NULL, 3);
+ALTER SEQUENCE athlete_seq RESTART WITH 239;
+
+INSERT INTO category_athlete (category_id, athlete_id) VALUES(49, 237);
+INSERT INTO category_athlete (category_id, athlete_id) VALUES(50, 234);
+INSERT INTO category_athlete (category_id, athlete_id, dnf) VALUES(50, 235, true);
+INSERT INTO category_athlete (category_id, athlete_id) VALUES(50, 236);
+
+INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1487, 0, '12.00', 500, 234, 50, 8, 1);
+INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1488, 0, '12.10', 480, 234, 50, 9, 1);
+INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1489, 0, '12.20', 460, 235, 50, 8, 1);
+INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1490, 0, '12.30', 440, 235, 50, 9, 1);
+INSERT INTO result (id, position, result, points, athlete_id, category_id, competition_id, event_id) VALUES(1491, 0, '12.40', 420, 236, 50, 8, 1);
+ALTER SEQUENCE result_seq RESTART WITH 1492;
 
 SET session_replication_role = 'origin';
 COMMIT;

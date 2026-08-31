@@ -46,7 +46,7 @@
 **Trigger:** Step 4 — more than one category of the series matches the athlete's gender and birth year.
 **Flow:**
 
-1. The category lookup (`fetchOneInto`) throws a `TooManyRowsException`, which is not handled; the assignment fails with an internal error. Category year ranges per gender should not overlap.
+1. The category lookup (`fetchOptionalInto`) throws a `TooManyRowsException`, which is not handled; the assignment fails with an internal error. Category year ranges per gender should not overlap.
 
 ### A4: New athlete
 

@@ -3,6 +3,7 @@ package ch.jtaf.ui.view;
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.ui.AbstractViewTest;
 import ch.jtaf.ui.ClubsView;
+import ch.jtaf.usecase.UseCase;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H1;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProtectedViewTest extends AbstractViewTest {
 
 	@Test
+	@UseCase(id = "UC-003", businessRules = "BR-006")
 	void user_without_organization() {
 		// This user has no organization
 		login("susan.miller@mail.com", "pass", List.of(Role.ADMIN));

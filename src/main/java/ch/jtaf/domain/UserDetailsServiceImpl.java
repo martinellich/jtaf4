@@ -13,6 +13,10 @@ import static ch.jtaf.db.tables.SecurityGroup.SECURITY_GROUP;
 import static ch.jtaf.db.tables.SecurityUser.SECURITY_USER;
 import static ch.jtaf.db.tables.UserGroup.USER_GROUP;
 
+/**
+ * Realizes UC-003 (Sign in), Step 4: loads the user from {@code SECURITY_USER}.
+ * Unconfirmed users are returned as disabled (A2, BR-005).
+ */
 // @formatter:off
 @Service
 @Primary

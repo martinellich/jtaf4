@@ -14,6 +14,10 @@ import java.util.Locale;
 
 import static org.openpdf.text.PageSize.A4;
 
+/**
+ * UC-091 (Download series ranking), Step 4: renders the ranking PDF. Generation errors
+ * are logged and yield an empty byte array (UC-091 failure postcondition).
+ */
 public class SeriesRankingReport extends RankingReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SeriesRankingReport.class);

@@ -1,6 +1,7 @@
 package ch.jtaf.domain;
 
 import ch.jtaf.TestcontainersConfiguration;
+import ch.jtaf.usecase.UseCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,10 @@ import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Service-level tests for UC-091 (Download series ranking) and UC-092 (Download club
+ * ranking).
+ */
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
 class SeriesRankingServiceTest {
@@ -24,6 +29,7 @@ class SeriesRankingServiceTest {
 	private SeriesRankingService seriesRankingService;
 
 	@Test
+	@UseCase(id = "UC-092")
 	void get_club_ranking() {
 		var clubRanking = seriesRankingService.getClubRanking(1L);
 
@@ -32,6 +38,7 @@ class SeriesRankingServiceTest {
 	}
 
 	@Test
+	@UseCase(id = "UC-092")
 	void create_club_ranking_pdf() {
 		byte[] pdf = seriesRankingService.getClubRankingAsPdf(1L, Locale.of("de", "CH"));
 
@@ -39,6 +46,7 @@ class SeriesRankingServiceTest {
 	}
 
 	@Test
+	@UseCase(id = "UC-091")
 	void get_series_ranking() {
 		var seriesRanking = seriesRankingService.getSeriesRanking(3L);
 
@@ -47,6 +55,7 @@ class SeriesRankingServiceTest {
 	}
 
 	@Test
+	@UseCase(id = "UC-091")
 	void create_series_ranking_pdf() {
 		byte[] pdf = seriesRankingService.getSeriesRankingAsPdf(3L, Locale.of("de", "CH"));
 

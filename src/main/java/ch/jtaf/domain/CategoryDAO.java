@@ -27,6 +27,11 @@ public class CategoryDAO extends JooqDAO<Category, CategoryRecord, Long> {
             .fetch();
     }
 
+    /**
+     * UC-072 (Assign athlete to series), Step 4 / BR-044: resolves the single category of
+     * the series matching the athlete's gender and year of birth. Overlapping category
+     * year ranges make this throw a {@code TooManyRowsException} (A3).
+     */
     public Optional<Long> findIdBySeriesIdAndGenderAndYearOfBirth(long seriesId, String gender, int yearOfBirth) {
         return dslContext
             .select(CATEGORY.ID)

@@ -49,6 +49,10 @@ public class AthleteDAO extends JooqDAO<Athlete, AthleteRecord, Long> {
             .fetchInto(ATHLETE);
     }
 
+    /**
+     * UC-072 (Assign athlete to series), Step 2: lists the athletes of the organization
+     * that are not yet enrolled in the series (A2 exclusion).
+     */
     public List<AthleteRecord> findByOrganizationIdAndSeriesId(long organizationId, long seriesId, Condition condition, int offset, int limit) {
         return dslContext
             .selectFrom(ATHLETE)
@@ -79,6 +83,10 @@ public class AthleteDAO extends JooqDAO<Athlete, AthleteRecord, Long> {
             .fetchOptionalInto(Integer.class).orElse(0);
     }
 
+    /**
+     * UC-080/UC-083 (Enter result, Filter athletes for result entry): the athletes of the
+     * competition's series matching the result-entry filter.
+     */
     public Result<Record5<Long, String, String, String, Long>> getAthletes(long competitionId, Condition condition, int offset, int limit) {
         return dslContext
             .select(

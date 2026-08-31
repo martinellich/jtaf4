@@ -240,6 +240,10 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver, Be
 		version.setText(applicationVersion);
 	}
 
+	/**
+	 * UC-003 (Sign in), Step 6: reveals the protected navigation links, the username and
+	 * the logout button for signed-in users; hides them again for visitors (UC-004).
+	 */
 	@SuppressWarnings("java:S3776")
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
