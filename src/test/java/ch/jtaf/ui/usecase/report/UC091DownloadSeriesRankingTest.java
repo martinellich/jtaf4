@@ -2,6 +2,7 @@ package ch.jtaf.ui.usecase.report;
 
 import ch.jtaf.configuration.security.Role;
 import ch.jtaf.domain.SeriesRankingService;
+import ch.jtaf.domain.data.SeriesRankingData;
 import ch.jtaf.domain.report.SeriesRankingReport;
 import ch.jtaf.ui.AbstractViewTest;
 import ch.jtaf.ui.DashboardView;
@@ -75,7 +76,7 @@ class UC091DownloadSeriesRankingTest extends AbstractViewTest {
 		var category = ranking.categories().getFirst();
 
 		// The DNF athlete is excluded by the query
-		assertThat(category.athletes()).extracting(a -> a.lastName())
+		assertThat(category.athletes()).extracting(SeriesRankingData.Category.Athlete::lastName)
 			.containsExactlyInAnyOrder("Fixturecomplete", "Fixtureincomplete");
 
 		// Only the athlete with a result in every competition appears in the ranking

@@ -141,8 +141,8 @@ public class FastestRunnersView extends VerticalLayout implements HasDynamicTitl
 	@Override
 	public String getPageTitle() {
 		return competitionDAO.findProjectionById(competitionId)
-			.map(record -> "%s | %s - %s".formatted(getTranslation("Fastest.Runners"),
-					record.get(COMPETITION.series().NAME), record.get(COMPETITION.NAME)))
+			.map(competitionRow -> "%s | %s - %s".formatted(getTranslation("Fastest.Runners"),
+					competitionRow.get(COMPETITION.series().NAME), competitionRow.get(COMPETITION.NAME)))
 			.orElseGet(() -> getTranslation("Fastest.Runners"));
 	}
 

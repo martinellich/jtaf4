@@ -3,6 +3,7 @@ package ch.jtaf.domain;
 import ch.jtaf.domain.data.CategoriesData;
 import ch.jtaf.domain.report.CategoriesReport;
 import org.jooq.DSLContext;
+import org.jooq.Record1;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -39,7 +40,7 @@ public class CategoriesReportService {
                                        .from(CATEGORY_EVENT)
                                        .where(CATEGORY_EVENT.CATEGORY_ID.eq(CATEGORY.ID))
                                        .orderBy(CATEGORY_EVENT.POSITION))
-                                   .convertFrom(r -> r.map(record -> record.value1())))
+                                   .convertFrom(r -> r.map(Record1::value1)))
                             .from(CATEGORY)
                             .where(CATEGORY.SERIES_ID.eq(SERIES.ID))
                             .orderBy(CATEGORY.ABBREVIATION))

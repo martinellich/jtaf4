@@ -153,19 +153,19 @@ public class CompetitionRankingService {
                         .and(RESULT.event().EVENT_TYPE.eq(EventType.RUN.name()))
                         .and(RESULT.RESULT_.isNotNull())
                         .and(RESULT.RESULT_.ne(""))
-                ).convertFrom(r -> r.map(record -> {
-                    var distance = FastestRunnersData.sprintDistance(record.value7(), record.value8());
+                ).convertFrom(r -> r.map(resultRow -> {
+                    var distance = FastestRunnersData.sprintDistance(resultRow.value7(), resultRow.value8());
                     return distance.isPresent()
-                        ? new FastestRunnersData.Runner(record.value1(), record.value2(), record.value3(),
-                            record.value4(), record.value5(), record.value6(), record.value7(),
-                            distance.getAsInt(), record.value9())
+                        ? new FastestRunnersData.Runner(resultRow.value1(), resultRow.value2(), resultRow.value3(),
+                            resultRow.value4(), resultRow.value5(), resultRow.value6(), resultRow.value7(),
+                            distance.getAsInt(), resultRow.value9())
                         : null;
                 }))
             )
             .from(COMPETITION)
             .where(COMPETITION.ID.eq(competitionId))
-            .fetchOptional(record -> new FastestRunnersData(record.value1(), record.value2(),
-                record.value3().stream().filter(Objects::nonNull).toList()));
+            .fetchOptional(competitionRow -> new FastestRunnersData(competitionRow.value1(), competitionRow.value2(),
+                competitionRow.value3().stream().filter(Objects::nonNull).toList()));
     }
 
     private byte[] getLogo(Long competitionId) {
