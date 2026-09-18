@@ -40,13 +40,23 @@ public class CategoryAthleteDAO extends JooqDAO<CategoryAthlete, CategoryAthlete
             .findIdBySeriesIdAndGenderAndYearOfBirth(seriesId, athleteRecord.getGender(), athleteRecord.getYearOfBirth());
 
         if (categoryId.isPresent() && !isAssignedToSeries(athleteRecord.getId(), seriesId)) {
-            createCategoryAthlete(athleteRecord.getId(), categoryId.get());
+            insertCategoryAthlete(athleteRecord.getId(), categoryId.get());
         }
         return categoryId;
     }
 
     @Transactional
     public void createCategoryAthlete(Long athleteId, @Nullable Long categoryId) {
+        insertCategoryAthlete(athleteId, categoryId);
+    }
+
+    /**
+     * Shared insert for both {@code createCategoryAthlete} entry points. Calling the
+     * public {@code @Transactional} method from within this bean would bypass the proxy
+     * anyway, so the work lives here and both callers join the transaction their own
+     * entry point opened.
+     */
+    private void insertCategoryAthlete(Long athleteId, @Nullable Long categoryId) {
         var categoryAthleteRecord = CATEGORY_ATHLETE.newRecord();
         categoryAthleteRecord.setAthleteId(athleteId);
         categoryAthleteRecord.setCategoryId(categoryId);

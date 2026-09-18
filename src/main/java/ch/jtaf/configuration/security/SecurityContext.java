@@ -44,7 +44,8 @@ public final class SecurityContext {
 			return Objects.requireNonNullElse(userDetails.getUsername(), "");
 		}
 		if (principal instanceof Jwt jwt) {
-			return Objects.requireNonNullElse(jwt.getSubject(), "");
+			var subject = jwt.getSubject();
+			return subject != null ? subject : "";
 		}
 		// Anonymous or no authentication.
 		return "";

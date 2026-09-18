@@ -26,9 +26,10 @@ class CategoriesReportTest {
 
 		assertThat(pdf).isNotEmpty();
 		var text = extractText(pdf);
-		assertThat(text).contains("Series 2026", "Kategorien", "Jahr von", "Jahr bis", "Disziplinen", "2010", "2011",
-				"2012", "2013", "60 m, Weit", "60 m, Ball", "50 m");
-		assertThat(text).doesNotContain(String.valueOf(CategoryYears.OPEN_FROM), String.valueOf(CategoryYears.OPEN_TO));
+		assertThat(text)
+			.contains("Series 2026", "Kategorien", "Jahr von", "Jahr bis", "Disziplinen", "2010", "2011", "2012",
+					"2013", "60 m, Weit", "60 m, Ball", "50 m")
+			.doesNotContain(String.valueOf(CategoryYears.OPEN_FROM), String.valueOf(CategoryYears.OPEN_TO));
 	}
 
 	@Test
@@ -40,17 +41,13 @@ class CategoriesReportTest {
 	}
 
 	private static String extractText(byte[] pdf) throws IOException {
-		var reader = new PdfReader(pdf);
-		try {
+		try (var reader = new PdfReader(pdf)) {
 			var extractor = new PdfTextExtractor(reader);
 			var sb = new StringBuilder();
 			for (var page = 1; page <= reader.getNumberOfPages(); page++) {
 				sb.append(extractor.getTextFromPage(page)).append('\n');
 			}
 			return sb.toString();
-		}
-		finally {
-			reader.close();
 		}
 	}
 

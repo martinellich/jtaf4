@@ -96,7 +96,8 @@ public class FastestRunnersReport extends RankingReport {
 		addCell(table, runner.firstName());
 		addCell(table, String.valueOf(runner.yearOfBirth()));
 		addCell(table, runner.category());
-		addCell(table, runner.club() != null ? runner.club() : "");
+		var club = runner.club();
+		addCell(table, club != null ? club : "");
 		addCell(table, runner.eventAbbreviation());
 		addCellAlignRight(table, runner.result());
 		addCellAlignRight(table,
