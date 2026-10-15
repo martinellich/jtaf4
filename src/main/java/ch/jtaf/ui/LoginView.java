@@ -24,7 +24,7 @@ public class LoginView extends LoginOverlay implements AfterNavigationObserver, 
 	public LoginView(SecurityContext securityContext) {
 		this.securityContext = securityContext;
 
-		var i18n = LoginI18n.createDefault();
+		var i18n = new LoginI18n();
 
 		i18n.setHeader(new LoginI18n.Header());
 		i18n.getHeader().setTitle("JTAF");
@@ -37,6 +37,7 @@ public class LoginView extends LoginOverlay implements AfterNavigationObserver, 
 		i18n.getForm().setUsername(getTranslation("Email"));
 		i18n.getForm().setPassword(getTranslation("Password"));
 
+		i18n.setErrorMessage(new LoginI18n.ErrorMessage());
 		i18n.getErrorMessage().setTitle(getTranslation("Auth.ErrorTitle"));
 		i18n.getErrorMessage().setMessage(getTranslation("Auth.ErrorMessage"));
 
