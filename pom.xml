@@ -70,7 +70,7 @@
         <mopo.version>0.0.6</mopo.version>
 
         <browserless-test.version>25.3.0</browserless-test.version>
-        <archunit.version>1.5.0</archunit.version>
+        <archunit.version>1.5.1</archunit.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
