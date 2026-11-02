@@ -51,7 +51,7 @@
     <properties>
         <java.version>25</java.version>
 
-        <vaadin.version>25.3.3</vaadin.version>
+        <vaadin.version>25.3.4</vaadin.version>
         <openpdf.version>3.0.5</openpdf.version>
         <poi.version>6.0.0</poi.version>
         <jooq-spring.version>1.2.0</jooq-spring.version>
