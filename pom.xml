@@ -67,7 +67,7 @@
         <gitflow.version>1.21.0</gitflow.version>
         <jacoco.version>0.8.16</jacoco.version>
         <playwright.version>1.64.0</playwright.version>
-        <mopo.version>0.0.6</mopo.version>
+        <mopo.version>0.0.7</mopo.version>
 
         <browserless-test.version>25.3.2</browserless-test.version>
         <archunit.version>1.5.1</archunit.version>
