@@ -14,6 +14,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import ch.jtaf.ui.util.NotificationUtil;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -516,7 +517,7 @@ public class SeriesView extends ProtectedView implements HasUrlParameter<Long> {
 		var athleteRecord = athleteSelectedEvent.getAthleteRecord();
 		if (seriesRecord != null
 				&& categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesRecord.getId()).isEmpty()) {
-			Notification.show(getTranslation("No.matching.category"), 6000, Notification.Position.TOP_END);
+			NotificationUtil.showInUi(getTranslation("No.matching.category"));
 		}
 
 		refreshAll();

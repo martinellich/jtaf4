@@ -21,6 +21,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import ch.jtaf.ui.util.NotificationUtil;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -209,7 +210,7 @@ public class ResultCapturingView extends VerticalLayout implements HasDynamicTit
 		}
 
 		if (categoryAthleteDAO.createCategoryAthlete(athleteRecord, seriesId).isEmpty()) {
-			Notification.show(getTranslation("No.matching.category"), 6000, Notification.Position.TOP_END);
+			NotificationUtil.showInUi(getTranslation("No.matching.category"));
 			return;
 		}
 

@@ -10,7 +10,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.notification.Notification;
+import ch.jtaf.ui.util.NotificationUtil;
 import com.vaadin.flow.component.textfield.IntegerField;
 
 public class CopyCategoriesDialog extends Dialog {
@@ -61,7 +61,7 @@ public class CopyCategoriesDialog extends Dialog {
 			var offset = Boolean.TRUE.equals(increaseYears.getValue()) && yearOffset.getValue() != null
 					? yearOffset.getValue() : 0;
 			seriesDAO.copyCategories(selectedSeries.getId(), currentSeriesId, offset);
-			Notification.show(getTranslation("Categories.copied"), 6000, Notification.Position.TOP_END);
+			NotificationUtil.showInUi(getTranslation("Categories.copied"));
 
 			fireEvent(new AfterCopyEvent(this));
 			close();

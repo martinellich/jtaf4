@@ -11,7 +11,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
+import ch.jtaf.ui.util.NotificationUtil;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.function.ValueProvider;
@@ -149,8 +149,8 @@ public class ImportAthletesDialog extends Dialog {
 	private void importAthletes() {
 		var result = athleteImportService.importAthletes(rows, organizationId, seriesId);
 
-		Notification.show(getTranslation("Athletes.imported", result.assigned(), result.created(),
-				result.withoutCategory().size()), 6000, Notification.Position.TOP_END);
+		NotificationUtil.showInUi(getTranslation("Athletes.imported", result.assigned(), result.created(),
+				result.withoutCategory().size()));
 
 		fireEvent(new AfterImportEvent(this));
 		close();
