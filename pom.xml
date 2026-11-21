@@ -79,7 +79,7 @@
         <db.username>jtaf4</db.username>
         <db.password>jtaf420</db.password><!-- NOSONAR - throwaway credentials for the ephemeral Testcontainers database used at build time -->
 
-        <sonar-maven-plugin.version>5.8.0.7211</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>5.9.0.7382</sonar-maven-plugin.version>
         <sonar.organization>martinellich</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.exclusions>src/main/java/ch/jtaf/Jtaf4Application.java</sonar.exclusions>
